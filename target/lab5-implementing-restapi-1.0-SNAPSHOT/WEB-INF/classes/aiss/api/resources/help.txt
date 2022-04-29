@@ -1,1 +1,0 @@
-Carpeta donde se almacenan los endpoints de las principales clases, básicamente donde se implementan las funciones CRUD.

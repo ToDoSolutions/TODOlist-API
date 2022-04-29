@@ -1,1 +1,0 @@
-Las clases que permitan tener una serie de datos de base.

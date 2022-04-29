@@ -1,1 +1,0 @@
-index.html tiene el contenido de la página al direccionarse  la URL base.
