@@ -1,0 +1,1 @@
+Las clases que almacenan la información de cada uno de los objetos.

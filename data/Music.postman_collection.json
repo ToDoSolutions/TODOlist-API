@@ -1,0 +1,907 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Music",
+		"_postman_id": "6b3da588-ee61-3143-b308-140408230b78",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PlayList",
+			"description": "",
+			"item": [
+				{
+					"name": "GET all",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET 1 and it EXIST",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p6",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET 1 and it NOT EXIST",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p999",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Lista AISS",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Lista AISS\",\n\t\"description\": \"lista de reproducción creada para la siguiente asignatura AISS\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT p7",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"p7\",\n\t\"name\": \"Lista AISS - Modificada\",\n\t\"description\": \"lista de reproducción creada para la siguiente asignatura AISS\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "p7 update?",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p7",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE p7",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p7",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "p7 delete?",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p7",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Song",
+			"description": "",
+			"item": [
+				{
+					"name": "GET all",
+					"request": {
+						"url": "http://localhost:8089/api/songs",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET s1",
+					"request": {
+						"url": "http://localhost:8089/api/songs/s1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Dame Da Ne",
+					"request": {
+						"url": "http://localhost:8089/api/songs",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"Dame Da Ne\",\n\t\"artist\":\"Goated Beats\",\n\t\"album\": \"Meme God\",\n\t\"year\": \"2020\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT s0 with LOST IN PARADISE",
+					"request": {
+						"url": "http://localhost:8089/api/songs",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"s0\",\n    \"title\": \"LOST IN PARADISE\",\n    \"artist\": \"ALI\",\n    \"album\": \"LOST IN PARADISE\",\n    \"year\": \"2020\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "s0 update?",
+					"request": {
+						"url": "http://localhost:8089/api/songs",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE s0",
+					"request": {
+						"url": "http://localhost:8089/api/songs/s0",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"s0\",\n    \"title\": \"LOST IN PARADISE\",\n    \"artist\": \"ALI\",\n    \"album\": \"LOST IN PARADISE\",\n    \"year\": \"2020\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "s0 delete?",
+					"request": {
+						"url": "http://localhost:8089/api/songs",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ejercicio 3",
+			"description": "",
+			"item": [
+				{
+					"name": "GET all PlayList",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Últimos Éxitos",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Últimos éxitos\",\n\t\"description\": \"Favoritos de los últimos tiempos\"\n}\n"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Canciones infantiles",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Canciones infantiles\",\n\t\"description\": \"Canciones para peques\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Recuerdos",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Recuerdos\",\n\t\"description\": \"Recuerdos de la infancia\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST AISSPlayList",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"AISSPlayList\",\n\t\"description\": \"Nueva lista de prueba\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET ASC -> name",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?order=name",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "name",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET DESC -> name",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?order=-name",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "-name",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET DESC -> name / empty",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?order=-name&isEmpty=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "-name",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "isEmpty",
+									"value": "true",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET name = Éxistos en Inglés",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?name=Éxitos+en+inglés",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Éxitos+en+inglés",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET name = AISSPlayList",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?name=AISSPlayList",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "AISSPlayList",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET name = AISSPlayList, without songs",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?name=AISSPlayList&isEmpty=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "AISSPlayList",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "isEmpty",
+									"value": "true",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT p5 When I FAIL an exam",
+					"request": {
+						"url": "http://localhost:8089/api/lists",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"p5\",\n\t\"name\": \"When I FAIL an exam\",\n\t\"description\": \"This music is used very frequently...\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "p5 update?",
+					"request": {
+						"url": "http://localhost:8089/api/lists/p5",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET name = AISSPlayList 2",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/lists?name=AISSPlayList",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "AISSPlayList",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ejercicio 4",
+			"description": "",
+			"item": [
+				{
+					"name": "GET q=i order=-year",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/songs?q=i&order=-year",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"songs"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "i",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "order",
+									"value": "-year",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET q=i order=year",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/songs?q=i&order=year",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"songs"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "i",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "order",
+									"value": "year",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ejercicio 5",
+			"description": "",
+			"item": [
+				{
+					"name": "GET order=year q=in",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/songs?order=year&q=in",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"songs"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "year",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "q",
+									"value": "in",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET order=year q=in copy limit=3",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/songs?order=year&q=in&limit=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"songs"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "year",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "q",
+									"value": "in",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET order=year q=in copy limit=2 offset=3",
+					"request": {
+						"url": {
+							"raw": "http://localhost:8089/api/songs?order=year&q=in&limit=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"songs"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "year",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "q",
+									"value": "in",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

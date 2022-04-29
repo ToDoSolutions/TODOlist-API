@@ -1,0 +1,1 @@
+En TODOlistAplication debemos de añadir las clases desde las cuales manejamos los recursos (todas las clases de resources).
