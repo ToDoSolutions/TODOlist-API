@@ -5,6 +5,8 @@ derived_file_type:
 - java_precompiled
 threadsafe: True
 auto_id_policy: default
+beta_settings:
+  'source_reference': 'https://github.com/alesanfe/TODOlist-API.git#932c49566c92e01569fd6b347f51b106b675bd90'
 api_version: 'user_defined'
 handlers:
 - url: (/.*/)

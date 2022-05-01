@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="maven-antrun-" default="main">
   <target name="main">
-    <property name="target.webapp.dir" value="C:\Users\alex0\Documents\Java\UNI\AISS\tuto_SWAGGER\target/TODOlist-API-1.0-SNAPSHOT" />
-    <property name="src.webapp.dir" value="C:\Users\alex0\Documents\Java\UNI\AISS\tuto_SWAGGER/src/main/webapp" />
+    <property name="target.webapp.dir" value="C:\Users\alex0\Documents\Java\UNI\AISS\TODOlist-API\target/TODOlist-API-1.0-SNAPSHOT" />
+    <property name="src.webapp.dir" value="C:\Users\alex0\Documents\Java\UNI\AISS\TODOlist-API/src/main/webapp" />
     <sync todir="${target.webapp.dir}" includeEmptyDirs="true" verbose="true">
       <fileset dir="${src.webapp.dir}" />
       <preserveintarget>
