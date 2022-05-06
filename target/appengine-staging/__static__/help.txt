@@ -1,3 +1,4 @@
 index.html tiene el contenido de la página al direccionarse  la URL base.
 
-Si utilizaís en algún momento Nicepage, borrar de cada archivo html generado por esta aplicación el último section (básicamente para no hacerles publicidad).
+Si utilizaís en algún momento Nicepage, borrar de cada archivo html generado por esta aplicación el último section (básicamente para no hacerles publicidad),
+borrar Contact.hml, About.html, TODOlist.hmlt, templates, About.css, Blog-Template.css, Contact.css, Page-Password-Template.css, Post-Template.css, los ficheros que no sean necesarios y blog.

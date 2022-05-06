@@ -6,7 +6,7 @@ derived_file_type:
 threadsafe: True
 auto_id_policy: default
 beta_settings:
-  'source_reference': 'https://github.com/alesanfe/TODOlist-API.git#7721a451c67e1b054da19496e50bf3cdf1a62335'
+  'source_reference': 'https://github.com/alesanfe/TODOlist-API.git#e122db836421ed9cd0d8fa1b70e8a8e074981747'
 api_version: 'user_defined'
 handlers:
 - url: (/.*/)
