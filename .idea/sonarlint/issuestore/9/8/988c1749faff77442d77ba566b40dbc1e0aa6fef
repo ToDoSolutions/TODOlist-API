@@ -1,0 +1,24 @@
+
+x
+java:S1192Q"VDefine a constant instead of duplicating this literal "The playlist with id=" 3 times.(í‹÷•ýÿÿÿÿ8ò¢È¥‰0
+q
+java:S1192Q"ODefine a constant instead of duplicating this literal " was not found" 3 times.(í‹÷•ýÿÿÿÿ8ó¢È¥‰0
+O
+java:S1199+"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ8ö¢È¥‰0
+a
+java:S25832"DChange this condition so that it does not always evaluate to "false"(Ó½¶8¹£È¥‰0
+`
+java:S2583p"DChange this condition so that it does not always evaluate to "false"(ÔÀ’68¹£È¥‰0
+v
+java:S3008"TRename this field "_instance" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„Ž„»øÿÿÿÿ8º£È¥‰0
+F
+java:S1659,"$Declare "models" on a separate line.(„ÓæŠøÿÿÿÿ8Å£È¥‰0
+>
+java:S1116;"Remove this empty statement.(ÉÓü¦ùÿÿÿÿ8Ê£È¥‰0
+U
+java:S1172@"3Remove these unused method parameters "model", "q".(á“Ö’úÿÿÿÿ8Ë£È¥‰0
+Z
+java:S1172E"8Remove these unused method parameters "result", "order".(¢Ù¤èúÿÿÿÿ8Ì£È¥‰0
+]	java:S125F"<This block of commented-out lines of code should be removed.(ÐË¦øûÿÿÿÿ8Í£È¥‰0
+\
+java:S1172z":Remove these unused method parameters "model", "oldModel".(Ü‰†ðüÿÿÿÿ8Ô£È¥‰0

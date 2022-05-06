@@ -1,1 +1,3 @@
 index.html tiene el contenido de la página al direccionarse  la URL base.
+
+Si utilizaís en algún momento Nicepage, borrar de cada archivo html generado por esta aplicación el último section (básicamente para no hacerles publicidad).
