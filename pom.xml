@@ -14,9 +14,6 @@
         <!-- PUT HERE YOUR projectId FROM GOOGLE CLOUD CONSOLE -->
         <project.projectId>todolist-api-348718</project.projectId>
 
-        <sonar.organization>alesanfe</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
         <appengine.version>1.9.80</appengine.version>        <!-- AppEngine version -->
         <gcloud.version>2.1.0</gcloud.version>        <!-- GCloud version -->
         <servlet.version>2.5</servlet.version>        <!-- Servlet version -->
