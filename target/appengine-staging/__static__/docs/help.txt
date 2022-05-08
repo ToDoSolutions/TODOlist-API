@@ -1,1 +1,0 @@
-De todos estos archivos, el único que debemos de tocar es el swagger.yaml.

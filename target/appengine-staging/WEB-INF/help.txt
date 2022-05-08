@@ -1,1 +1,0 @@
-web.xml contiene información importante como la clase principal del proyecto (TODOlistAplication) o la a continiación de la URL base (/api).
