@@ -26,8 +26,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/antlr4-runtime-4.9.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-math3-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/FADDA.jar"/>
 	<classpathentry kind="output" path="target/lab5-implementing-restapi-1.0-SNAPSHOT/WEB-INF/classes"/>
 </classpath>

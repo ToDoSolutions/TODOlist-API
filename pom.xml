@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
@@ -13,8 +14,8 @@
         <!-- PUT HERE YOUR projectId FROM GOOGLE CLOUD CONSOLE -->
         <project.projectId>todolist-api-348718</project.projectId>
 
-		<sonar.organization>alesanfe</sonar.organization>
-  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>alesanfe</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <appengine.version>1.9.80</appengine.version>        <!-- AppEngine version -->
         <gcloud.version>2.1.0</gcloud.version>        <!-- GCloud version -->
@@ -168,8 +169,8 @@
             <!-- https://cloud.google.com/appengine/docs/standard/java/tools/migrate-maven -->
             <!-- https://github.com/GoogleCloudPlatform/app-maven-plugin/blob/master/USER_GUIDE.md#how-do-i-enable-hot-reload-of-my-application -->
             <plugin>
-            	<artifactId>maven-war-plugin</artifactId>
-            	<version>3.2.2</version>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.2</version>
             </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
@@ -182,8 +183,8 @@
                     <!-- <address>0.0.0.0</address> -->
                     <port>8089</port>
                     <jvmFlags>
-                        <jvmFlag> -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
-                        <jvmFlag> -Dappengine.fullscan.seconds=1 </jvmFlag>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
+                        <jvmFlag>-Dappengine.fullscan.seconds=1</jvmFlag>
                     </jvmFlags>
                     <automaticRestart>true</automaticRestart>
                 </configuration>
@@ -234,15 +235,16 @@
                         </goals>
                         <configuration>
                             <target>
-                                <property name="target.webapp.dir" value="${project.build.directory}/${project.build.finalName}" />
-                                <property name="src.webapp.dir" value="${basedir}/src/main/webapp" />
+                                <property name="target.webapp.dir"
+                                          value="${project.build.directory}/${project.build.finalName}"/>
+                                <property name="src.webapp.dir" value="${basedir}/src/main/webapp"/>
 
                                 <sync verbose="true" todir="${target.webapp.dir}" includeEmptyDirs="true">
-                                    <fileset dir="${src.webapp.dir}" />
+                                    <fileset dir="${src.webapp.dir}"/>
                                     <preserveintarget>
-                                        <include name="WEB-INF/lib/**" />
-                                        <include name="WEB-INF/classes/**" />
-                                        <include name="WEB-INF/appengine-generated/**" />
+                                        <include name="WEB-INF/lib/**"/>
+                                        <include name="WEB-INF/classes/**"/>
+                                        <include name="WEB-INF/appengine-generated/**"/>
                                     </preserveintarget>
                                 </sync>
                             </target>
