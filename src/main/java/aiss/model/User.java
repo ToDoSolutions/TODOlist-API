@@ -1,11 +1,6 @@
 package aiss.model;
 
-import main.java.common.extension.List2;
-import main.java.common.extension.Map2;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +28,7 @@ public class User {
         this.tasks = tasks;
     }
     public static User of(String name, String surname, String email, String avatar, String bio, String location) {
-        return new User(null, name, surname, email, avatar, bio, location, List2.empty());
+        return new User(null, name, surname, email, avatar, bio, location, new ArrayList<>());
     }
 
     public String getIdUser() {
@@ -126,7 +121,7 @@ public class User {
     // Para modificar tasks.
     public void addTask(Task t) {
         if (tasks == null)
-            tasks = List2.empty();
+            tasks = new ArrayList<>();
         tasks.add(t);
     }
 
@@ -147,7 +142,7 @@ public class User {
 
     public Map<String, String> getFields(String fields) {
         List<String> attributes = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
-        Map<String, String> map = Map2.empty();
+        Map<String, String> map = new HashMap<>();
         for (String attribute: attributes) {
             if (Objects.equals(attribute, "id"))
                 map.put(attribute, getIdUser());

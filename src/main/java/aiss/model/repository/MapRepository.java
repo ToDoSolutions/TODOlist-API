@@ -4,7 +4,6 @@ import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
-import main.java.common.extension.Map2;
 
 import java.sql.Date;
 import java.util.Collection;
@@ -35,8 +34,8 @@ public class MapRepository implements Repository {
 
     private void init() {
         // Los map necesarios para cada modelo.
-        userMap = Map2.empty();
-        taskMap = Map2.empty();
+        userMap = new HashMap<>();
+        taskMap = new HashMap<>();
 
         // Create task
         Task t1= Task.of("Quiero vacaciones", Status.DRAFT, Date.valueOf("2020-01-01"), Date.valueOf("2020-01-31"), "Vacaciones", 5, Difficulty.HARDCORE);

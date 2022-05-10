@@ -1,6 +1,5 @@
 package aiss.model.repository;
 
-import aiss.model.Model;
 import aiss.model.Task;
 import aiss.model.User;
 
