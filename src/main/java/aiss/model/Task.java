@@ -9,6 +9,7 @@ public class Task {
 
     // Por favor en private, no en public (para algo están los setters, constructores y métodos de factoría).
     private String idTask;
+    private String title;
     private String description;
     private Status status;
     private Date finishedDate;
@@ -19,8 +20,9 @@ public class Task {
 
     // Por mí se quita este constructor, pero viene en las prácticas.
     // Además, sugiero que se utilicen constructores en condiciones y métodos de factoría.
-    private Task(String idTask, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
+    private Task(String idTask, String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = idTask;
+        this.title = title;
         this.description = description;
         this.status = status;
         this.finishedDate = finishedDate;
@@ -31,12 +33,12 @@ public class Task {
     }
 
     // Método de factoría para crear un objeto Task.
-    public static Task of(String idTask, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
-        return new Task(idTask, description, status, finishedDate, startedDate, annotation, priority, difficulty);
+    public static Task of(String idTask, String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
+        return new Task(idTask, title, description, status, finishedDate, startedDate, annotation, priority, difficulty);
     }
 
-    public static Task of(String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
-        return new Task(null, description, status, finishedDate, startedDate, annotation, priority, difficulty);
+    public static Task of(String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
+        return new Task(null, title, description, status, finishedDate, startedDate, annotation, priority, difficulty);
     }
 
     // Crear un constructor en condiciones y un método de factoría, please.
@@ -51,6 +53,14 @@ public class Task {
     }
 
     // Poner getters y setters
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
     public String getDescription() {
         return description;
     }
