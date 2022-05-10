@@ -21,7 +21,7 @@ public interface Repository {
     void addUser(User user);
     void updateUser(User user);
     void deleteUser(String idUser);
-    void getAllTask(String idUser);
+    Collection<Task> getAllTask(String idUser);
     void addTask(String idUser, String idTask);
     void deleteTask(String idUser, String idTask);
 }

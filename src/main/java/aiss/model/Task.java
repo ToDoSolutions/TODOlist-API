@@ -8,6 +8,7 @@ public class Task {
 
 
     // Por favor en private, no en public (para algo están los setters, constructores y métodos de factoría).
+    private static String attributes = "idTask,title,description,status,finishedDate,startedDate,finishedDate,annotation,priority,difficulty";
     private String idTask;
     private String title;
     private String description;
@@ -51,16 +52,21 @@ public class Task {
     public String getIdTask() {
         return idTask;
     }
+    
+    // Métodos derivados
+    public Long getDuration() {
+        return  (finishedDate.getTime() - startedDate.getTime()) / (1000 * 60 * 60 * 24);
+    }
 
     // Poner getters y setters
     public String getTitle() {
         return title;
     }
-    
+
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public String getDescription() {
         return description;
     }
@@ -115,6 +121,18 @@ public class Task {
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public void setStartedDate(Date startedDate) {
+        this.startedDate = startedDate;
+    }
+
+    public Date getStartedDate() {
+        return startedDate;
+    }
+
+    public static String getAttributes() {
+        return attributes;
     }
 
     @Override

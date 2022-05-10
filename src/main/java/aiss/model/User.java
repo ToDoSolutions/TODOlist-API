@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 
 public class User {
 
+    private final static String attributes = "isUser,id,name,surname,email,avatar,bio,location,taskCompleted,tasks";
+
     private String idUser;
     private String name;
     private String surname;
@@ -27,6 +29,7 @@ public class User {
         this.taskCompleted = 0;
         this.tasks = tasks;
     }
+
     public static User of(String name, String surname, String email, String avatar, String bio, String location) {
         return new User(null, name, surname, email, avatar, bio, location, new ArrayList<>());
     }
@@ -99,7 +102,7 @@ public class User {
         return tasks;
     }
 
-    private Task getTask(String id) {
+    public Task getTask(String id) {
         if (tasks == null)
             return null;
 
@@ -114,7 +117,7 @@ public class User {
     }
 
 
-    public void setTask(List<Task> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -135,6 +138,10 @@ public class User {
             tasks.remove(t);
     }
 
+    public static String getAttributes() {
+        return attributes;
+    }
+
     @Override
     public String toString() {
         return "User{" + "idUser=" + idUser + ", name=" + name + ", surname=" + surname + ", email=" + email + ", avatar=" + avatar + ", bio=" + bio + ", location=" + location + ", taskCompleted=" + taskCompleted + ", tasks=" + tasks + '}';
@@ -143,7 +150,7 @@ public class User {
     public Map<String, String> getFields(String fields) {
         List<String> attributes = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
         Map<String, String> map = new HashMap<>();
-        for (String attribute: attributes) {
+        for (String attribute : attributes) {
             if (Objects.equals(attribute, "id"))
                 map.put(attribute, getIdUser());
             else if (Objects.equals(attribute, "name"))
