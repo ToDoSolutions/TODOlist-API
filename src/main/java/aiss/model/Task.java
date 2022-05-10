@@ -1,9 +1,6 @@
 package aiss.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,33 +11,15 @@ public class Task {
     private String idTask;
     private String description;
     private Status status;
-    private enum Status {
-        DRAFT,
-        IN_PROGRESS,
-        IN_REVISION,
-        DONE,
-        CANCELED
-    }
-    private String finishedDate;
-    private String startedDate;
-
+    private Date finishedDate;
+    private Date startedDate;
     private String annotation;
     private Integer priority;
     private Difficulty difficulty;
-    private enum Difficulty {
-        SLEEP,
-        EASY,
-        MEDIUM,
-        HARD,
-        HARDCORE,
-        I_WANT_TO_DIE
-    }
-
-
 
     // Por mí se quita este constructor, pero viene en las prácticas.
     // Además, sugiero que se utilicen constructores en condiciones y métodos de factoría.
-    private Task(String idTask, String description, Status status, String finishedDate, String startedDate, String annotation, Integer priority, Difficulty difficulty) {
+    private Task(String idTask, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = idTask;
         this.description = description;
         this.status = status;
@@ -52,11 +31,11 @@ public class Task {
     }
 
     // Método de factoría para crear un objeto Task.
-    public static Task of(String idTask, String description, Status status, String finishedDate, String startedDate, String annotation, Integer priority, Difficulty difficulty) {
+    public static Task of(String idTask, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         return new Task(idTask, description, status, finishedDate, startedDate, annotation, priority, difficulty);
     }
 
-    public static Task of(String description, Status status, String finishedDate, String startedDate, String annotation, Integer priority, Difficulty difficulty) {
+    public static Task of(String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         return new Task(null, description, status, finishedDate, startedDate, annotation, priority, difficulty);
     }
 
@@ -88,19 +67,19 @@ public class Task {
         this.status = status;
     }
 
-    public String getFinishedDate() {
+    public Date getFinishedDate() {
         return finishedDate;
     }
 
-    public void setFinishedDate(String finishedDate) {
+    public void setFinishedDate(Date finishedDate) {
         this.finishedDate = finishedDate;
     }
 
-    public String getReleaseDate() {
+    public Date getReleaseDate() {
         return startedDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.startedDate = releaseDate;
     }
 
@@ -144,9 +123,9 @@ public class Task {
             else if (Objects.equals(attribute, "status"))
                 map.put(attribute, getStatus().toString());
             else if (Objects.equals(attribute, "finishedDate"))
-                map.put(attribute, getFinishedDate());
+                map.put(attribute, getFinishedDate().toString());
             else if (Objects.equals(attribute, "startedDate"))
-                map.put(attribute, getReleaseDate());
+                map.put(attribute, getReleaseDate().toString());
             else if (Objects.equals(attribute, "annotation"))
                 map.put(attribute, getAnnotation());
             else if (Objects.equals(attribute, "priority"))

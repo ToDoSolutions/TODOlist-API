@@ -15,13 +15,13 @@ public class User {
     private String name;
     private String surname;
     private String email;
-    private String avatar;
+    private String avatar; // se podrá hacer con dalle.
     private String bio;
     private String location;
     private Integer taskCompleted;
     private List<Task> tasks;
 
-    public User(String idUser, String name, String surname, String email, String avatar, String bio, String location, Integer taskCompleted, List<Task> tasks) {
+    public User(String idUser, String name, String surname, String email, String avatar, String bio, String location, List<Task> tasks) {
         this.idUser = idUser;
         this.name = name;
         this.surname = surname;
@@ -29,24 +29,11 @@ public class User {
         this.avatar = avatar;
         this.bio = bio;
         this.location = location;
-        this.taskCompleted = taskCompleted;
+        this.taskCompleted = 0;
         this.tasks = tasks;
     }
-
-    public User of(String idUser, String name, String surname, String email, String avatar, String bio, String location, Integer taskCompleted) {
-        return new User(idUser, name, surname, email, avatar, bio, location, taskCompleted, List2.empty());
-    }
-
-    public User of(String idUser, String name, String surname, String email, String avatar, String bio, String location, Integer taskCompleted, List<Task> tasks) {
-        return new User(idUser, name, surname, email, avatar, bio, location, taskCompleted, tasks);
-    }
-
-    public User of(String name, String surname, String email, String avatar, String bio, String location, Integer taskCompleted) {
-        return new User(null, name, surname, email, avatar, bio, location, taskCompleted, List2.empty());
-    }
-
-    public User of(String name, String surname, String email, String avatar, String bio, String location, Integer taskCompleted, List<Task> tasks) {
-        return new User(null, name, surname, email, avatar, bio, location, taskCompleted, tasks);
+    public static User of(String name, String surname, String email, String avatar, String bio, String location) {
+        return new User(null, name, surname, email, avatar, bio, location, List2.empty());
     }
 
     public String getIdUser() {
