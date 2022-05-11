@@ -11,7 +11,6 @@ public class User {
 
     // Atributos de la clase.
     private String idUser, name, surname, email, avatar, bio, location;
-    private Integer taskCompleted;
     private List<Task> tasks;
 
     // Constructor, crear nueva clase para disminuir parámetros (por ejemplo persona que contenga name, surname, bio y location).
@@ -23,7 +22,6 @@ public class User {
         this.avatar = avatar;
         this.bio = bio;
         this.location = location;
-        this.taskCompleted = 0;
         this.tasks = tasks;
     }
 
@@ -32,6 +30,11 @@ public class User {
 
     public static User of(String name, String surname, String email, String avatar, String bio, String location) {
         return new User(name, surname, email, avatar, bio, location, new ArrayList<>());
+    }
+    
+    // Propiedades derivadas.
+    public Long getTaskCompleted() {
+        return getTasks().stream().filter(task -> task.getStatus().equals(Status.DONE)).count();
     }
 
     // Getter y setters.
@@ -91,14 +94,6 @@ public class User {
         this.location = location;
     }
 
-    public Integer getTaskCompleted() {
-        return taskCompleted;
-    }
-
-    public void setTaskCompleted(Integer taskCompleted) {
-        this.taskCompleted = taskCompleted;
-    }
-
     public List<Task> getTasks() {
         return tasks;
     }
@@ -139,7 +134,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "idUser=" + idUser + ", name=" + name + ", surname=" + surname + ", email=" + email + ", avatar=" + avatar + ", bio=" + bio + ", location=" + location + ", taskCompleted=" + taskCompleted + ", tasks=" + tasks + '}';
+        return "User{" + "idUser=" + idUser + ", name=" + name + ", surname=" + surname + ", email=" + email + ", avatar=" + avatar + ", bio=" + bio + ", location=" + location + ", taskCompleted=" + getTaskCompleted() + ", tasks=" + tasks + '}';
     }
 
     public Map<String, Object> getFields(String fieldsUser, String fieldsTask) {

@@ -157,9 +157,6 @@ public class UserResource {
         // Update location.
         if (user.getLocation() != null)
             oldUser.setLocation(user.getLocation());
-        // Update tasks completed.
-        if (user.getTaskCompleted() != null)
-            oldUser.setTaskCompleted(user.getTaskCompleted());
     }
 
     @DELETE
@@ -170,7 +167,7 @@ public class UserResource {
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The user with id=" + id + " was not found.");
-            // Si no Elimina el modelo de la base de datos chapucera.
+        // Si no Elimina el modelo de la base de datos chapucera.
         else
             repository.deleteUser(id);
 
