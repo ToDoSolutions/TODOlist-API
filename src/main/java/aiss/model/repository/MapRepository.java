@@ -12,8 +12,6 @@ import java.util.Map;
 
 public class MapRepository implements Repository {
 
-    private String wordTasks = "T";      // Para el identificador de Tareas.
-    private String wordUsers = "U";      // Para el identificador de Usuarios.
     private int indexTask = 0;
     private int indexUser = 0;
 
@@ -92,6 +90,8 @@ public class MapRepository implements Repository {
 
     @Override
     public void addTask(Task task) {
+        // Para el identificador de Tareas.
+        String wordTasks = "T";
         String id = wordTasks + indexTask++;
         task.setIdTask(id);
         taskMap.put(id, task);
@@ -100,6 +100,7 @@ public class MapRepository implements Repository {
     @Override
     public void updateTask(Task t) {
         Task task = taskMap.get(t.getIdTask());
+        // taskMap.put(t.getIdTask() , t);
         task.setTitle(t.getTitle());
         task.setDescription(t.getDescription());
         task.setStatus(t.getStatus());
@@ -134,6 +135,8 @@ public class MapRepository implements Repository {
 
     @Override
     public void addUser(User user) {
+        // Para el identificador de Usuarios.
+        String wordUsers = "U";
         String id = wordUsers + indexUser++;
         user.setIdUser(id);
         userMap.put(id, user);

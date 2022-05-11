@@ -7,20 +7,16 @@ import java.util.stream.Stream;
 public class Task {
 
 
-    // Por favor en private, no en public (para algo están los setters, constructores y métodos de factoría).
-    private static String attributes = "idTask,title,description,status,finishedDate,startedDate,finishedDate,annotation,priority,difficulty";
-    private String idTask;
-    private String title;
-    private String description;
+    // Para el getFields.
+    public static final String ALL_ATTRIBUTES = "idTask,title,description,status,finishedDate,startedDate,finishedDate,annotation,priority,difficulty";
+    // Atributos de la clase.
+    private String idTask, title, description, annotation;
     private Status status;
-    private Date finishedDate;
-    private Date startedDate;
-    private String annotation;
+    private Date finishedDate, startedDate;
     private Integer priority;
     private Difficulty difficulty;
 
-    // Por mí se quita este constructor, pero viene en las prácticas.
-    // Además, sugiero que se utilicen constructores en condiciones y métodos de factoría.
+    // Constructor, crear nueva clase para disminuir parámetros (ni idea).
     private Task(String idTask, String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = idTask;
         this.title = title;
@@ -34,17 +30,16 @@ public class Task {
     }
 
     // Método de factoría para crear un objeto Task.
-    public static Task of(String idTask, String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
-        return new Task(idTask, title, description, status, finishedDate, startedDate, annotation, priority, difficulty);
-    }
-
     public static Task of(String title, String description, Status status, Date finishedDate, Date startedDate, String annotation, Integer priority, Difficulty difficulty) {
         return new Task(null, title, description, status, finishedDate, startedDate, annotation, priority, difficulty);
     }
 
-    // Crear un constructor en condiciones y un método de factoría, please.
+    // Métodos derivados
+    public Long getDuration() {
+        return (finishedDate.getTime() - startedDate.getTime()) / (1000 * 60 * 60 * 24);
+    }
 
-    // Por desgracia es necesario.
+    // Getters y setters
     public void setIdTask(String idTask) {
         this.idTask = idTask;
     }
@@ -52,13 +47,7 @@ public class Task {
     public String getIdTask() {
         return idTask;
     }
-    
-    // Métodos derivados
-    public Long getDuration() {
-        return  (finishedDate.getTime() - startedDate.getTime()) / (1000 * 60 * 60 * 24);
-    }
 
-    // Poner getters y setters
     public String getTitle() {
         return title;
     }
@@ -129,10 +118,6 @@ public class Task {
 
     public Date getStartedDate() {
         return startedDate;
-    }
-
-    public static String getAttributes() {
-        return attributes;
     }
 
     @Override

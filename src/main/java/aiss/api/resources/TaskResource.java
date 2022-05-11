@@ -33,7 +33,7 @@ public class TaskResource {
 
     @GET
     @Produces("application/json")
-    public List<Map<String, Object>> getAllTasks(@QueryParam("q") String q, @QueryParam("order") String order,
+    public List<Map<String, Object>> getAllTasks(@QueryParam("order") String order,
                                                  @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                                  @QueryParam("fields") String fields) {
         {
@@ -42,6 +42,14 @@ public class TaskResource {
             int end = limit == null ? tasks.size() : start + limit; // Donde va a terminar.
             for (int i = start; i < end; i++) {
             	// Comprobamos que contiene la cadena q y el resto de restricciones.
+                // Hacer más compleja esta restricción, pedir para un cierto:
+                // - title.
+                // - status.
+                // - releaseDate (mayor, menor  o igual).
+                // - finishedDate.
+                // - priority.
+                // - difficulty
+                // - duration (mayor, menor o igual).
             	if (tasks.get(i) != null)
             		result.add(tasks.get(i));
                 }
@@ -49,7 +57,7 @@ public class TaskResource {
                 orderResult(result, order);
 
             // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-            return result.stream().map(model -> model.getFields((fields == null) ? Task.getAttributes() : fields)).collect(Collectors.toList());
+            return result.stream().map(model -> model.getFields((fields == null) ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
         }
     }
 
@@ -103,7 +111,7 @@ public class TaskResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
-        isModelCorrect(task); // Comprueba contiene algún tipo de error.
+        isTaskCorrect(task); // Comprueba contiene algún tipo de error.
 
         repository.addTask(task); // Añadimos el modelo a la base de datos chapucera.
 
@@ -115,10 +123,9 @@ public class TaskResource {
         return resp.build();
     }
 
-    private void isModelCorrect(Task task) {
-        if (task.getTitle() == null || "".equals(task.getTitle())) {
+    private void isTaskCorrect(Task task) {
+        if (task.getTitle() == null || "".equals(task.getTitle()))
             throw new BadRequestException("The title of the task must not be null");
-        }
     }
 
     @PUT
@@ -130,24 +137,30 @@ public class TaskResource {
         if (oldTask == null)
             throw new NotFoundException("The task with id=" + task.getIdTask() + " was not found");
 
-        updateModel(task, oldTask); // Actualiza los atributos del modelo.
+        auxUpdateTask(task, oldTask); // Actualiza los atributos del modelo.
 
         repository.updateTask(task);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos chapucera.
 
         return Response.noContent().build();
     }
 
-    private void updateModel(Task task, Task oldTask) {
-        if (task.getTitle() != null) {
+    private void auxUpdateTask(Task task, Task oldTask) {
+        if (task.getTitle() != null)
             oldTask.setTitle(task.getTitle());
+        if (task.getDescription() != null)
             oldTask.setDescription(task.getDescription());
+        if (task.getStatus() != null)
             oldTask.setStatus(task.getStatus());
+        if (task.getFinishedDate() != null)
             oldTask.setFinishedDate(task.getFinishedDate());
+        if (task.getReleaseDate() != null)
             oldTask.setReleaseDate(task.getReleaseDate());
+        if (task.getAnnotation() != null)
             oldTask.setAnnotation(task.getAnnotation());
+        if (task.getPriority() != null)
             oldTask.setPriority(task.getPriority());
+        if (task.getDifficulty() != null)
             oldTask.setDifficulty(task.getDifficulty());
-        }
     }
 
     @DELETE
@@ -158,7 +171,7 @@ public class TaskResource {
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The task with id=" + taskId + " was not found");
-            // Si no Elimina el modelo de la base de datos chapucera.
+        // Si no Elimina el modelo de la base de datos chapucera.
         else
             repository.deleteTask(taskId);
 

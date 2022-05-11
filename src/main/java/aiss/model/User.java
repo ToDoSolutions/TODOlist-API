@@ -6,19 +6,16 @@ import java.util.stream.Stream;
 
 public class User {
 
-    private final static String attributes = "isUser,id,name,surname,email,avatar,bio,location,taskCompleted,tasks";
+    // Para el getFields.
+    public static final String ALL_ATTRIBUTES = "isUser,id,name,surname,email,avatar,bio,location,taskCompleted,tasks";
 
-    private String idUser;
-    private String name;
-    private String surname;
-    private String email;
-    private String avatar; // se podrá hacer con dalle.
-    private String bio;
-    private String location;
+    // Atributos de la clase.
+    private String idUser, name, surname, email, avatar, bio, location;
     private Integer taskCompleted;
     private List<Task> tasks;
 
-    public User(String idUser, String name, String surname, String email, String avatar, String bio, String location, List<Task> tasks) {
+    // Constructor, crear nueva clase para disminuir parámetros (por ejemplo persona que contenga name, surname, bio y location).
+    private User(String idUser, String name, String surname, String email, String avatar, String bio, String location, List<Task> tasks) {
         this.idUser = idUser;
         this.name = name;
         this.surname = surname;
@@ -34,6 +31,7 @@ public class User {
         return new User(null, name, surname, email, avatar, bio, location, new ArrayList<>());
     }
 
+    // Getter y setters.
     public String getIdUser() {
         return idUser;
     }
@@ -105,7 +103,6 @@ public class User {
     public Task getTask(String id) {
         if (tasks == null)
             return null;
-
         Task task = null;
         for (Task t : tasks) {
             if (t.getIdTask().equals(id)) {
@@ -138,19 +135,15 @@ public class User {
             tasks.remove(t);
     }
 
-    public static String getAttributes() {
-        return attributes;
-    }
-
     @Override
     public String toString() {
         return "User{" + "idUser=" + idUser + ", name=" + name + ", surname=" + surname + ", email=" + email + ", avatar=" + avatar + ", bio=" + bio + ", location=" + location + ", taskCompleted=" + taskCompleted + ", tasks=" + tasks + '}';
     }
 
     public Map<String, Object> getFields(String fields) {
-        List<String> attributes = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
+        List<String> attributesShown = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
-        for (String attribute : attributes) {
+        for (String attribute : attributesShown) {
             if (Objects.equals(attribute, "id"))
                 map.put(attribute, getIdUser());
             else if (Objects.equals(attribute, "name"))

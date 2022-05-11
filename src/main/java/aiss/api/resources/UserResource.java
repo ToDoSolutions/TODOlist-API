@@ -48,7 +48,7 @@ public class UserResource {
 
     @GET
     @Produces("application/json")
-    public List<Map<String, Object>> getAll(@QueryParam("q") String q, @QueryParam("order") String order,
+    public List<Map<String, Object>> getAll(@QueryParam("order") String order,
                                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                             @QueryParam("fields") String fields) {
 
@@ -58,6 +58,12 @@ public class UserResource {
 
         for (int i = start; i < end; i++) {
             // Comprobamos que contiene la cadena q y el resto de restricciones.
+            // Hacer más compleja esta restricción, pedir para un cierto:
+            // - name
+            // - email (opcional)
+            // - surname
+            // - location
+            // - taskComplete (mayor, menor o igual)
             if (users.get(i) != null)
                 result.add(users.get(i));
         }
@@ -66,7 +72,7 @@ public class UserResource {
             orderResult(result, order);
 
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-        return result.stream().map(user -> user.getFields((fields == null) ? User.getAttributes() : fields)).collect(Collectors.toList());
+        return result.stream().map(user -> user.getFields((fields == null) ? User.ALL_ATTRIBUTES: fields)).collect(Collectors.toList());
 
     }
 
@@ -101,7 +107,7 @@ public class UserResource {
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)
             throw new NotFoundException("The user with id=" + id + " was not found.");
-        return user.getFields((fields == null) ? User.getAttributes() : fields);
+        return user.getFields((fields == null) ? User.ALL_ATTRIBUTES : fields);
     }
 
     @POST
