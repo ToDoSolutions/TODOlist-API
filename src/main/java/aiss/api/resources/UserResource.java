@@ -34,7 +34,7 @@ import javassist.NotFoundException;
 @Path("/users")
 public class UserResource {
 
-    protected static UserResource _instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+    protected static UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
     Repository repository; // Para poder trabajar con los datos
 
     private UserResource() {
@@ -43,12 +43,12 @@ public class UserResource {
 
     public static UserResource getInstance() {
         // Creamos una instancia si no existe.
-        return (_instance == null) ? new UserResource() : _instance;
+        return (instance == null) ? new UserResource() : instance;
     }
 
     @GET
     @Produces("application/json")
-    public List<Map<String, String>> getAll(@QueryParam("q") String q, @QueryParam("order") String order,
+    public List<Map<String, Object>> getAll(@QueryParam("q") String q, @QueryParam("order") String order,
                                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                             @QueryParam("fields") String fields) {
 
@@ -96,7 +96,7 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Map<String, String> getUser(@PathParam("id") String id, @QueryParam("fields") String fields) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Map<String, Object> getUser(@PathParam("id") String id, @QueryParam("fields") String fields) throws NotFoundException /* No debería de ser necesario este throw */ {
         User user = repository.getUser(id);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)

@@ -147,9 +147,9 @@ public class User {
         return "User{" + "idUser=" + idUser + ", name=" + name + ", surname=" + surname + ", email=" + email + ", avatar=" + avatar + ", bio=" + bio + ", location=" + location + ", taskCompleted=" + taskCompleted + ", tasks=" + tasks + '}';
     }
 
-    public Map<String, String> getFields(String fields) {
+    public Map<String, Object> getFields(String fields) {
         List<String> attributes = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         for (String attribute : attributes) {
             if (Objects.equals(attribute, "id"))
                 map.put(attribute, getIdUser());
@@ -166,9 +166,9 @@ public class User {
             else if (Objects.equals(attribute, "location"))
                 map.put(attribute, getLocation());
             else if (Objects.equals(attribute, "taskCompleted"))
-                map.put(attribute, getTaskCompleted().toString());
+                map.put(attribute, getTaskCompleted());
             else if (Objects.equals(attribute, "tasks"))
-                map.put(attribute, getTasks().toString());
+                map.put(attribute, getTasks());
         }
         return map;
     }

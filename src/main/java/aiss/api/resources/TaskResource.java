@@ -33,18 +33,17 @@ public class TaskResource {
 
     @GET
     @Produces("application/json")
-    public List<Map<String, String>> getAllTasks(@QueryParam("q") String q, @QueryParam("order") String order,
+    public List<Map<String, Object>> getAllTasks(@QueryParam("q") String q, @QueryParam("order") String order,
                                                  @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                                  @QueryParam("fields") String fields) {
         {
             List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
             int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
             int end = limit == null ? tasks.size() : start + limit; // Donde va a terminar.
-            if (q != null)
-                for (int i = start; i < end; i++) {
-                    // Comprobamos que contiene la cadena q y el resto de restricciones.
-                    if (tasks.get(i) != null)
-                        result.add(tasks.get(i));
+            for (int i = start; i < end; i++) {
+            	// Comprobamos que contiene la cadena q y el resto de restricciones.
+            	if (tasks.get(i) != null)
+            		result.add(tasks.get(i));
                 }
             if (order != null)
                 orderResult(result, order);

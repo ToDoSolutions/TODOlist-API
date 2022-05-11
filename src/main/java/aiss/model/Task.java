@@ -140,26 +140,26 @@ public class Task {
         return "Task{" + "idTask=" + idTask + ", description=" + description + ", status=" + status + ", finishedDate=" + finishedDate + ", startedDate=" + startedDate + ", annotation=" + annotation + ", priority=" + priority + ", difficulty=" + difficulty + '}';
     }
 
-    public Map<String, String> getFields(String fields) {
+    public Map<String, Object> getFields(String fields) {
         List<String> attributes = Stream.of(fields.split(",")).map(String::trim).collect(Collectors.toList());
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         for (String attribute : attributes) {
             if (Objects.equals(attribute, "id"))
                 map.put(attribute, getIdTask());
             else if (Objects.equals(attribute, "description"))
                 map.put(attribute, getDescription());
             else if (Objects.equals(attribute, "status"))
-                map.put(attribute, getStatus().toString());
+                map.put(attribute, getStatus());
             else if (Objects.equals(attribute, "finishedDate"))
-                map.put(attribute, getFinishedDate().toString());
+                map.put(attribute, getFinishedDate());
             else if (Objects.equals(attribute, "startedDate"))
-                map.put(attribute, getReleaseDate().toString());
+                map.put(attribute, getReleaseDate());
             else if (Objects.equals(attribute, "annotation"))
                 map.put(attribute, getAnnotation());
             else if (Objects.equals(attribute, "priority"))
-                map.put(attribute, getPriority().toString());
+                map.put(attribute, getPriority());
             else if (Objects.equals(attribute, "difficulty"))
-                map.put(attribute, getDifficulty().toString());
+                map.put(attribute, getDifficulty());
         }
         return map;
     }

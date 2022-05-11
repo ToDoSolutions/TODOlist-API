@@ -16,7 +16,7 @@
 		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>TODOlistApplication</param-value>
+			<param-value>aiss.api.TODOlistApplication</param-value>
 		</init-param>
 	</servlet>		
 	
@@ -31,5 +31,4 @@
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	 
 </web-app>
