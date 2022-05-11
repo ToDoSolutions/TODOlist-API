@@ -1,5 +1,8 @@
 package aiss.api.resources;
 
+import aiss.Tool;
+import aiss.model.Difficulty;
+import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
@@ -38,29 +41,34 @@ public class TaskResource {
     @Produces("application/json")
     public List<Map<String, Object>> getAllTasks(@QueryParam("order") String order,
                                                  @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                                 @QueryParam("fields") String fields) {
-        {
-            List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
-            int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
-            int end = limit == null ? tasks.size() : start + limit; // Donde va a terminar.
-            for (int i = start; i < end; i++) {
-                // Hacer más compleja esta restricción, pedir para un cierto:
-                // - title.
-                // - status.
-                // - releaseDate (mayor, menor  o igual).
-                // - finishedDate.
-                // - priority.
-                // - difficulty
-                // - duration (mayor, menor o igual).
-                if (tasks.get(i) != null)
-                    result.add(tasks.get(i));
-            }
-            if (order != null)
-                orderResult(result, order);
-
-            // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-            return result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
+                                                 @QueryParam("fields") String fields, @QueryParam("tittle") String tittle,
+                                                 @QueryParam("status") String status, @QueryParam("releaseDAte") String releaseDate,
+                                                 @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority,
+                                                 @QueryParam("description") String difficulty, @QueryParam("duration") String duration) {
+        List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
+        if (order != null)
+            orderResult(tasks, order);
+        Status auxStatus = status != null ? Status.parse(status) : null;
+        Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
+        int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
+        int end = limit == null || limit > tasks.size() ? tasks.size() : start + limit; // Donde va a terminar.
+        for (int i = start; i < end; i++) {
+            Task task = tasks.get(i);
+            if (tasks.get(i) != null &&
+                    (tittle == null || task.getTitle().contains(tittle)) &&
+                    (auxStatus == null || task.getStatus() == auxStatus) &&
+                    (releaseDate == null || Tool.isGEL(task.getReleaseDate(), releaseDate)) &&
+                    (finishedDate == null || Tool.isGEL(task.getFinishedDate(), finishedDate)) &&
+                    (priority == null || Tool.isGEL((long) task.getPriority(), priority)) &&
+                    (auxDifficulty == null || task.getDifficulty() == auxDifficulty) &&
+                    (duration == null || Tool.isGEL(task.getDuration(), duration)))
+                result.add(tasks.get(i));
         }
+
+
+        // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
+        return result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
+
     }
 
     private void orderResult(List<Task> result, String order) {
@@ -97,14 +105,14 @@ public class TaskResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{taskId}")
     @Produces("application/json")
-    public Task getTask(@PathParam("id") String id) throws NotFoundException {
-        Task t = repository.getTask(id);
+    public Task getTask(@PathParam("taskId") String taskId) throws NotFoundException {
+        Task t = repository.getTask(taskId);
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (t == null)
-            throw new NotFoundException("The task with id=" + id + " was not found");
+            throw new NotFoundException("The task with id=" + taskId + " was not found");
 
         return t;
     }
@@ -166,8 +174,8 @@ public class TaskResource {
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response deleteTask(@PathParam("id") String taskId) throws NotFoundException {
+    @Path("/{taskId}")
+    public Response deleteTask(@PathParam("taskId") String taskId) throws NotFoundException {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.

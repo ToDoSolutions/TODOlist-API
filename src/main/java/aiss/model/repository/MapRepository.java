@@ -41,7 +41,7 @@ public class MapRepository implements Repository {
         Task t4 = Task.of("VIVA ER BETIS", "Ver el betis", Status.DONE, Date.valueOf("2022-08-07"), Date.valueOf("2022-08-08"), "err Betiss", 5, Difficulty.EASY);
         Task t5 = Task.of("Entrenador Pokemon", "Completar la pokedex para el profesor Oak", Status.IN_REVISION, Date.valueOf("2021-05-17"), Date.valueOf("2022-11-30"), "Hazte con todos, los 892...", 3, Difficulty.I_WANT_TO_DIE);
         Task t6 = Task.of("Comprar mando nuevo", "Nuevo mando para jugar elden ring", Status.DRAFT, Date.valueOf("2022-01-19"), Date.valueOf("2022-06-06"), "Comprar uno a prueba de enfados", 4, Difficulty.MEDIUM);
-        Task t7 = Task.of("¿Aprender Inglés? Na", "El inglés se enseña mal y punto", Status.CANCELED, Date.valueOf("2020-04-22"), Date.valueOf("2023-05-26"), "Como aprendo el inglés si ni se el español", 0, Difficulty.HARDCORE);
+        Task t7 = Task.of("¿Aprender Inglés? Na", "El inglés se enseña mal y punto", Status.CANCELLED, Date.valueOf("2020-04-22"), Date.valueOf("2023-05-26"), "Como aprendo el inglés si ni se el español", 0, Difficulty.HARDCORE);
 
         addTasks(t1, t2, t3, t4, t5, t6, t7);
 

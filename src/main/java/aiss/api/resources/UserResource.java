@@ -1,6 +1,7 @@
 package aiss.api.resources;
 
 
+import aiss.Tool;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
@@ -15,10 +16,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Path("/users")
@@ -40,29 +38,30 @@ public class UserResource {
     @Produces("application/json")
     public List<Map<String, Object>> getAll(@QueryParam("order") String order,
                                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
+                                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
+                                            @QueryParam("name") String name, @QueryParam("surname") String surname, @QueryParam("email") String email,
+                                            @QueryParam("location") String location, @QueryParam("taskCompleted") String taskCompleted) {
 
         List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
+        if (order != null)
+            orderResult(users, order);
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
-        int end = limit == null ? users.size() : start + limit; // Donde va a terminar.
+        int end = limit == null || limit > users.size() ? users.size() : start + limit; // Donde va a terminar.
+
 
         for (int i = start; i < end; i++) {
-            // Hacer más compleja esta restricción, pedir para un cierto:
-            // - name
-            // - email (opcional)
-            // - surname
-            // - location
-            // - taskComplete (mayor, menor o igual)
-            if (users.get(i) != null)
+            User user = users.get(i);
+            if (user != null &&
+                    (name == null || user.getName().equals(name)) &&
+                    (surname == null || user.getSurname().equals(surname)) &&
+                    (email == null || user.getEmail().equals(email)) &&
+                    (location == null || user.getLocation().equals(location)) &&
+                    (taskCompleted == null || Tool.isGEL(user.getTaskCompleted(), taskCompleted)))
                 result.add(users.get(i));
         }
 
-        if (order != null)
-            orderResult(result, order);
-
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
         return result.stream().map(user -> user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).collect(Collectors.toList());
-
     }
 
     private void orderResult(List<User> result, String order) {
@@ -89,13 +88,13 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{userId}")
     @Produces("application/json")
-    public Map<String, Object> getUser(@PathParam("id") String id, @QueryParam("fields") String fields, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
-        User user = repository.getUser(id);
+    public Map<String, Object> getUser(@PathParam("userId") String userId, @QueryParam("fields") String fields, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
+        User user = repository.getUser(userId);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)
-            throw new NotFoundException("The user with id=" + id + " was not found.");
+            throw new NotFoundException("The user with id=" + userId + " was not found.");
         return user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask);
     }
 
@@ -160,16 +159,16 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response deleteUser(@PathParam("id") String id) throws NotFoundException {
-        User toBeRemoved = repository.getUser(id); // Obtiene el modelo a eliminar de la base de datos chapucera.
+    @Path("/{userId}")
+    public Response deleteUser(@PathParam("userId") String userId) throws NotFoundException {
+        User toBeRemoved = repository.getUser(userId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            throw new NotFoundException("The user with id=" + id + " was not found.");
+            throw new NotFoundException("The user with id=" + userId + " was not found.");
         // Si no Elimina el modelo de la base de datos chapucera.
         else
-            repository.deleteUser(id);
+            repository.deleteUser(userId);
 
         return Response.noContent().build();
     }
