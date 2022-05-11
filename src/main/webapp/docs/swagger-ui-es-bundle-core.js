@@ -997,7 +997,7 @@ var ct = {
                                                     o.newThrownErr(s)
                                                 }
                                             } catch (e) {
-                                                return
+
                                             }
                                         }());
                                         s.updateLoadingStatus("success"), s.updateSpec(t.text), u.url() !== e && s.updateUrl(e)
@@ -9573,7 +9573,7 @@ var pt = {};
         try {
             return je(e, t, {selectedServer: a})
         } catch (e) {
-            return
+
         }
     }
 

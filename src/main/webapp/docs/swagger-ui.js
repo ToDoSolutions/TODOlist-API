@@ -916,7 +916,7 @@
                                                             r.newThrownErr(l)
                                                         }
                                                     } catch (e) {
-                                                        return
+
                                                     }
                                                 }());
                                                 l.updateLoadingStatus("success"), l.updateSpec(t.text), o.url() !== e && l.updateUrl(e)
@@ -6281,7 +6281,7 @@
                 try {
                     return ut(e, t, {selectedServer: a})
                 } catch (e) {
-                    return
+
                 }
             }
 

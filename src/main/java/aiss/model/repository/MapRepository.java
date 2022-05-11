@@ -12,14 +12,12 @@ import java.util.Map;
 
 public class MapRepository implements Repository {
 
-    private int indexTask = 0;
-    private int indexUser = 0;
-
+    private static MapRepository instance = null;
     // Añadir los map para cada modelo.
     Map<String, Task> taskMap; // Contiene los datos de las Tasks.
     Map<String, User> userMap; // Contiene los datos de los Users.
-
-    private static MapRepository instance = null;
+    private int indexTask = 0;
+    private int indexUser = 0;
 
     public static Repository getInstance() {
         // Si es null, entendemos que es la primera vez que se ejecuta este método.

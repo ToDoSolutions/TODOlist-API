@@ -7690,7 +7690,7 @@
                 t.exports = function () {
                     try {
                         if (!Object.assign) return !1;
-                        var t = new String("abc");
+                        var t = String("abc");
                         if (t[5] = "de", "5" === Object.getOwnPropertyNames(t)[0]) return !1;
                         for (var e = {}, r = 0; r < 10; r++) e["_" + String.fromCharCode(r)] = r;
                         if ("0123456789" !== Object.getOwnPropertyNames(e).map((function (t) {
@@ -7815,6 +7815,25 @@
                         this.tokens = n(t)
                     }
 
+                    get defaultRange() {
+                        return this._range = this._range || new i(32, 126)
+                    }
+
+                    set defaultRange(t) {
+                        this._range = t
+                    }
+
+                    static randexp(e, r) {
+                        var n;
+                        return "string" == typeof e && (e = new RegExp(e, r)), void 0 === e._randexp ? (n = new t(e, r), e._randexp = n) : (n = e._randexp)._setDefaults(e), n.gen()
+                    }
+
+                    static sugar() {
+                        RegExp.prototype.gen = function () {
+                            return t.randexp(this)
+                        }
+                    }
+
                     _setDefaults(e) {
                         this.max = null != e.max ? e.max : null != t.prototype.max ? t.prototype.max : 100, this.defaultRange = e.defaultRange ? e.defaultRange : this.defaultRange.clone(), e.randInt && (this.randInt = e.randInt)
                     }
@@ -7877,25 +7896,6 @@
 
                     randInt(t, e) {
                         return t + Math.floor(Math.random() * (1 + e - t))
-                    }
-
-                    get defaultRange() {
-                        return this._range = this._range || new i(32, 126)
-                    }
-
-                    set defaultRange(t) {
-                        this._range = t
-                    }
-
-                    static randexp(e, r) {
-                        var n;
-                        return "string" == typeof e && (e = new RegExp(e, r)), void 0 === e._randexp ? (n = new t(e, r), e._randexp = n) : (n = e._randexp)._setDefaults(e), n.gen()
-                    }
-
-                    static sugar() {
-                        RegExp.prototype.gen = function () {
-                            return t.randexp(this)
-                        }
                     }
                 }
             }, 92282: (t, e, r) => {

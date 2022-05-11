@@ -1,6 +1,19 @@
 package aiss.api.resources;
 
 
+import aiss.model.Task;
+import aiss.model.User;
+import aiss.model.repository.MapRepository;
+import aiss.model.repository.Repository;
+import javassist.NotFoundException;
+import org.jboss.resteasy.spi.BadRequestException;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,34 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
-import org.jboss.resteasy.spi.BadRequestException;
-
-import aiss.model.Task;
-import aiss.model.User;
-import aiss.model.repository.MapRepository;
-import aiss.model.repository.Repository;
-import javassist.NotFoundException;
-
 @Path("/users")
 public class UserResource {
 
-    protected static UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
-    Repository repository; // Para poder trabajar con los datos
+    protected static final UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+    final Repository repository; // Para poder trabajar con los datos
 
     private UserResource() {
         repository = MapRepository.getInstance();
@@ -50,14 +40,13 @@ public class UserResource {
     @Produces("application/json")
     public List<Map<String, Object>> getAll(@QueryParam("order") String order,
                                             @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                            @QueryParam("fields") String fields) {
+                                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
 
         List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null ? users.size() : start + limit; // Donde va a terminar.
 
         for (int i = start; i < end; i++) {
-            // Comprobamos que contiene la cadena q y el resto de restricciones.
             // Hacer más compleja esta restricción, pedir para un cierto:
             // - name
             // - email (opcional)
@@ -72,7 +61,7 @@ public class UserResource {
             orderResult(result, order);
 
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-        return result.stream().map(user -> user.getFields((fields == null) ? User.ALL_ATTRIBUTES: fields)).collect(Collectors.toList());
+        return result.stream().map(user -> user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).collect(Collectors.toList());
 
     }
 
@@ -102,12 +91,12 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Map<String, Object> getUser(@PathParam("id") String id, @QueryParam("fields") String fields) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Map<String, Object> getUser(@PathParam("id") String id, @QueryParam("fields") String fields, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
         User user = repository.getUser(id);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)
             throw new NotFoundException("The user with id=" + id + " was not found.");
-        return user.getFields((fields == null) ? User.ALL_ATTRIBUTES : fields);
+        return user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask);
     }
 
     @POST

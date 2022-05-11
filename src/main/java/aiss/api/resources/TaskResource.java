@@ -13,14 +13,17 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/tasks")
 public class TaskResource {
 
-    protected static TaskResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
-    Repository repository; // Para poder trabajar con los datos
+    protected static final TaskResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+    final Repository repository; // Para poder trabajar con los datos
 
     private TaskResource() {
         repository = MapRepository.getInstance();
@@ -41,7 +44,6 @@ public class TaskResource {
             int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
             int end = limit == null ? tasks.size() : start + limit; // Donde va a terminar.
             for (int i = start; i < end; i++) {
-            	// Comprobamos que contiene la cadena q y el resto de restricciones.
                 // Hacer más compleja esta restricción, pedir para un cierto:
                 // - title.
                 // - status.
@@ -50,14 +52,14 @@ public class TaskResource {
                 // - priority.
                 // - difficulty
                 // - duration (mayor, menor o igual).
-            	if (tasks.get(i) != null)
-            		result.add(tasks.get(i));
-                }
+                if (tasks.get(i) != null)
+                    result.add(tasks.get(i));
+            }
             if (order != null)
                 orderResult(result, order);
 
             // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-            return result.stream().map(model -> model.getFields((fields == null) ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
+            return result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
         }
     }
 
@@ -171,7 +173,7 @@ public class TaskResource {
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The task with id=" + taskId + " was not found");
-        // Si no Elimina el modelo de la base de datos chapucera.
+            // Si no Elimina el modelo de la base de datos chapucera.
         else
             repository.deleteTask(taskId);
 

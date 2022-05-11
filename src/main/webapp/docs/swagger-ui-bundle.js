@@ -2525,7 +2525,7 @@
                                                             r.newThrownErr(s)
                                                         }
                                                     } catch (e) {
-                                                        return
+
                                                     }
                                                 }());
                                                 s.updateLoadingStatus("success"), s.updateSpec(t.text), a.url() !== e && s.updateUrl(e)
@@ -5472,7 +5472,7 @@
                                 return i(e)
                             })).join("|".concat(c))
                         }
-                        return
+
                     }(e) : "object" === m()(t) ? function (e) {
                         var t = e.key, n = e.value, r = e.style, o = e.explode, a = e.escape, i = function (e) {
                             return J(e, {escape: a})
@@ -5498,7 +5498,7 @@
                                 f = o ? "=" : ",";
                             return s()(a = s()(u = s()(l = "".concat(p)).call(l, t)).call(u, f)).call(a, c)
                         }), "");
-                        return
+
                     }(e) : function (e) {
                         var t, n = e.key, r = e.value, o = e.style, a = e.escape, i = function (e) {
                             return J(e, {escape: a})
@@ -5508,7 +5508,7 @@
                         if ("matrix" === o) return s()(t = ";".concat(n, "=")).call(t, i(r));
                         if ("form" === o) return i(r);
                         if ("deepObject" === o) return i(r, {}, !0);
-                        return
+
                     }(e)
                 }
 
@@ -15317,6 +15317,16 @@
                         return this.rootNode
                     }
 
+                    static _walk(e, t) {
+                        return "string" == typeof t ? e.addText(t) : t.children && (e.openNode(t), t.children.forEach((t => this._walk(e, t))), e.closeNode(t)), e
+                    }
+
+                    static _collapse(e) {
+                        "string" != typeof e && e.children && (e.children.every((e => "string" == typeof e)) ? e.children = [e.children.join("")] : e.children.forEach((e => {
+                            l._collapse(e)
+                        })))
+                    }
+
                     add(e) {
                         this.top.children.push(e)
                     }
@@ -15340,16 +15350,6 @@
 
                     walk(e) {
                         return this.constructor._walk(e, this.rootNode)
-                    }
-
-                    static _walk(e, t) {
-                        return "string" == typeof t ? e.addText(t) : t.children && (e.openNode(t), t.children.forEach((t => this._walk(e, t))), e.closeNode(t)), e
-                    }
-
-                    static _collapse(e) {
-                        "string" != typeof e && e.children && (e.children.every((e => "string" == typeof e)) ? e.children = [e.children.join("")] : e.children.forEach((e => {
-                            l._collapse(e)
-                        })))
                     }
                 }
 
@@ -20921,7 +20921,7 @@
                 e.exports = function () {
                     try {
                         if (!Object.assign) return !1;
-                        var e = new String("abc");
+                        var e = String("abc");
                         if (e[5] = "de", "5" === Object.getOwnPropertyNames(e)[0]) return !1;
                         for (var t = {}, n = 0; n < 10; n++) t["_" + String.fromCharCode(n)] = n;
                         if ("0123456789" !== Object.getOwnPropertyNames(t).map((function (e) {
@@ -21468,6 +21468,25 @@
                         this.tokens = r(e)
                     }
 
+                    get defaultRange() {
+                        return this._range = this._range || new o(32, 126)
+                    }
+
+                    set defaultRange(e) {
+                        this._range = e
+                    }
+
+                    static randexp(t, n) {
+                        var r;
+                        return "string" == typeof t && (t = new RegExp(t, n)), void 0 === t._randexp ? (r = new e(t, n), t._randexp = r) : (r = t._randexp)._setDefaults(t), r.gen()
+                    }
+
+                    static sugar() {
+                        RegExp.prototype.gen = function () {
+                            return e.randexp(this)
+                        }
+                    }
+
                     _setDefaults(t) {
                         this.max = null != t.max ? t.max : null != e.prototype.max ? e.prototype.max : 100, this.defaultRange = t.defaultRange ? t.defaultRange : this.defaultRange.clone(), t.randInt && (this.randInt = t.randInt)
                     }
@@ -21530,25 +21549,6 @@
 
                     randInt(e, t) {
                         return e + Math.floor(Math.random() * (1 + t - e))
-                    }
-
-                    get defaultRange() {
-                        return this._range = this._range || new o(32, 126)
-                    }
-
-                    set defaultRange(e) {
-                        this._range = e
-                    }
-
-                    static randexp(t, n) {
-                        var r;
-                        return "string" == typeof t && (t = new RegExp(t, n)), void 0 === t._randexp ? (r = new e(t, n), t._randexp = r) : (r = t._randexp)._setDefaults(t), r.gen()
-                    }
-
-                    static sugar() {
-                        RegExp.prototype.gen = function () {
-                            return e.randexp(this)
-                        }
                     }
                 }
             }, 92282: (e, t, n) => {
@@ -22518,7 +22518,7 @@
                         case"onMouseUpCapture":
                         case"onMouseEnter":
                             (r = !r.disabled) || (r = !("button" === (e = e.type) || "input" === e || "select" === e || "textarea" === e)), e = !r;
-                            break e;
+                            break;
                         default:
                             e = !1
                     }
@@ -25013,7 +25013,7 @@
                                 e.child.return = e, e = e.child;
                                 continue
                             }
-                            if (e === t) break e;
+                            if (e === t) break;
                             for (; null === e.sibling;) {
                                 if (null === e.return || e.return === t) break e;
                                 e = e.return
@@ -25620,7 +25620,7 @@
                         }
                         if (5 === o.tag || 6 === o.tag) {
                             e:for (var s = e, u = o, l = u; ;) if (bs(s, l), null !== l.child && 4 !== l.tag) l.child.return = l, l = l.child; else {
-                                if (l === u) break e;
+                                if (l === u) break;
                                 for (; null === l.sibling;) {
                                     if (null === l.return || l.return === u) break e;
                                     l = l.return
@@ -30512,7 +30512,7 @@
                     e.push(t);
                     e:for (; ;) {
                         var r = n - 1 >>> 1, o = e[r];
-                        if (!(void 0 !== o && 0 < k(o, t))) break e;
+                        if (!(void 0 !== o && 0 < k(o, t))) break;
                         e[r] = t, e[n] = o, n = r
                     }
                 }
@@ -30530,7 +30530,7 @@
                             e:for (var r = 0, o = e.length; r < o;) {
                                 var a = 2 * (r + 1) - 1, i = e[a], s = a + 1, u = e[s];
                                 if (void 0 !== i && 0 > k(i, n)) void 0 !== u && 0 > k(u, i) ? (e[r] = u, e[s] = n, r = s) : (e[r] = i, e[a] = n, r = a); else {
-                                    if (!(void 0 !== u && 0 > k(u, n))) break e;
+                                    if (!(void 0 !== u && 0 > k(u, n))) break;
                                     e[r] = u, e[s] = n, r = s
                                 }
                             }
@@ -31303,7 +31303,7 @@
                                     if (n && l) return u
                                 }
                             }
-                            return
+
                         }(e, t, !0) || null
                     }(e, (function (e) {
                         var n = e.pathName, r = e.method, o = e.operation;
@@ -31861,11 +31861,11 @@
                             return "[object Error]" === i(e)
                         }(e)) t = {message: e.message}; else if (function (e) {
                             return "[object Boolean]" === i(e)
-                        }(e)) t = new Boolean(e); else if (function (e) {
+                        }(e)) t = Boolean(e); else if (function (e) {
                             return "[object Number]" === i(e)
-                        }(e)) t = new Number(e); else if (function (e) {
+                        }(e)) t = Number(e); else if (function (e) {
                             return "[object String]" === i(e)
-                        }(e)) t = new String(e); else if (Object.create && Object.getPrototypeOf) t = Object.create(Object.getPrototypeOf(e)); else if (e.constructor === Object) t = {}; else {
+                        }(e)) t = String(e); else if (Object.create && Object.getPrototypeOf) t = Object.create(Object.getPrototypeOf(e)); else if (e.constructor === Object) t = {}; else {
                             var n = e.constructor && e.constructor.prototype || e.__proto__ || {}, r = function () {
                             };
                             r.prototype = n, t = new r
@@ -35141,7 +35141,7 @@
                 try {
                     return lt(e, t, {selectedServer: o})
                 } catch (e) {
-                    return
+
                 }
             }
 
