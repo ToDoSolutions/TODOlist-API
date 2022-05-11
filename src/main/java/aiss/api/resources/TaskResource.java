@@ -167,7 +167,7 @@ public class TaskResource {
 
     @DELETE
     @Path("/{id}")
-    public Response remove(@PathParam("id") String taskId) throws NotFoundException {
+    public Response deleteTask(@PathParam("id") String taskId) throws NotFoundException {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
