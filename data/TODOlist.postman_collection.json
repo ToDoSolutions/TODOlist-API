@@ -1,0 +1,1068 @@
+{
+	"info": {
+		"_postman_id": "731f4b40-1de5-4d9d-b37b-a03196d28be8",
+		"name": "TODOlist",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "ALL",
+							"item": [
+								{
+									"name": "solo",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "orden de menor a mayor",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks?order=difficulty",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "difficulty"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "orden de mayor a menor",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks?order=-duration",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "-duration"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "limitar datos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks?limit=3",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "valor de inicio",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?offset=3&order=-idTask",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "offset",
+													"value": "3"
+												},
+												{
+													"key": "order",
+													"value": "-idTask"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "campos devueltos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks?fields=title,status",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "fields",
+													"value": "title,status"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por título",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?title=Comprar mando nuevo",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "Comprar mando nuevo"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtar por estado",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?status=draft",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "draft"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "fecha de comienzo posterior",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?startDate=>2020-02-02",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "startDate",
+													"value": ">2020-02-02"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "fecha de finalización anterior",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?finishedDate=<2021-02-02",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "finishedDate",
+													"value": "<2021-02-02"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "prioridad inferior",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?priority=<3",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "priority",
+													"value": "<3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por dificultad",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks?difficulty=easy",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "difficulty",
+													"value": "easy"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "duración superior",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:8089/api/v1/tasks?duration=>100",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks"
+											],
+											"query": [
+												{
+													"key": "duration",
+													"value": ">100"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "ONE",
+							"item": [
+								{
+									"name": "solo",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8089/api/v1/tasks/T2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"T2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "campos devueltos",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:8089/api/v1/tasks/T1?fields=title,status",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"T1"
+											],
+											"query": [
+												{
+													"key": "fields",
+													"value": "title,status"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "crear NO",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"annotation\": \"Cuesta 0.2€, devuelveme el cambio.\",\r\n    \"description\": \"Para comprar el pan, ir al polvillo.\",\r\n    \"difficulty\": \"EASY\",\r\n    \"finishedDate\": \"2020-03-04\",\r\n    \"priority\": \"5\",\r\n    \"startDate\": \"2020-03-03\",\r\n    \"status\": \"IN_PROGRESS\",\r\n    \"title\": \"Comprar el pan.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8089/api/v1/tasks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "actualizar",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"idTask\": \"T2\",\r\n    \"priority\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8089/api/v1/tasks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "remove",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/tasks/T1",
+									"protocol": "https",
+									"host": [
+										"todolist-api-348718",
+										"ew",
+										"r",
+										"appspot",
+										"com"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tasks",
+										"T1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "ALL",
+							"item": [
+								{
+									"name": "solo",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/users",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "orden alfabético",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/users?order=name",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "name"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "limitar datos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/users?limit=2",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "limit",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "valor de inicio",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?order=idUser&offset=2",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "idUser"
+												},
+												{
+													"key": "offset",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "campos devueltos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?fieldsUser=idUser,name,surname,tasks&fieldsTask=idTask,title",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "fieldsUser",
+													"value": "idUser,name,surname,tasks"
+												},
+												{
+													"key": "fieldsTask",
+													"value": "idTask,title"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por nombre",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?name=Paquito",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "Paquito"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por apellido",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?surname=El Chocolatero",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "surname",
+													"value": "El Chocolatero"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por correo",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?email=miscosama@gmail.com",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "miscosama@gmail.com"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "filtrar por ubicación",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?location=La Tierra",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "location",
+													"value": "La Tierra"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "tareas completadas distintas a 1",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users?taskCompleted=<>1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users"
+											],
+											"query": [
+												{
+													"key": "taskCompleted",
+													"value": "<>1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "ONE",
+							"item": [
+								{
+									"name": "solo",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8089/api/v1/users/U1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8089",
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"U1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "campos devueltos",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://todolist-api-348718.ew.r.appspot.com/api/v1/users/U1?fieldsUser=avatar,name",
+											"protocol": "https",
+											"host": [
+												"todolist-api-348718",
+												"ew",
+												"r",
+												"appspot",
+												"com"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users",
+												"U1"
+											],
+											"query": [
+												{
+													"key": "fieldsUser",
+													"value": "avatar,name"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "crear NO",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"avatar\": \"Motosierra\",\r\n    \"bio\": \"Convirtiendo los demonios en pedacitos desde 1981.\",\r\n    \"email\": \"eldesgraciao@yahoo.com\",\r\n    \"location\": \"Más allá\",\r\n    \"name\": \"Ashley\",\r\n    \"surname\": \"J. Williams\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8089/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "añadir tarea NO",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:8089/api/v1/users/U1/T2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"U1",
+										"T2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": [
+						{
+							"name": "actualizar",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"avatar\": \"Calvito\",\r\n    \"idUser\": \"U1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8089/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "eliminar",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8089/api/v1/users/U1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"U1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "eliminar tarea",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8089/api/v1/users/U1/T1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8089",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"U1",
+										"T1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

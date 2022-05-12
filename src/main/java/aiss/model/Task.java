@@ -13,21 +13,21 @@ public class Task {
 
 
     // Para el getFields.
-    public static final String ALL_ATTRIBUTES = "idTask,title,description,status,finishedDate,startedDate,annotation,priority,difficulty,duration";
+    public static final String ALL_ATTRIBUTES = "idTask,title,description,status,finishedDate,startDate,annotation,priority,difficulty,duration";
     // Atributos de la clase.
     private String idTask, title, description, annotation;
     private Status status;
-    private Date finishedDate, startedDate;
+    private Date finishedDate, startDate;
     private Integer priority;
     private Difficulty difficulty;
 
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
-    private Task(String title, String description, Status status, Date startedDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
+    public Task(String title, String description, Status status, Date startDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = null;
         this.title = title;
         this.description = description;
         this.status = status;
-        this.startedDate = startedDate;
+        this.startDate = startDate;
         this.finishedDate = finishedDate;
         this.annotation = annotation;
         this.priority = priority;
@@ -44,7 +44,7 @@ public class Task {
 
     // Métodos derivados
     public Long getDuration() {
-        return (finishedDate.getTime() - startedDate.getTime()) / (1000 * 60 * 60 * 24);
+        return (finishedDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     }
 
     public String getIdTask() {
@@ -88,12 +88,12 @@ public class Task {
         this.finishedDate = finishedDate;
     }
 
-    public Date getReleaseDate() {
-        return startedDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
     public void setReleaseDate(Date releaseDate) {
-        this.startedDate = releaseDate;
+        this.startDate = releaseDate;
     }
 
     public String getAnnotation() {
@@ -121,16 +121,16 @@ public class Task {
     }
 
     public Date getStartedDate() {
-        return startedDate;
+        return startDate;
     }
 
     public void setStartedDate(Date startedDate) {
-        this.startedDate = startedDate;
+        this.startDate = startedDate;
     }
 
     @Override
     public String toString() {
-        return "Task{" + "idTask=" + idTask + ", description=" + description + ", status=" + status + ", finishedDate=" + finishedDate + ", startedDate=" + startedDate + ", annotation=" + annotation + ", priority=" + priority + ", difficulty=" + difficulty + '}';
+        return "Task{" + "idTask=" + idTask + ", description=" + description + ", status=" + status + ", finishedDate=" + finishedDate + ", startedDate=" + startDate + ", annotation=" + annotation + ", priority=" + priority + ", difficulty=" + difficulty + '}';
     }
 
     public Map<String, Object> getFields(String fields) {
@@ -147,8 +147,8 @@ public class Task {
                 map.put(attribute, getStatus());
             else if (Objects.equals(attribute, "finishedDate"))
                 map.put(attribute, getFinishedDate());
-            else if (Objects.equals(attribute, "startedDate"))
-                map.put(attribute, getReleaseDate());
+            else if (Objects.equals(attribute, "startDate"))
+                map.put(attribute, getStartDate());
             else if (Objects.equals(attribute, "annotation"))
                 map.put(attribute, getAnnotation());
             else if (Objects.equals(attribute, "priority"))

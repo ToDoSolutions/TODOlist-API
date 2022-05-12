@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Path("/tasks")
 public class TaskResource {
 
-    protected static final TaskResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+    protected static TaskResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
     final Repository repository; // Para poder trabajar con los datos
 
     private TaskResource() {
@@ -34,17 +34,18 @@ public class TaskResource {
 
     public static TaskResource getInstance() {
         // Creamos una instancia si no existe.
-        return (instance == null) ? new TaskResource() : instance;
+        instance = (instance == null) ? new TaskResource() : instance;
+        return instance;
     }
 
     @GET
     @Produces("application/json")
     public List<Map<String, Object>> getAllTasks(@QueryParam("order") String order,
                                                  @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                                 @QueryParam("fields") String fields, @QueryParam("tittle") String tittle,
-                                                 @QueryParam("status") String status, @QueryParam("releaseDAte") String releaseDate,
+                                                 @QueryParam("fields") String fields, @QueryParam("title") String title,
+                                                 @QueryParam("status") String status, @QueryParam("startDate") String startDate,
                                                  @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority,
-                                                 @QueryParam("description") String difficulty, @QueryParam("duration") String duration) {
+                                                 @QueryParam("difficulty") String difficulty, @QueryParam("duration") String duration) {
         List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
             orderResult(tasks, order);
@@ -54,15 +55,15 @@ public class TaskResource {
         int end = limit == null || limit > tasks.size() ? tasks.size() : start + limit; // Donde va a terminar.
         for (int i = start; i < end; i++) {
             Task task = tasks.get(i);
-            if (tasks.get(i) != null &&
-                    (tittle == null || task.getTitle().contains(tittle)) &&
+            if (tasks != null &&
+                    (title == null || task.getTitle().contains(title)) &&
                     (auxStatus == null || task.getStatus() == auxStatus) &&
-                    (releaseDate == null || Tool.isGEL(task.getReleaseDate(), releaseDate)) &&
+                    (startDate == null || Tool.isGEL(task.getStartDate(), startDate)) &&
                     (finishedDate == null || Tool.isGEL(task.getFinishedDate(), finishedDate)) &&
                     (priority == null || Tool.isGEL((long) task.getPriority(), priority)) &&
                     (auxDifficulty == null || task.getDifficulty() == auxDifficulty) &&
                     (duration == null || Tool.isGEL(task.getDuration(), duration)))
-                result.add(tasks.get(i));
+                result.add(task);
         }
 
 
@@ -72,7 +73,11 @@ public class TaskResource {
     }
 
     private void orderResult(List<Task> result, String order) {
-        if (order.equals("title"))
+        if (order.equals("idTask"))
+            result.sort(Comparator.comparing(Task::getIdTask));
+        else if (order.equals("-idTask"))
+            result.sort(Comparator.comparing(Task::getIdTask));
+        else if (order.equals("title"))
             result.sort(Comparator.comparing(Task::getTitle));
         else if (order.equals("-title"))
             result.sort(Comparator.comparing(Task::getTitle).reversed());
@@ -81,9 +86,9 @@ public class TaskResource {
         else if (order.equals("-status"))
             result.sort(Comparator.comparing(Task::getStatus).reversed());
         else if (order.equals("releaseDate"))
-            result.sort(Comparator.comparing(Task::getReleaseDate));
+            result.sort(Comparator.comparing(Task::getStartDate));
         else if (order.equals("-releaseDate"))
-            result.sort(Comparator.comparing(Task::getReleaseDate).reversed());
+            result.sort(Comparator.comparing(Task::getStartDate).reversed());
         else if (order.equals("finishedDate"))
             result.sort(Comparator.comparing(Task::getFinishedDate));
         else if (order.equals("-finishedDate"))
@@ -149,7 +154,7 @@ public class TaskResource {
 
         auxUpdateTask(task, oldTask); // Actualiza los atributos del modelo.
 
-        repository.updateTask(task);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos chapucera.
+        repository.updateTask(oldTask);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos chapucera.
 
         return Response.noContent().build();
     }
@@ -163,8 +168,8 @@ public class TaskResource {
             oldTask.setStatus(task.getStatus());
         if (task.getFinishedDate() != null)
             oldTask.setFinishedDate(task.getFinishedDate());
-        if (task.getReleaseDate() != null)
-            oldTask.setReleaseDate(task.getReleaseDate());
+        if (task.getStartDate() != null)
+            oldTask.setReleaseDate(task.getStartDate());
         if (task.getAnnotation() != null)
             oldTask.setAnnotation(task.getAnnotation());
         if (task.getPriority() != null)

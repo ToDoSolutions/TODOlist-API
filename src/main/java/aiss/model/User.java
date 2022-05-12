@@ -31,7 +31,7 @@ public class User {
     public static User of(String name, String surname, String email, String avatar, String bio, String location) {
         return new User(name, surname, email, avatar, bio, location, new ArrayList<>());
     }
-    
+
     // Propiedades derivadas.
     public Long getTaskCompleted() {
         return getTasks().stream().filter(task -> task.getStatus().equals(Status.DONE)).count();

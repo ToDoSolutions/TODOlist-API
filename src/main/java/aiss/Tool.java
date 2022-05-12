@@ -34,6 +34,6 @@ public class Tool {
         }
         return restriccion.contains("=") && Objects.equals(value, date) ||
                 restriccion.contains("<") && value.before(date) ||
-                restriccion.contains(">") && value .after(date);
+                restriccion.contains(">") && value.after(date);
     }
 }

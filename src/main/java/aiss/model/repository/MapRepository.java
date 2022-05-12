@@ -103,7 +103,7 @@ public class MapRepository implements Repository {
         task.setDescription(t.getDescription());
         task.setStatus(t.getStatus());
         task.setFinishedDate(t.getFinishedDate());
-        task.setReleaseDate(t.getReleaseDate());
+        task.setReleaseDate(t.getStartDate());
         task.setAnnotation(t.getAnnotation());
         task.setPriority(t.getPriority());
         task.setDifficulty(t.getDifficulty());

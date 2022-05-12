@@ -16,13 +16,16 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/users")
 public class UserResource {
 
-    protected static final UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+    protected static UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
     final Repository repository; // Para poder trabajar con los datos
 
     private UserResource() {
@@ -31,7 +34,8 @@ public class UserResource {
 
     public static UserResource getInstance() {
         // Creamos una instancia si no existe.
-        return (instance == null) ? new UserResource() : instance;
+        instance = (instance == null) ? new UserResource() : instance;
+        return instance;
     }
 
     @GET
@@ -57,7 +61,7 @@ public class UserResource {
                     (email == null || user.getEmail().equals(email)) &&
                     (location == null || user.getLocation().equals(location)) &&
                     (taskCompleted == null || Tool.isGEL(user.getTaskCompleted(), taskCompleted)))
-                result.add(users.get(i));
+                result.add(user);
         }
 
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
@@ -65,7 +69,11 @@ public class UserResource {
     }
 
     private void orderResult(List<User> result, String order) {
-        if (order.equals("name"))
+        if (order.equals("idUser"))
+            result.sort(Comparator.comparing(User::getIdUser));
+        else if (order.equals("-idUser"))
+            result.sort(Comparator.comparing(User::getIdUser).reversed());
+        else if (order.equals("name"))
             result.sort(Comparator.comparing(User::getName));
         else if (order.equals("-name"))
             result.sort(Comparator.comparing(User::getName).reversed());
@@ -132,7 +140,7 @@ public class UserResource {
             throw new NotFoundException("The user with id=" + user.getIdUser() + " was not found.");
 
         updateUser(user, oldUser); // Actualiza los atributos del modelo.
-        repository.updateUser(user);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
+        repository.updateUser(oldUser);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
 
         return Response.noContent().build();
     }
@@ -166,7 +174,7 @@ public class UserResource {
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The user with id=" + userId + " was not found.");
-        // Si no Elimina el modelo de la base de datos chapucera.
+            // Si no Elimina el modelo de la base de datos chapucera.
         else
             repository.deleteUser(userId);
 

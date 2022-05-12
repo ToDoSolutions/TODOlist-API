@@ -16,7 +16,7 @@ public enum Status {
             return IN_REVISION;
         } else if (status.equals("done")) {
             return DONE;
-        } else if (status.equals("canceled")) {
+        } else if (status.equals("cancelled")) {
             return CANCELLED;
         } else {
             return null;

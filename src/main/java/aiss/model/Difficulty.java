@@ -22,6 +22,6 @@ public enum Difficulty {
         else if (difficulty.equals("i_want_to_die") || difficulty.equals("i want to die"))
             return I_WANT_TO_DIE;
         else
-        	return null;
+            return null;
     }
 }

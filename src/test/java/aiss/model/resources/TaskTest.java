@@ -27,7 +27,7 @@ import aiss.model.Task;
 
 public class TaskTest {
 	
-	
+	/*
 	static Task task1, task2, task3;
 	static TaskResource tsk = new TaskResource(); // hay alguna forma de quitar que sea publico
 
@@ -155,5 +155,6 @@ public class TaskTest {
 		Task task  = tsk.getTask(task2.getIdTask());
 		assertNull("The song has not been deleted correctly", task);
 	}
+	*/
 
 }
