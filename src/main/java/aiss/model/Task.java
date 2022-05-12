@@ -21,6 +21,8 @@ public class Task {
     private Integer priority;
     private Difficulty difficulty;
 
+    
+    
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
     public Task(String title, String description, Status status, Date startDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = null;

@@ -14,7 +14,7 @@ public class User {
     private List<Task> tasks;
 
     // Constructor, crear nueva clase para disminuir parámetros (por ejemplo persona que contenga name, surname, bio y location).
-    private User(String name, String surname, String email, String avatar, String bio, String location, List<Task> tasks) {
+    private User(String name, String surname, String email, String avatar, String bio, String location) {
         this.idUser = null;
         this.name = name;
         this.surname = surname;
@@ -22,18 +22,20 @@ public class User {
         this.avatar = avatar;
         this.bio = bio;
         this.location = location;
-        this.tasks = tasks;
+        this.tasks = new ArrayList<>();
     }
 
     private User() {
     }
 
     public static User of(String name, String surname, String email, String avatar, String bio, String location) {
-        return new User(name, surname, email, avatar, bio, location, new ArrayList<>());
+        return new User(name, surname, email, avatar, bio, location);
     }
 
     // Propiedades derivadas.
     public Long getTaskCompleted() {
+    	if (getTasks() == null) 
+    		setTasks(new ArrayList<>());
         return getTasks().stream().filter(task -> task.getStatus().equals(Status.DONE)).count();
     }
 

@@ -465,7 +465,7 @@
 					"name": "POST",
 					"item": [
 						{
-							"name": "crear NO",
+							"name": "crear",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -919,7 +919,7 @@
 					"name": "POST",
 					"item": [
 						{
-							"name": "crear NO",
+							"name": "crear",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -949,7 +949,7 @@
 							"response": []
 						},
 						{
-							"name": "añadir tarea NO",
+							"name": "añadir tarea",
 							"request": {
 								"method": "POST",
 								"header": [],

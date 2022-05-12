@@ -113,7 +113,7 @@ public class UserResource {
         isUserCorrect(user); // Comprueba contiene algún tipo de error.
         repository.addUser(user); // Añadimos el modelo a la base de datos.
         // Builds the response. Returns the playlist the has just been added.
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getUser");
         URI uri = ub.build(user.getIdUser());
         ResponseBuilder resp = Response.created(uri);
         resp.entity(user);
@@ -183,7 +183,6 @@ public class UserResource {
 
     @POST
     @Path("/{userId}/{taskId}")
-    @Consumes("text/plain")
     @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
         User user = repository.getUser(userId);
@@ -201,7 +200,7 @@ public class UserResource {
         repository.addTask(userId, taskId);
 
         // Builds the response
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getUser");
         URI uri = ub.build(userId);
         ResponseBuilder resp = Response.created(uri);
         resp.entity(user);

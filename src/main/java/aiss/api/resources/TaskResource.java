@@ -125,17 +125,17 @@ public class TaskResource {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addTask(@Context UriInfo uriInfo, Task task) {
+    public Task addTask(@Context UriInfo uriInfo, Task task) {
         isTaskCorrect(task); // Comprueba contiene algún tipo de error.
 
-        repository.addTask(task); // Añadimos el modelo a la base de datos chapucera.
+        repository.addTask(task); // Añadimos el modelo a la base de datos.
 
         // Builds the response. Returns the playlist the has just been added.
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getTask");
         URI uri = ub.build(task.getIdTask());
         ResponseBuilder resp = Response.created(uri);
         resp.entity(task);
-        return resp.build();
+        return task/*resp.build()*/;
     }
 
     private void isTaskCorrect(Task task) {
