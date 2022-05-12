@@ -21,8 +21,7 @@ public class Task {
     private Integer priority;
     private Difficulty difficulty;
 
-    
-    
+
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
     public Task(String title, String description, Status status, Date startDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = null;
@@ -46,7 +45,8 @@ public class Task {
 
     // Métodos derivados
     public Long getDuration() {
-        return (finishedDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+
+        return finishedDate == null ? null : (finishedDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     }
 
     public String getIdTask() {
@@ -122,17 +122,9 @@ public class Task {
         this.difficulty = difficulty;
     }
 
-    public Date getStartedDate() {
-        return startDate;
-    }
-
-    public void setStartedDate(Date startedDate) {
-        this.startDate = startedDate;
-    }
-
     @Override
     public String toString() {
-        return "Task{" + "idTask=" + idTask + ", description=" + description + ", status=" + status + ", finishedDate=" + finishedDate + ", startedDate=" + startDate + ", annotation=" + annotation + ", priority=" + priority + ", difficulty=" + difficulty + '}';
+        return "Task{" + "idTask=" + idTask + ", description=" + description + ", status=" + status + ", finishedDate=" + finishedDate + ", startDate=" + startDate + ", annotation=" + annotation + ", priority=" + priority + ", difficulty=" + difficulty + '}';
     }
 
     public Map<String, Object> getFields(String fields) {

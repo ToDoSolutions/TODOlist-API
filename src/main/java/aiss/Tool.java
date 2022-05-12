@@ -36,4 +36,6 @@ public class Tool {
                 restriccion.contains("<") && value.before(date) ||
                 restriccion.contains(">") && value.after(date);
     }
+
+
 }

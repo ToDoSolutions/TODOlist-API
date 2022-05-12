@@ -55,7 +55,7 @@ public class TaskResource {
         int end = limit == null || limit > tasks.size() ? tasks.size() : start + limit; // Donde va a terminar.
         for (int i = start; i < end; i++) {
             Task task = tasks.get(i);
-            if (tasks != null &&
+            if (task != null &&
                     (title == null || task.getTitle().contains(title)) &&
                     (auxStatus == null || task.getStatus() == auxStatus) &&
                     (startDate == null || Tool.isGEL(task.getStartDate(), startDate)) &&
@@ -125,17 +125,17 @@ public class TaskResource {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Task addTask(@Context UriInfo uriInfo, Task task) {
+    public Response addTask(@Context UriInfo uriInfo, Task task) {
         isTaskCorrect(task); // Comprueba contiene algún tipo de error.
 
-        repository.addTask(task); // Añadimos el modelo a la base de datos.
+        repository.addTask(task); // Añadimos la tarea a la base de datos.
 
-        // Builds the response. Returns the playlist the has just been added.
+        // Builds the response. Returns the task the has just been added.
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getTask");
         URI uri = ub.build(task.getIdTask());
         ResponseBuilder resp = Response.created(uri);
         resp.entity(task);
-        return task/*resp.build()*/;
+        return resp.build();
     }
 
     private void isTaskCorrect(Task task) {
@@ -181,12 +181,12 @@ public class TaskResource {
     @DELETE
     @Path("/{taskId}")
     public Response deleteTask(@PathParam("taskId") String taskId) throws NotFoundException {
-        Task toBeRemoved = repository.getTask(taskId); // Obtiene el modelo a eliminar de la base de datos chapucera.
+        Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The task with id=" + taskId + " was not found");
-            // Si no Elimina el modelo de la base de datos chapucera.
+            // Si no Elimina la tarea de la base de datos chapucera.
         else
             repository.deleteTask(taskId);
 

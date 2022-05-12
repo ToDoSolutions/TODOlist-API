@@ -4,11 +4,18 @@ import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
+import aiss.model.github.Owner;
+import aiss.model.github.TaskGitHub;
+import org.restlet.resource.ClientResource;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MapRepository implements Repository {
 
@@ -164,4 +171,34 @@ public class MapRepository implements Repository {
     public void deleteTask(String idUser, String idTask) {
         userMap.get(idUser).deleteTask(taskMap.get(idTask));
     }
+
+    // Para GitHub.
+    @Override
+    public TaskGitHub getRepo(String account, String repo) {
+        try {
+            account = URLEncoder.encode(account, "UTF-8");
+            repo = URLEncoder.encode(repo, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String uri = "https://api.github.com/repos/" + account + "/" + repo;
+        Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        ClientResource cr = new ClientResource(uri);
+        return cr.get(TaskGitHub.class);
+    }
+
+
+    @Override
+    public Owner getOwner(String account) {
+        try {
+            account = URLEncoder.encode(account, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String uri = "https://api.github.com/users/" + account;
+        Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        ClientResource cr = new ClientResource(uri);
+        return cr.get(Owner.class);
+    }
+
 }

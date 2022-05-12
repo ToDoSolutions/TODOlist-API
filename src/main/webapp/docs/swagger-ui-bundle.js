@@ -22505,7 +22505,7 @@
                     var r = ao(n);
                     if (null === r) return null;
                     n = r[t];
-                    e:switch (t) {
+                    switch (t) {
                         case"onClick":
                         case"onClickCapture":
                         case"onDoubleClick":
@@ -30510,7 +30510,7 @@
                 function x(e, t) {
                     var n = e.length;
                     e.push(t);
-                    e:for (; ;) {
+                    for (; ;) {
                         var r = n - 1 >>> 1, o = e[r];
                         if (!(void 0 !== o && 0 < k(o, t))) break;
                         e[r] = t, e[n] = o, n = r
@@ -30527,7 +30527,7 @@
                         var n = e.pop();
                         if (n !== t) {
                             e[0] = n;
-                            e:for (var r = 0, o = e.length; r < o;) {
+                            for (var r = 0, o = e.length; r < o;) {
                                 var a = 2 * (r + 1) - 1, i = e[a], s = a + 1, u = e[s];
                                 if (void 0 !== i && 0 > k(i, n)) void 0 !== u && 0 > k(u, i) ? (e[r] = u, e[s] = n, r = s) : (e[r] = i, e[a] = n, r = a); else {
                                     if (!(void 0 !== u && 0 > k(u, n))) break;

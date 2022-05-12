@@ -34,8 +34,8 @@ public class User {
 
     // Propiedades derivadas.
     public Long getTaskCompleted() {
-    	if (getTasks() == null) 
-    		setTasks(new ArrayList<>());
+        if (getTasks() == null)
+            setTasks(new ArrayList<>());
         return getTasks().stream().filter(task -> task.getStatus().equals(Status.DONE)).count();
     }
 

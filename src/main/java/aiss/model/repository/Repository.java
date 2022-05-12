@@ -2,6 +2,8 @@ package aiss.model.repository;
 
 import aiss.model.Task;
 import aiss.model.User;
+import aiss.model.github.Owner;
+import aiss.model.github.TaskGitHub;
 
 import java.util.Collection;
 
@@ -35,4 +37,9 @@ public interface Repository {
     void addTask(String idUser, String idTask);
 
     void deleteTask(String idUser, String idTask);
+
+    // Para GitHub.
+    TaskGitHub getRepo(String account, String repo);
+
+    Owner getOwner(String account);
 }

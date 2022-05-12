@@ -111,8 +111,10 @@ public class UserResource {
     @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
         isUserCorrect(user); // Comprueba contiene algún tipo de error.
-        repository.addUser(user); // Añadimos el modelo a la base de datos.
-        // Builds the response. Returns the playlist the has just been added.
+
+        repository.addUser(user); // Añadimos el usuario a la base de datos.
+
+        // Builds the response. Returns the user the has just been added.
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getUser");
         URI uri = ub.build(user.getIdUser());
         ResponseBuilder resp = Response.created(uri);
@@ -174,7 +176,7 @@ public class UserResource {
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
             throw new NotFoundException("The user with id=" + userId + " was not found.");
-            // Si no Elimina el modelo de la base de datos chapucera.
+            // Si no Elimina el usuario de la base de datos chapucera.
         else
             repository.deleteUser(userId);
 
