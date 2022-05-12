@@ -21,24 +21,25 @@ import aiss.model.Difficulty;
 
 import aiss.model.Status;
 import aiss.model.Task;
+import javassist.NotFoundException;
 
 
 
 
 public class TaskTest {
 	
-	/*
+	
 	static Task task1, task2, task3;
-	static TaskResource tsk = new TaskResource(); // hay alguna forma de quitar que sea publico
+	static TaskResource tsk = TaskResource.getInstance(); // hay alguna forma de quitar que sea publico
 
 	@BeforeClass
 	public static void setup() throws Exception {
 		
 		// Test Task 1
-		task1 = tsk.addTask(new Task("Test title","Test description", Status.DRAFT ,Date.valueOf("2020-01-01"),Date.valueOf("2020-01-02"),"Test annotation",1,Difficulty.EASY));
+		task1 = tsk.addTask(Task.of("Test title","Test description", Status.DRAFT ,Date.valueOf("2020-01-01"),Date.valueOf("2020-01-02"),"Test annotation",1,Difficulty.EASY));
 		
 		// Test Task 2
-		task2 = tsk.addTask(new Task("Test title_2","Test description_2", Status.CANCELED ,Date.valueOf("2022-01-01"),Date.valueOf("2022-01-02"),"Test annotation_2",1,Difficulty.MEDIUM));
+		task2 = tsk.addTask(Task.of("Test title_2","Test description_2", Status.CANCELED ,Date.valueOf("2022-01-01"),Date.valueOf("2022-01-02"),"Test annotation_2",1,Difficulty.MEDIUM));
 		
 	}
 
@@ -52,7 +53,7 @@ public class TaskTest {
 	public void testGetAll() {
 		//autocompletando me sale asi sin errores
 		
-		Collection<Map<String, Object>> tasks = tsk.getAllTasks(null, null, null, null);
+		Collection<Map<String, Object>> tasks = tsk.getAllTasks(null, null, null, null, null, null, null, null, null, null, null);
 		
 		assertNotNull("The collection of tasks is null", tasks);
 		
@@ -65,7 +66,7 @@ public class TaskTest {
 	}
 	
 	@Test
-	public void testGetTask() {
+	public void testGetTask() throws NotFoundException {
 		Task t = tsk.getTask(task1.getIdTask());
 		
 		assertEquals("The id of the task do not match", task1.getIdTask(), t.getIdTask());
@@ -83,7 +84,7 @@ public class TaskTest {
 		
 		String title = "Add task test title";
 		String description = "Add task description";
-		Status status = Status.CANCELED;
+		Status status = Status.CANCELLED;
 		Date  startedDate = Date.valueOf("2023-01-01");
 		Date finishedDate=Date.valueOf("2023-01-02");
 		String annotation= "Add task annotation";
@@ -91,14 +92,14 @@ public class TaskTest {
 		Difficulty difficulty= Difficulty.EASY;
 		
 		
-		task3 = tsk.addTask(null, new Task(title,description,status,startedDate,finishedDate,annotation,priority,difficulty));
+		task3 = tsk.addTask(Task.of(title,description,status,startedDate,finishedDate,annotation,priority,difficulty));
 				
 			//cambiar los " " 	
 		assertNotNull("Error when adding the song", task1);
 		assertEquals("The song title has not been setted correctly", title, task3.getTitle());
 		assertEquals("The song artits has not been setted correctly", description, task3.getDescription());
 		assertEquals("The song album has not been setted correctly", status, task3.getStatus());
-		assertEquals("The song year has not been setted correctly", startedDate, task3.getStartedDate());
+		assertEquals("The song year has not been setted correctly", startedDate, task3.getStartDate());  //se ha cambiado el nombre al get?
 		assertEquals("The song title has not been setted correctly", finishedDate, task3.getFinishedDate());
 		assertEquals("The song artits has not been setted correctly", annotation, task3.getAnnotation());
 		assertEquals("The song album has not been setted correctly", priority, task3.getPriority());
@@ -111,7 +112,7 @@ public class TaskTest {
 		
 		String title = "Update task title";
 		String description = "Update task description";
-		Status status = Status.CANCELED;
+		Status status = Status.CANCELLED;
 		Date  startedDate = Date.valueOf("2023-01-01");
 		Date finishedDate=Date.valueOf("2023-01-02");
 		String annotation= "Update task annotation";
@@ -122,7 +123,7 @@ public class TaskTest {
 		task1.setTitle(title);
 		task1.setDescription(description);
 		task1.setStatus(status);
-		task1.setStartedDate(startedDate);
+		task1.setReleaseDate(startedDate);		//se ha cambiado el nombre al set?
 		task1.setFinishedDate(finishedDate);
 		task1.setAnnotation(annotation);
 		task1.setPriority(priority);
@@ -137,7 +138,7 @@ public class TaskTest {
 		assertEquals("The song title has not been setted correctly", title, task.getTitle());
 		assertEquals("The song artits has not been setted correctly", description, task.getDescription());
 		assertEquals("The song album has not been setted correctly", status, task.getStatus());
-		assertEquals("The song year has not been setted correctly", startedDate, task.getStartedDate());
+		assertEquals("The song year has not been setted correctly", startedDate, task.getStartDate()); //se ha cambiado el nombre al get?
 		assertEquals("The song title has not been setted correctly", finishedDate, task.getFinishedDate());
 		assertEquals("The song artits has not been setted correctly", annotation, task.getAnnotation());
 		assertEquals("The song album has not been setted correctly", priority, task.getPriority());
@@ -155,6 +156,6 @@ public class TaskTest {
 		Task task  = tsk.getTask(task2.getIdTask());
 		assertNull("The song has not been deleted correctly", task);
 	}
-	*/
+	
 
 }
