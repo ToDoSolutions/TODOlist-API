@@ -98,7 +98,7 @@ public class UserResource {
     @GET
     @Path("/{userId}")
     @Produces("application/json")
-    public Map<String, Object> getUser(@PathParam("userId") String userId, @QueryParam("fields") String fields, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Map<String, Object> getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
         User user = repository.getUser(userId);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)

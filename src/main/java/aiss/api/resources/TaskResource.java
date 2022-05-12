@@ -112,14 +112,14 @@ public class TaskResource {
     @GET
     @Path("/{taskId}")
     @Produces("application/json")
-    public Task getTask(@PathParam("taskId") String taskId) throws NotFoundException {
-        Task t = repository.getTask(taskId);
+    public Map<String, Object> getTask(@PathParam("taskId") String taskId, @QueryParam("fields") String fields) throws NotFoundException {
+        Task task = repository.getTask(taskId);
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        if (t == null)
+        if (task == null)
             throw new NotFoundException("The task with id=" + taskId + " was not found");
 
-        return t;
+        return task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields);
     }
 
     @POST
