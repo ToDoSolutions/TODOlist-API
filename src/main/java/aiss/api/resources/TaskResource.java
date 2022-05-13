@@ -88,10 +88,7 @@ public class TaskResource {
     @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
         // Comprueba contiene algún tipo de error.
-        if (task.getTitle() == null || "".equals(task.getTitle()))
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "Title is required"));
+
 
         // Comprobamos si los campos son correctos.
         Response response = Message.checkTask(task);

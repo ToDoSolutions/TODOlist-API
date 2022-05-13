@@ -20,6 +20,10 @@ public class Message {
     }
 
     public static Response checkTask(Task task) {
+        if (task.getTitle() == null || "".equals(task.getTitle()))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "Title is required"));
         if (task.getTitle() != null && task.getTitle().length() > 50)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
@@ -54,6 +58,22 @@ public class Message {
         return null;
     }
     public static Response checkUser(User user) {
+        if (user.getName() == null || "".equals(user.getName()))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The name of the user is required"));
+        if (user.getSurname() == null || "".equals(user.getSurname()))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The surname of the user is required"));
+        if (user.getEmail() == null || "".equals(user.getEmail()))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The email of the user is required"));
+        if (user.getTasks() != null)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The tasks of the user are not allowed"));
         if (user.getEmail() != null && !EmailValidator.getInstance().isValid(user.getEmail()))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
@@ -78,12 +98,10 @@ public class Message {
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The user with id=" + userId + " was not found"));
-
         if (task == null)
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The task with id=" + taskId + " was not found"));
-
         if (user.getTask(taskId) != null)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),

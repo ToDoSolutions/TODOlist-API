@@ -83,24 +83,6 @@ public class UserResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
-        // Comprueba contiene algún tipo de error.
-        if (user.getName() == null || "".equals(user.getName()))
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The name of the user is required"));
-        if (user.getSurname() == null || "".equals(user.getSurname()))
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The surname of the user is required"));
-        if (user.getEmail() == null || "".equals(user.getEmail()))
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The email of the user is required"));
-        if (user.getTasks() != null)
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The tasks of the user are not allowed"));
-
         // Comprobamos si algún campo no es correcto.
         Response response = Message.checkUser(user);
         if (response != null) return response;

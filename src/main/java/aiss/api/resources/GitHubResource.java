@@ -112,7 +112,4 @@ public class GitHubResource {
         resp.entity(user);
         return resp.build();
     }
-
-    // Funciones auxiliares.
-
 }
