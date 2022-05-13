@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -98,7 +99,7 @@ public class GitHubResource {
         String name = null;
         String surname = null;
         if (auxName != null) {
-            fullName = List.of(additional.get("name").toString().split(" "));
+            fullName = Arrays.asList(additional.get("name").toString().split(" "));
             name = fullName.get(0);
             surname = fullName.size() == 1 ? null : fullName.stream().skip(1).reduce("", (ac, nx) -> ac + " " + nx);
         }

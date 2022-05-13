@@ -186,7 +186,7 @@ public class UserResource {
     @POST
     @Path("/{userId}/{taskId}")
     @Produces("application/json")
-    public Response addTask(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
+    public Response addTaskToUser(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
 
@@ -199,7 +199,7 @@ public class UserResource {
         if (user.getTask(taskId) != null)
             throw new BadRequestException("The task is already taken by the user.");
 
-        repository.addTask(userId, taskId);
+        repository.addTaskToUser(userId, taskId);
 
         // Builds the response
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getUser");
@@ -211,7 +211,7 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}/{taskId}")
-    public Response deleteTask(@PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
+    public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
 
@@ -222,7 +222,7 @@ public class UserResource {
             throw new NotFoundException("The task with id=" + taskId + " was not found.");
 
 
-        repository.deleteTask(userId, taskId);
+        repository.deleteTaskToOrder(userId, taskId);
 
         return Response.noContent().build();
     }

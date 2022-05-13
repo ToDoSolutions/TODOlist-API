@@ -13,6 +13,7 @@ public interface Repository {
     // Para task.
     Collection<Task> getAllTask();
 
+
     Task getTask(String idTask);
 
     void addTask(Task task);
@@ -34,9 +35,9 @@ public interface Repository {
 
     Collection<Task> getAllTask(String idUser);
 
-    void addTask(String idUser, String idTask);
+    void addTaskToUser(String idUser, String idTask);
 
-    void deleteTask(String idUser, String idTask);
+    void deleteTaskToOrder(String idUser, String idTask);
 
     // Para GitHub.
     TaskGitHub getRepo(String account, String repo);

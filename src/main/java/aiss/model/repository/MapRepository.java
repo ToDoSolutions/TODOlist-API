@@ -67,13 +67,13 @@ public class MapRepository implements Repository {
         addUsers(u1, u2, u3, u4, u5, u6);
 
         // Si uno de los modelos es contenedor de otro.
-        addTask(u1.getIdUser(), t1.getIdTask());
-        addTask(u2.getIdUser(), t2.getIdTask());
-        addTask(u3.getIdUser(), t3.getIdTask());
-        addTask(u4.getIdUser(), t4.getIdTask());
-        addTask(u5.getIdUser(), t5.getIdTask());
-        addTask(u6.getIdUser(), t6.getIdTask());
-        addTask(u6.getIdUser(), t7.getIdTask());
+        addTaskToUser(u1.getIdUser(), t1.getIdTask());
+        addTaskToUser(u2.getIdUser(), t2.getIdTask());
+        addTaskToUser(u3.getIdUser(), t3.getIdTask());
+        addTaskToUser(u4.getIdUser(), t4.getIdTask());
+        addTaskToUser(u5.getIdUser(), t5.getIdTask());
+        addTaskToUser(u6.getIdUser(), t6.getIdTask());
+        addTaskToUser(u6.getIdUser(), t7.getIdTask());
     }
 
     // Para task.
@@ -163,12 +163,12 @@ public class MapRepository implements Repository {
     }
 
     @Override
-    public void addTask(String idUser, String idTask) {
+    public void addTaskToUser(String idUser, String idTask) {
         userMap.get(idUser).addTask(taskMap.get(idTask));
     }
 
     @Override
-    public void deleteTask(String idUser, String idTask) {
+    public void deleteTaskToOrder(String idUser, String idTask) {
         userMap.get(idUser).deleteTask(taskMap.get(idTask));
     }
 
@@ -199,6 +199,11 @@ public class MapRepository implements Repository {
         Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Owner.class);
+    }
+
+    public void resetIndex() {
+        indexUser = 0;
+        indexTask = 0;
     }
 
 }

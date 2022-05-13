@@ -1,26 +1,20 @@
 package aiss.model.resources;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Date;
 import java.util.Collection;
-import java.util.Map;
-
-import javax.ws.rs.core.Response;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
-import com.google.api.client.util.Data;
-
-import aiss.api.resources.TaskResource;
 import aiss.model.Difficulty;
-
 import aiss.model.Status;
 import aiss.model.Task;
+import aiss.model.repository.MapRepository;
 import javassist.NotFoundException;
 
 
@@ -30,44 +24,46 @@ public class TaskTest {
 	
 	
 	static Task task1, task2, task3;
-	static TaskResource tsk = TaskResource.getInstance(); // hay alguna forma de quitar que sea publico
+	static MapRepository repository = new MapRepository(); // hay alguna forma de quitar que sea publico
+	
 
 	@BeforeClass
 	public static void setup() throws Exception {
 		
 		// Test Task 1
-		task1 = tsk.addTask(Task.of("Test title","Test description", Status.DRAFT ,Date.valueOf("2020-01-01"),Date.valueOf("2020-01-02"),"Test annotation",1,Difficulty.EASY));
-		
+		repository.addTask(Task.of("Test title","Test description", Status.DRAFT ,Date.valueOf("2020-01-01"),Date.valueOf("2020-01-02"),"Test annotation",1,Difficulty.EASY));
+		task1 = repository.getTask("T0");
 		// Test Task 2
-		task2 = tsk.addTask(Task.of("Test title_2","Test description_2", Status.CANCELED ,Date.valueOf("2022-01-01"),Date.valueOf("2022-01-02"),"Test annotation_2",1,Difficulty.MEDIUM));
-		
+		repository.addTask(Task.of("Test title_2","Test description_2", Status.CANCELLED ,Date.valueOf("2022-01-01"),Date.valueOf("2022-01-02"),"Test annotation_2",1,Difficulty.MEDIUM));
+		task2 = repository.getTask("T1");
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-		tsk.deleteTask(task1.getIdTask());
-		tsk.deleteTask(task3.getIdTask());
+		repository.deleteTask(task1.getIdTask());
+		repository.deleteTask(task3.getIdTask());
+		repository.resetIndex();
 	}
 
 	@Test
 	public void testGetAll() {
 		//autocompletando me sale asi sin errores
 		
-		Collection<Map<String, Object>> tasks = tsk.getAllTasks(null, null, null, null, null, null, null, null, null, null, null);
+		Collection<Task> tasks = repository.getAllTask();
 		
 		assertNotNull("The collection of tasks is null", tasks);
 		
 		// Show result
 		System.out.println("Getting all tasks :");
 		int i=1;
-		for (Map<String, Object> s : tasks) {
-			System.out.println("Task " + i++ + " : " + ((Task) s).getTitle() + " (ID=" + ((Task) s).getIdTask() + ")");
+		for (Task task : tasks) {
+			System.out.println("Task " + i++ + " : " + task.getTitle() + " (ID=" + task.getIdTask() + ")");
 		}
 	}
 	
 	@Test
 	public void testGetTask() throws NotFoundException {
-		Task t = tsk.getTask(task1.getIdTask());
+		Task t = repository.getTask(task1.getIdTask());
 		
 		assertEquals("The id of the task do not match", task1.getIdTask(), t.getIdTask());
 		assertEquals("The title of the task do not match", task1.getTitle(), t.getTitle());
@@ -92,9 +88,10 @@ public class TaskTest {
 		Difficulty difficulty= Difficulty.EASY;
 		
 		
-		task3 = tsk.addTask(Task.of(title,description,status,startedDate,finishedDate,annotation,priority,difficulty));
-				
-			//cambiar los " " 	
+		repository.addTask(Task.of(title,description,status,startedDate,finishedDate,annotation,priority,difficulty));
+		task3 = repository.getTask("T2");
+
+		//cambiar los " "
 		assertNotNull("Error when adding the song", task1);
 		assertEquals("The song title has not been setted correctly", title, task3.getTitle());
 		assertEquals("The song artits has not been setted correctly", description, task3.getDescription());
@@ -129,12 +126,10 @@ public class TaskTest {
 		task1.setPriority(priority);
 		task1.setDifficulty(difficulty);
 		
-		Response success = tsk.updateTask(task1);
-		
-		assertTrue("Error when updating the song", success);
-		
+		repository.updateTask(task1);
+
 		//cambiar los " " 	
-		Task task  = tsk.getTask(task1.getIdTask());
+		Task task  = repository.getTask(task1.getIdTask());
 		assertEquals("The song title has not been setted correctly", title, task.getTitle());
 		assertEquals("The song artits has not been setted correctly", description, task.getDescription());
 		assertEquals("The song album has not been setted correctly", status, task.getStatus());
@@ -149,13 +144,9 @@ public class TaskTest {
 	public void testDeleteSong() {
 		
 		// Delete songs
-		Response success = tsk.deleteTask(task2.getIdTask());
-		
-		assertTrue("Error when deleting the song", success);
-		
-		Task task  = tsk.getTask(task2.getIdTask());
+		repository.deleteTask(task2.getIdTask());
+
+		Task task  = repository.getTask(task2.getIdTask()); // Esta línea debe de petar.
 		assertNull("The song has not been deleted correctly", task);
 	}
-	
-
 }
