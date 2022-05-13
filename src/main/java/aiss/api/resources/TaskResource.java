@@ -6,8 +6,6 @@ import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
-import javassist.NotFoundException;
-import org.jboss.resteasy.spi.BadRequestException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -19,7 +17,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/tasks")
@@ -40,12 +37,12 @@ public class TaskResource {
 
     @GET
     @Produces("application/json")
-    public List<Map<String, Object>> getAllTasks(@QueryParam("order") String order,
-                                                 @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                                 @QueryParam("fields") String fields, @QueryParam("title") String title,
-                                                 @QueryParam("status") String status, @QueryParam("startDate") String startDate,
-                                                 @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority,
-                                                 @QueryParam("difficulty") String difficulty, @QueryParam("duration") String duration) {
+    public Response getAllTasks(@QueryParam("order") String order,
+                                @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                                @QueryParam("fields") String fields, @QueryParam("title") String title,
+                                @QueryParam("status") String status, @QueryParam("startDate") String startDate,
+                                @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority,
+                                @QueryParam("difficulty") String difficulty, @QueryParam("duration") String duration) {
         List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
             orderResult(tasks, order);
@@ -68,7 +65,7 @@ public class TaskResource {
 
 
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-        return result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList());
+        return Response.ok(result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList())).build();
 
     }
 
@@ -112,21 +109,22 @@ public class TaskResource {
     @GET
     @Path("/{taskId}")
     @Produces("application/json")
-    public Map<String, Object> getTask(@PathParam("taskId") String taskId, @QueryParam("fields") String fields) throws NotFoundException {
+    public Response getTask(@PathParam("taskId") String taskId, @QueryParam("fields") String fields) {
         Task task = repository.getTask(taskId);
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (task == null)
-            throw new NotFoundException("The task with id=" + taskId + " was not found");
-
-        return task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields);
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The task with id=" + taskId + " was not found");
+        return Response.ok(task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).build();
     }
 
     @POST
     @Consumes("application/json")
     @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
-        isTaskCorrect(task); // Comprueba contiene algún tipo de error.
+        // Comprueba contiene algún tipo de error.
+        if (task.getTitle() == null || "".equals(task.getTitle()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The title of the task must not be null");
 
         repository.addTask(task); // Añadimos la tarea a la base de datos.
 
@@ -138,19 +136,14 @@ public class TaskResource {
         return resp.build();
     }
 
-    private void isTaskCorrect(Task task) {
-        if (task.getTitle() == null || "".equals(task.getTitle()))
-            throw new BadRequestException("The title of the task must not be null");
-    }
-
     @PUT
     @Consumes("application/json")
-    public Response updateTask(Task task) throws NotFoundException {
+    public Response updateTask(Task task) {
         Task oldTask = repository.getTask(task.getIdTask());
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (oldTask == null)
-            throw new NotFoundException("The task with id=" + task.getIdTask() + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + task.getIdTask() + " was not found");
 
         auxUpdateTask(task, oldTask); // Actualiza los atributos del modelo.
 
@@ -180,12 +173,12 @@ public class TaskResource {
 
     @DELETE
     @Path("/{taskId}")
-    public Response deleteTask(@PathParam("taskId") String taskId) throws NotFoundException {
+    public Response deleteTask(@PathParam("taskId") String taskId) {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            throw new NotFoundException("The task with id=" + taskId + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found");
             // Si no Elimina la tarea de la base de datos chapucera.
         else
             repository.deleteTask(taskId);

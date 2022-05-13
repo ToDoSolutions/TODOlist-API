@@ -1,6 +1,8 @@
 package aiss;
 
+import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.util.Map;
 import java.util.Objects;
 
 public class Tool {
@@ -35,6 +37,11 @@ public class Tool {
         return restriccion.contains("=") && Objects.equals(value, date) ||
                 restriccion.contains("<") && value.before(date) ||
                 restriccion.contains(">") && value.after(date);
+    }
+
+    public static Response sendMsg(Response.Status status, String key, String value) {
+        return Response.status(status).entity(Map.of(key, value)).build();
+
     }
 
 

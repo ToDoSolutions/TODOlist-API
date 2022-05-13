@@ -7,7 +7,6 @@ import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import javassist.NotFoundException;
-import org.jboss.resteasy.spi.BadRequestException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -19,7 +18,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/users")
@@ -40,11 +38,11 @@ public class UserResource {
 
     @GET
     @Produces("application/json")
-    public List<Map<String, Object>> getAll(@QueryParam("order") String order,
-                                            @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
-                                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
-                                            @QueryParam("name") String name, @QueryParam("surname") String surname, @QueryParam("email") String email,
-                                            @QueryParam("location") String location, @QueryParam("taskCompleted") String taskCompleted) {
+    public Response getAll(@QueryParam("order") String order,
+                           @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                           @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
+                           @QueryParam("name") String name, @QueryParam("surname") String surname, @QueryParam("email") String email,
+                           @QueryParam("location") String location, @QueryParam("taskCompleted") String taskCompleted) {
 
         List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
@@ -65,7 +63,7 @@ public class UserResource {
         }
 
         // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
-        return result.stream().map(user -> user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).collect(Collectors.toList());
+        return Response.ok(result.stream().map(user -> user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).collect(Collectors.toList())).build();
     }
 
     private void orderResult(List<User> result, String order) {
@@ -98,19 +96,27 @@ public class UserResource {
     @GET
     @Path("/{userId}")
     @Produces("application/json")
-    public Map<String, Object> getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Response getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
         User user = repository.getUser(userId);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)
-            throw new NotFoundException("The user with id=" + userId + " was not found.");
-        return user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask);
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The user with id=" + userId + " was not found");
+        return Response.ok(user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).build();
     }
 
     @POST
     @Consumes("application/json")
     @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
-        isUserCorrect(user); // Comprueba contiene algún tipo de error.
+        // Comprueba contiene algún tipo de error.
+        if (user.getName() == null || "".equals(user.getName()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The name of the user must not be null");
+        if (user.getSurname() == null || "".equals(user.getSurname()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The surname of the user must not be null");
+        if (user.getEmail() == null || "".equals(user.getEmail()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The email of the user must not be null");
+        if (user.getTasks() != null)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The tasks property is not editable");
 
         repository.addUser(user); // Añadimos el usuario a la base de datos.
 
@@ -122,24 +128,13 @@ public class UserResource {
         return resp.build();
     }
 
-    private void isUserCorrect(User user) {
-        if (user.getName() == null || "".equals(user.getName()))
-            throw new BadRequestException("The name of the user must not be null.");
-        if (user.getSurname() == null || "".equals(user.getSurname()))
-            throw new BadRequestException("The surname of the user must not be null.");
-        if (user.getEmail() == null || "".equals(user.getEmail()))
-            throw new BadRequestException("The email of the user must not be null.");
-        if (user.getTasks() != null)
-            throw new BadRequestException("The tasks property is not editable.");
-    }
-
     @PUT
     @Consumes("application/json")
-    public Response updateUser(User user) throws NotFoundException {
+    public Response updateUser(User user) {
         User oldUser = repository.getUser(user.getIdUser());
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (oldUser == null)
-            throw new NotFoundException("The user with id=" + user.getIdUser() + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + user.getIdUser() + " was not found.");
 
         updateUser(user, oldUser); // Actualiza los atributos del modelo.
         repository.updateUser(oldUser);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
@@ -170,12 +165,12 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}")
-    public Response deleteUser(@PathParam("userId") String userId) throws NotFoundException {
+    public Response deleteUser(@PathParam("userId") String userId) {
         User toBeRemoved = repository.getUser(userId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            throw new NotFoundException("The user with id=" + userId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
             // Si no Elimina el usuario de la base de datos chapucera.
         else
             repository.deleteUser(userId);
@@ -191,13 +186,13 @@ public class UserResource {
         Task task = repository.getTask(taskId);
 
         if (user == null)
-            throw new NotFoundException("The user with id=" + userId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
 
         if (task == null)
-            throw new NotFoundException("The task with id=" + taskId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found.");
 
         if (user.getTask(taskId) != null)
-            throw new BadRequestException("The task is already taken by the user.");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The task is already taken by the user.");
 
         repository.addTaskToUser(userId, taskId);
 
@@ -211,21 +206,20 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}/{taskId}")
-    public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
+    public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
 
         if (user == null)
-            throw new NotFoundException("The user with id=" + userId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
 
         if (task == null)
-            throw new NotFoundException("The task with id=" + taskId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found.");
 
 
         repository.deleteTaskToOrder(userId, taskId);
 
         return Response.noContent().build();
     }
-
 }
 

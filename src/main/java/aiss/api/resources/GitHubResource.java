@@ -1,5 +1,6 @@
 package aiss.api.resources;
 
+import aiss.Tool;
 import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
@@ -8,7 +9,6 @@ import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
-import javassist.NotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -46,10 +46,18 @@ public class GitHubResource {
     @GET
     @Path("/{account}/{repo}")
     @Produces("application/json")
-    public Task getTask(@PathParam("account") String account, @PathParam("repo") String repo,
-                        @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
-                        @QueryParam("difficulty") String difficulty) throws NotFoundException {
-        return parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+    public Response getTask(@PathParam("account") String account, @PathParam("repo") String repo,
+                            @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
+                            @QueryParam("difficulty") String difficulty) {
+        Task task;
+        try {
+            task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+        } catch (Exception e) {
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The repository with the name " + repo + " was not found");
+        }
+        return Response.ok(task).build();
+
+
     }
 
     @POST
@@ -58,7 +66,12 @@ public class GitHubResource {
     public Response addTask(@Context UriInfo uriInfo, @PathParam("account") String account, @PathParam("repo") String repo,
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
-        Task task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+        Task task;
+        try {
+            task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+        } catch (Exception e) {
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The repository with the name " + repo + " was not found");
+        }
 
         repository.addTask(task); // Añadimos el modelo a la base de datos.
         // Builds the response. Returns the playlist the has just been added.
@@ -72,15 +85,26 @@ public class GitHubResource {
     @GET
     @Path("/{account}")
     @Produces("application/json")
-    public User getUser(@PathParam("account") String account) throws NotFoundException {
-        return parseOrderFromGitHub(repository.getOwner(account));
+    public Response getUser(@PathParam("account") String account) {
+        User user;
+        try {
+            user = parseOrderFromGitHub(repository.getOwner(account));
+        } catch (Exception e) {
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The account with the name " + account + " was not found");
+        }
+        return Response.ok(user).build();
     }
 
     @POST
     @Path("/{account}")
     @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, @PathParam("account") String account) {
-        User user = parseOrderFromGitHub(repository.getOwner(account));
+        User user;
+        try {
+            user = parseOrderFromGitHub(repository.getOwner(account));
+        } catch (Exception e) {
+            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The account with the name " + account + " was not found");
+        }
 
         repository.addUser(user); // Añadimos el modelo a la base de datos.
         // Builds the response. Returns the playlist the has just been added.
@@ -95,7 +119,7 @@ public class GitHubResource {
     private User parseOrderFromGitHub(Owner owner) {
         Map<String, Object> additional = owner.getAdditionalProperties();
         Object auxName = additional.get("name");
-        List<String> fullName = null;
+        List<String> fullName;
         String name = null;
         String surname = null;
         if (auxName != null) {
@@ -120,7 +144,7 @@ public class GitHubResource {
                 auxStatus,
                 Date.valueOf(repo.getCreatedAt().split("T")[0]),
                 auxFinishedDate,
-                language == null ? null: language.toString(),
+                language == null ? null : language.toString(),
                 priority,
                 auxDifficulty);
     }
