@@ -1,12 +1,9 @@
 package aiss.utilities;
 
-import javax.ws.rs.core.Response;
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-public class Tool {
+public class Filter {
 
     public static boolean isGEL(Long value, String parameter) {
         String restriccion = String.valueOf(parameter.charAt(0));
@@ -38,11 +35,5 @@ public class Tool {
         return restriccion.contains("=") && Objects.equals(value, date) ||
                 restriccion.contains("<") && value.before(date) ||
                 restriccion.contains(">") && value.after(date);
-    }
-
-    public static Response sendMsg(Response.Status status, Pair ... params) {
-        Map<String, String> map = new HashMap<>();
-        for (Pair param : params) map.put(param.getA(), param.getB());
-        return Response.status(status).entity(map).build();
     }
 }

@@ -1,15 +1,12 @@
 package aiss.api.resources;
 
-import aiss.utilities.Pair;
-import aiss.utilities.Tool;
-import aiss.model.Difficulty;
-import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
-import aiss.model.github.Owner;
-import aiss.model.github.TaskGitHub;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
+import aiss.utilities.Message;
+import aiss.utilities.Pair;
+import aiss.utilities.Parse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -18,10 +15,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @Path("/github")
 public class GitHubResource {
@@ -39,10 +32,7 @@ public class GitHubResource {
         return instance;
     }
 
-    public static String getAdditional(Map<String, Object> additional, String key) {
-        Object aux = additional.get(key);
-        return aux == null ? null : aux.toString();
-    }
+
 
     @GET
     @Path("/{account}/{repo}")
@@ -52,9 +42,9 @@ public class GitHubResource {
                             @QueryParam("difficulty") String difficulty) {
         Task task;
         try {
-            task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+            task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
+            return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
         return Response.ok(task).build();
@@ -70,9 +60,9 @@ public class GitHubResource {
                             @QueryParam("difficulty") String difficulty) {
         Task task;
         try {
-            task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+            task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND,
+            return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
@@ -92,9 +82,9 @@ public class GitHubResource {
     public Response getUser(@PathParam("account") String account) {
         User user;
         try {
-            user = parseOrderFromGitHub(repository.getOwner(account));
+            user = Parse.userFromGitHub(repository.getOwner(account));
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND,
+            return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The user with the name " + account + " was not found"));
         }
@@ -107,9 +97,9 @@ public class GitHubResource {
     public Response addUser(@Context UriInfo uriInfo, @PathParam("account") String account) {
         User user;
         try {
-            user = parseOrderFromGitHub(repository.getOwner(account));
+            user = Parse.userFromGitHub(repository.getOwner(account));
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND,
+            return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The account with the name " + account + " was not found"));
         }
@@ -124,37 +114,5 @@ public class GitHubResource {
     }
 
     // Funciones auxiliares.
-    private User parseOrderFromGitHub(Owner owner) {
-        Map<String, Object> additional = owner.getAdditionalProperties();
-        Object auxName = additional.get("name");
-        List<String> fullName;
-        String name = null;
-        String surname = null;
-        if (auxName != null) {
-            fullName = Arrays.asList(additional.get("name").toString().split(" "));
-            name = fullName.get(0);
-            surname = fullName.size() == 1 ? null : fullName.stream().skip(1).reduce("", (ac, nx) -> ac + " " + nx);
-        }
-        String email = getAdditional(additional, "email");
-        String bio = getAdditional(additional, "bio");
-        String location = getAdditional(additional, "location");
-        return User.of(name, surname, email, owner.getAvatarUrl(), bio, location);
-    }
-
-    private Task parseTaskFromGitHub(TaskGitHub repo, String status, String finishedDate, Integer priority, String difficulty) {
-        Status auxStatus = status == null ? null : Status.parse(status);
-        Date auxFinishedDate = finishedDate == null ? null : Date.valueOf(finishedDate);
-        Difficulty auxDifficulty = difficulty == null ? null : Difficulty.valueOf(difficulty);
-        Object language = repo.getLanguage();
-        return Task.of(
-                repo.getName(),
-                repo.getDescription(),
-                auxStatus,
-                Date.valueOf(repo.getCreatedAt().split("T")[0]),
-                auxFinishedDate,
-                language == null ? null : language.toString(),
-                priority,
-                auxDifficulty);
-    }
 
 }

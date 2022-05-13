@@ -1,12 +1,11 @@
 package aiss.api.resources;
 
-import aiss.utilities.Pair;
-import aiss.utilities.Tool;
 import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
+import aiss.utilities.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -15,9 +14,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +44,7 @@ public class TaskResource {
                                 @QueryParam("difficulty") String difficulty, @QueryParam("duration") String duration) {
         List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
-            orderResult(tasks, order);
+            Order.sequenceTask(result, order);
         Status auxStatus = status != null ? Status.parse(status) : null;
         Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
@@ -57,11 +54,11 @@ public class TaskResource {
             if (task != null &&
                     (title == null || task.getTitle().contains(title)) &&
                     (auxStatus == null || task.getStatus() == auxStatus) &&
-                    (startDate == null || Tool.isGEL(task.getStartDate(), startDate)) &&
-                    (finishedDate == null || Tool.isGEL(task.getFinishedDate(), finishedDate)) &&
-                    (priority == null || Tool.isGEL((long) task.getPriority(), priority)) &&
+                    (startDate == null || Filter.isGEL(task.getStartDate(), startDate)) &&
+                    (finishedDate == null || Filter.isGEL(task.getFinishedDate(), finishedDate)) &&
+                    (priority == null || Filter.isGEL((long) task.getPriority(), priority)) &&
                     (auxDifficulty == null || task.getDifficulty() == auxDifficulty) &&
-                    (duration == null || Tool.isGEL(task.getDuration(), duration)))
+                    (duration == null || Filter.isGEL(task.getDuration(), duration)))
                 result.add(task);
         }
 
@@ -71,42 +68,6 @@ public class TaskResource {
 
     }
 
-    private void orderResult(List<Task> result, String order) {
-        if (order.equals("idTask"))
-            result.sort(Comparator.comparing(Task::getIdTask));
-        else if (order.equals("-idTask"))
-            result.sort(Comparator.comparing(Task::getIdTask));
-        else if (order.equals("title"))
-            result.sort(Comparator.comparing(Task::getTitle));
-        else if (order.equals("-title"))
-            result.sort(Comparator.comparing(Task::getTitle).reversed());
-        else if (order.equals("status"))
-            result.sort(Comparator.comparing(Task::getStatus));
-        else if (order.equals("-status"))
-            result.sort(Comparator.comparing(Task::getStatus).reversed());
-        else if (order.equals("releaseDate"))
-            result.sort(Comparator.comparing(Task::getStartDate));
-        else if (order.equals("-releaseDate"))
-            result.sort(Comparator.comparing(Task::getStartDate).reversed());
-        else if (order.equals("finishedDate"))
-            result.sort(Comparator.comparing(Task::getFinishedDate));
-        else if (order.equals("-finishedDate"))
-            result.sort(Comparator.comparing(Task::getFinishedDate).reversed());
-        else if (order.equals("priority"))
-            result.sort(Comparator.comparing(Task::getPriority));
-        else if (order.equals("-priority"))
-            result.sort(Comparator.comparing(Task::getPriority).reversed());
-        else if (order.equals("difficulty"))
-            result.sort(Comparator.comparing(Task::getDifficulty));
-        else if (order.equals("-difficulty"))
-            result.sort(Comparator.comparing(Task::getDifficulty).reversed());
-        else if (order.equals("duration"))
-            result.sort(Comparator.comparing(Task::getDuration));
-        else if (order.equals("-duration"))
-            result.sort(Comparator.comparing(Task::getDuration).reversed());
-
-
-    }
 
     @GET
     @Path("/{taskId}")
@@ -116,7 +77,7 @@ public class TaskResource {
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (task == null)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+            return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "Task not found"));
         return Response.ok(task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).build();
@@ -128,12 +89,12 @@ public class TaskResource {
     public Response addTask(@Context UriInfo uriInfo, Task task) {
         // Comprueba contiene algún tipo de error.
         if (task.getTitle() == null || "".equals(task.getTitle()))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+            return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "Title is required"));
 
         // Comprobamos si los campos son correctos.
-        Response response = validateTask(task);
+        Response response = Message.checkTask(task);
         if (response != null) return response;
 
         repository.addTask(task); // Añadimos la tarea a la base de datos.
@@ -154,39 +115,21 @@ public class TaskResource {
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (oldTask == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND,
+            return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The task with id=" + task.getIdTask() + " was not found"));
 
         // Comprobamos si los campos son correctos.
-        Response response = validateTask(task);
+        Response response = Message.checkTask(task);
         if (response != null) return response;
 
-        auxUpdateTask(task, oldTask); // Actualiza los atributos del modelo.
+        Update.taskFromOther(task, oldTask); // Actualiza los atributos del modelo.
 
         repository.updateTask(oldTask);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos chapucera.
 
         return Response.noContent().build();
     }
 
-    private void auxUpdateTask(Task task, Task oldTask) {
-        if (task.getTitle() != null)
-            oldTask.setTitle(task.getTitle());
-        if (task.getDescription() != null)
-            oldTask.setDescription(task.getDescription());
-        if (task.getStatus() != null)
-            oldTask.setStatus(task.getStatus());
-        if (task.getFinishedDate() != null)
-            oldTask.setFinishedDate(task.getFinishedDate());
-        if (task.getStartDate() != null)
-            oldTask.setReleaseDate(task.getStartDate());
-        if (task.getAnnotation() != null)
-            oldTask.setAnnotation(task.getAnnotation());
-        if (task.getPriority() != null)
-            oldTask.setPriority(task.getPriority());
-        if (task.getDifficulty() != null)
-            oldTask.setDifficulty(task.getDifficulty());
-    }
 
     @DELETE
     @Path("/{taskId}")
@@ -196,49 +139,14 @@ public class TaskResource {
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND,
+            return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The task with id=" + taskId + " was not found"));
-        // Si no Elimina la tarea de la base de datos chapucera.
+            // Si no Elimina la tarea de la base de datos chapucera.
         else
             repository.deleteTask(taskId);
 
         return Response.noContent().build();
-    }
-
-    public Response validateTask(Task task) {
-        if (task.getTitle() != null && task.getTitle().length() > 50)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The title is too long"));
-        if (task.getDescription() != null && task.getDescription().length() > 50)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The description is too long"));
-        if (task.getStatus() != null && task.getStatus() != Status.DRAFT && task.getStatus() != Status.IN_PROGRESS &&
-                task.getStatus() != Status.DONE && task.getStatus() != Status.IN_REVISION && task.getStatus() != Status.CANCELLED)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The status is not valid, it must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED"));
-        if (task.getFinishedDate() != null && task.getStartDate() != null && task.getDuration() < 0)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The duration is not valid, it must be a positive number"));
-        if (task.getAnnotation() != null && task.getAnnotation().length() > 50)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The annotation is too long"));
-        if (task.getPriority() != null && (task.getPriority() < 0 || task.getPriority() > 5))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The priority is not valid, it must be a number between 0 and 5"));
-        if (task.getDifficulty() != null && task.getDifficulty() != Difficulty.EASY &&
-                task.getDifficulty() != Difficulty.MEDIUM && task.getDifficulty() != Difficulty.HARD &&
-                task.getDifficulty() != Difficulty.HARDCORE && task.getDifficulty() != Difficulty.I_WANT_TO_DIE)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "The difficulty is not valid, it must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
-        return null;
     }
 }
 
