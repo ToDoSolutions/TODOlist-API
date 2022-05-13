@@ -1,12 +1,15 @@
 package aiss.api.resources;
 
 
-import aiss.Tool;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
+import aiss.utilities.Pair;
+import aiss.utilities.Tool;
 import javassist.NotFoundException;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -15,6 +18,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -100,7 +104,9 @@ public class UserResource {
         User user = repository.getUser(userId);
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (user == null)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The user with id=" + userId + " was not found");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The user with id=" + userId + " was not found"));
         return Response.ok(user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).build();
     }
 
@@ -110,13 +116,25 @@ public class UserResource {
     public Response addUser(@Context UriInfo uriInfo, User user) {
         // Comprueba contiene algún tipo de error.
         if (user.getName() == null || "".equals(user.getName()))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The name of the user must not be null");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The name of the user is required"));
         if (user.getSurname() == null || "".equals(user.getSurname()))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The surname of the user must not be null");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The surname of the user is required"));
         if (user.getEmail() == null || "".equals(user.getEmail()))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The email of the user must not be null");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The email of the user is required"));
         if (user.getTasks() != null)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The tasks property is not editable");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The tasks of the user are not allowed"));
+
+        // Comprobamos si algún campo no es correcto.
+        Response response = validateUser(user);
+        if (response != null) return response;
 
         repository.addUser(user); // Añadimos el usuario a la base de datos.
 
@@ -130,11 +148,18 @@ public class UserResource {
 
     @PUT
     @Consumes("application/json")
+    @Produces("application/json")
     public Response updateUser(User user) {
         User oldUser = repository.getUser(user.getIdUser());
         // Comprobamos si se encuentra el objeto en la base de datos.
         if (oldUser == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + user.getIdUser() + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + user.getIdUser() + " was not found"));
+
+        // Comprobamos si algún campo no es correcto.
+        Response response = validateUser(user);
+        if (response != null) return response;
 
         updateUser(user, oldUser); // Actualiza los atributos del modelo.
         repository.updateUser(oldUser);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
@@ -165,13 +190,16 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}")
+    @Produces("application/json")
     public Response deleteUser(@PathParam("userId") String userId) {
         User toBeRemoved = repository.getUser(userId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
-            // Si no Elimina el usuario de la base de datos chapucera.
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + userId + " was not found"));
+        // Si no Elimina el usuario de la base de datos chapucera.
         else
             repository.deleteUser(userId);
 
@@ -186,13 +214,19 @@ public class UserResource {
         Task task = repository.getTask(taskId);
 
         if (user == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + userId + " was not found"));
 
         if (task == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The task with id=" + taskId + " was not found"));
 
         if (user.getTask(taskId) != null)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The task is already taken by the user.");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The task with id=" + taskId + " is already assigned to the user with id=" + userId));
 
         repository.addTaskToUser(userId, taskId);
 
@@ -206,20 +240,44 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}/{taskId}")
+    @Produces("application/json")
     public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
 
         if (user == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The user with id=" + userId + " was not found.");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + userId + " was not found"));
 
         if (task == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found.");
-
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The task with id=" + taskId + " was not found"));
 
         repository.deleteTaskToOrder(userId, taskId);
 
         return Response.noContent().build();
+    }
+
+    public Response validateUser(User user) {
+        if (user.getEmail() != null && !EmailValidator.getInstance().isValid(user.getEmail()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The email of the user is not valid"));
+        if (user.getName() != null && user.getName().length() > 50)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The name of the user is not valid"));
+        if (user.getSurname() != null && user.getSurname().length() > 50)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The surname of the user is not valid"));
+        if (user.getAvatar() != null && !UrlValidator.getInstance().isValid(user.getAvatar()))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The avatar of the user is not valid"));
+        return null;
     }
 }
 

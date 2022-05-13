@@ -1,6 +1,7 @@
 package aiss.api.resources;
 
-import aiss.Tool;
+import aiss.utilities.Pair;
+import aiss.utilities.Tool;
 import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -114,7 +116,9 @@ public class TaskResource {
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (task == null)
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The task with id=" + taskId + " was not found");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "Task not found"));
         return Response.ok(task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).build();
     }
 
@@ -124,7 +128,13 @@ public class TaskResource {
     public Response addTask(@Context UriInfo uriInfo, Task task) {
         // Comprueba contiene algún tipo de error.
         if (task.getTitle() == null || "".equals(task.getTitle()))
-            return Tool.sendMsg(Response.Status.BAD_REQUEST, "error", "The title of the task must not be null");
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "Title is required"));
+
+        // Comprobamos si los campos son correctos.
+        Response response = validateTask(task);
+        if (response != null) return response;
 
         repository.addTask(task); // Añadimos la tarea a la base de datos.
 
@@ -138,12 +148,19 @@ public class TaskResource {
 
     @PUT
     @Consumes("application/json")
+    @Produces("application/json")
     public Response updateTask(Task task) {
         Task oldTask = repository.getTask(task.getIdTask());
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (oldTask == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + task.getIdTask() + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The task with id=" + task.getIdTask() + " was not found"));
+
+        // Comprobamos si los campos son correctos.
+        Response response = validateTask(task);
+        if (response != null) return response;
 
         auxUpdateTask(task, oldTask); // Actualiza los atributos del modelo.
 
@@ -173,17 +190,55 @@ public class TaskResource {
 
     @DELETE
     @Path("/{taskId}")
+    @Produces("application/json")
     public Response deleteTask(@PathParam("taskId") String taskId) {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
         if (toBeRemoved == null)
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The task with id=" + taskId + " was not found");
-            // Si no Elimina la tarea de la base de datos chapucera.
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The task with id=" + taskId + " was not found"));
+        // Si no Elimina la tarea de la base de datos chapucera.
         else
             repository.deleteTask(taskId);
 
         return Response.noContent().build();
+    }
+
+    public Response validateTask(Task task) {
+        if (task.getTitle() != null && task.getTitle().length() > 50)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The title is too long"));
+        if (task.getDescription() != null && task.getDescription().length() > 50)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The description is too long"));
+        if (task.getStatus() != null && task.getStatus() != Status.DRAFT && task.getStatus() != Status.IN_PROGRESS &&
+                task.getStatus() != Status.DONE && task.getStatus() != Status.IN_REVISION && task.getStatus() != Status.CANCELLED)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The status is not valid, it must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED"));
+        if (task.getFinishedDate() != null && task.getStartDate() != null && task.getDuration() < 0)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The duration is not valid, it must be a positive number"));
+        if (task.getAnnotation() != null && task.getAnnotation().length() > 50)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The annotation is too long"));
+        if (task.getPriority() != null && (task.getPriority() < 0 || task.getPriority() > 5))
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The priority is not valid, it must be a number between 0 and 5"));
+        if (task.getDifficulty() != null && task.getDifficulty() != Difficulty.EASY &&
+                task.getDifficulty() != Difficulty.MEDIUM && task.getDifficulty() != Difficulty.HARD &&
+                task.getDifficulty() != Difficulty.HARDCORE && task.getDifficulty() != Difficulty.I_WANT_TO_DIE)
+            return Tool.sendMsg(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The difficulty is not valid, it must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
+        return null;
     }
 }
 

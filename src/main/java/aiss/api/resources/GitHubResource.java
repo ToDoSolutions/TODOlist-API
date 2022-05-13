@@ -1,6 +1,7 @@
 package aiss.api.resources;
 
-import aiss.Tool;
+import aiss.utilities.Pair;
+import aiss.utilities.Tool;
 import aiss.model.Difficulty;
 import aiss.model.Status;
 import aiss.model.Task;
@@ -53,7 +54,8 @@ public class GitHubResource {
         try {
             task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The repository with the name " + repo + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
         return Response.ok(task).build();
 
@@ -70,7 +72,9 @@ public class GitHubResource {
         try {
             task = parseTaskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The repository with the name " + repo + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
 
         repository.addTask(task); // Añadimos el modelo a la base de datos.
@@ -90,7 +94,9 @@ public class GitHubResource {
         try {
             user = parseOrderFromGitHub(repository.getOwner(account));
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The account with the name " + account + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The user with the name " + account + " was not found"));
         }
         return Response.ok(user).build();
     }
@@ -103,7 +109,9 @@ public class GitHubResource {
         try {
             user = parseOrderFromGitHub(repository.getOwner(account));
         } catch (Exception e) {
-            return Tool.sendMsg(Response.Status.NOT_FOUND, "error", "The account with the name " + account + " was not found");
+            return Tool.sendMsg(Response.Status.NOT_FOUND,
+                    Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The account with the name " + account + " was not found"));
         }
 
         repository.addUser(user); // Añadimos el modelo a la base de datos.

@@ -1,7 +1,8 @@
-package aiss;
+package aiss.utilities;
 
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -39,10 +40,9 @@ public class Tool {
                 restriccion.contains(">") && value.after(date);
     }
 
-    public static Response sendMsg(Response.Status status, String key, String value) {
-        return Response.status(status).entity(Map.of(key, value)).build();
-
+    public static Response sendMsg(Response.Status status, Pair ... params) {
+        Map<String, String> map = new HashMap<>();
+        for (Pair param : params) map.put(param.getA(), param.getB());
+        return Response.status(status).entity(map).build();
     }
-
-
 }
