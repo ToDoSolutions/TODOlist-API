@@ -1,9 +1,6 @@
 package aiss.model.repository;
 
-import aiss.model.Difficulty;
-import aiss.model.Status;
-import aiss.model.Task;
-import aiss.model.User;
+import aiss.model.*;
 import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
 import org.restlet.resource.ClientResource;
@@ -23,8 +20,10 @@ public class MapRepository implements Repository {
     // Añadir los map para cada modelo.
     Map<String, Task> taskMap; // Contiene los datos de las Tasks.
     Map<String, User> userMap; // Contiene los datos de los Users.
+    Map<String, Group> groupMap; // Contiene los datos de los grupos.
     private int indexTask = 0;
     private int indexUser = 0;
+    private int indexGroup = 0;
 
     public static Repository getInstance() {
         // Si es null, entendemos que es la primera vez que se ejecuta este método.
@@ -35,9 +34,9 @@ public class MapRepository implements Repository {
         return instance; // Devolvemos la instancia.
     }
 
-
     private void init() {
         // Los map necesarios para cada modelo.
+        groupMap = new HashMap<>();
         userMap = new HashMap<>();
         taskMap = new HashMap<>();
 
@@ -55,7 +54,6 @@ public class MapRepository implements Repository {
 
         // Aquí yace la vista de laura que no se ha logueado con la cuenta correcta en Gooogle CLooud y puede que sea baneada.
 
-
         // Create user
         User u1 = User.of("Misco", "Jones", "miscosama@gmail.com", "Robin Lord Taylor", "ser celestial, nacido para ayudar ", "mi casa");
         User u2 = User.of("El Pelón", "Calvo", "niunpelotonto@tortilla.ong", "Calvo de Brazzers", "nacío en un día en el que el sol brillo de tal manera que dislumbró a los imples mortales", "3000 viviendas");
@@ -66,6 +64,11 @@ public class MapRepository implements Repository {
 
         addUsers(u1, u2, u3, u4, u5, u6);
 
+        // Create group
+        Group g1 = Group.of("Pepe", "Hola", Date.valueOf("2022-12-12"));
+        Group g2 = Group.of("Pepito", "Hola", Date.valueOf("2022-12-12"));
+
+
         // Si uno de los modelos es contenedor de otro.
         addTaskToUser(u1.getIdUser(), t1.getIdTask());
         addTaskToUser(u2.getIdUser(), t2.getIdTask());
@@ -74,6 +77,12 @@ public class MapRepository implements Repository {
         addTaskToUser(u5.getIdUser(), t5.getIdTask());
         addTaskToUser(u6.getIdUser(), t6.getIdTask());
         addTaskToUser(u6.getIdUser(), t7.getIdTask());
+        addUserToGroup(g1.getIdGroup(), u1.getIdUser());
+        addUserToGroup(g1.getIdGroup(), u2.getIdUser());
+        addUserToGroup(g2.getIdGroup(), u3.getIdUser());
+        addUserToGroup(g2.getIdGroup(), u4.getIdUser());
+        addUserToGroup(g2.getIdGroup(), u5.getIdUser());
+        addUserToGroup(g2.getIdGroup(), u6.getIdUser());
     }
 
     // Para task.
@@ -170,6 +179,66 @@ public class MapRepository implements Repository {
     @Override
     public void deleteTaskToOrder(String idUser, String idTask) {
         userMap.get(idUser).deleteTask(taskMap.get(idTask));
+    }
+
+    // Para Group.
+    @Override
+    public Collection<Group> getAllGroup() {
+        return groupMap.values();
+    }
+
+    @Override
+    public Group getGroup(String idGroup) {
+        return groupMap.get(idGroup);
+    }
+
+    private void addGroups(Group... groups) {
+        for (Group group : groups)
+            addGroup(group);
+    }
+
+    @Override
+    public void addGroup(Group group) {
+        // Para el identificador de Grupos.
+        String wordGroups = "G";
+        String id = wordGroups + indexGroup++;
+        group.setIdGroup(id);
+        groupMap.put(id, group);
+    }
+
+    @Override
+    public void updateGroup(Group group) {
+        groupMap.put(group.getIdGroup(), group);
+    }
+
+    @Override
+    public void deleteGroup(String idGroup) {
+        groupMap.remove(idGroup);
+    }
+
+    @Override
+    public Collection<User> getAllUser(String idGroup) {
+        return groupMap.get(idGroup).getUsers();
+    }
+
+    @Override
+    public void addUserToGroup(String idGroup, String idUser) {
+        groupMap.get(idGroup).addUser(userMap.get(idUser));
+    }
+
+    @Override
+    public void deleteUserToGroup(String idGroup, String idUser) {
+        groupMap.get(idGroup).deleteUser(userMap.get(idUser));
+    }
+
+    @Override
+    public void addTaskToGroup(String idGroup, String idTask) {
+        groupMap.get(idGroup).addTask(taskMap.get(idTask));
+    }
+
+    @Override
+    public void deleteTaskToGroup(String idGroup, String idTask) {
+        groupMap.get(idGroup).deleteTask(taskMap.get(idTask));
     }
 
     // Para GitHub.

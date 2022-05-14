@@ -1,128 +1,145 @@
 package aiss.model;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Group {
-	
-	// Para el getFields.
+
+    // Para el getFields.
     public static final String ALL_ATTRIBUTES = "idUser,name,surname,email,avatar,bio,location,taskCompleted,tasks";
 
     // Atributos de la clase.
     private String idGroup, name, description;
-    private Integer numTasks;
     private Date createdDate;
     private List<User> users;
-    
+
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
-    public Group(String name, String description, Date createdDate, Integer numTasks) {
+    public Group(String name, String description, Date createdDate) {
         this.idGroup = null;
         this.name = name;
         this.description = description;
         this.createdDate = createdDate;
-        this.numTasks = numTasks;
         this.users = new ArrayList<>();
     }
-    
+
     private Group() {
     }
-    
-    public static Group of(String name, String description, Date createdDate, Integer numTasks) {
-        return new Group(name, description, createdDate, numTasks);
+
+    public static Group of(String name, String description, Date createdDate) {
+        return new Group(name, description, createdDate);
+    }
+
+    public Integer getNumTasks() {
+        return 0;
     }
 
     // Getter y setters.
-	public String getIdGroup() {
-		return idGroup;
+    public String getIdGroup() {
+        return idGroup;
+    }
+
+    public void setIdGroup(String idGroup) {
+        this.idGroup = idGroup;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public User getUser(String id) {
+        if (users == null)
+            return null;
+        User user = null;
+        for (User u : users) {
+            if (u.getIdUser().equals(id)) {
+                user = u;
+                break;
+            }
+        }
+        return user;
+    }
+
+    // Para modificar Users.
+    public void addUser(User u) {
+        if (users == null)
+            users = new ArrayList<>();
+        users.add(u);
+    }
+
+    public void deleteUser(User u) {
+        users.remove(u);
+    }
+
+    public void deleteUser(String id) {
+        User u = getUser(id);
+        if (u != null)
+            users.remove(u);
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "idGroup='" + idGroup + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", numTasks=" + getNumTasks() +
+                ", createdDate=" + createdDate +
+                ", users=" + users +
+                '}';
+    }
+
+	public void addTask(Task t) {
+		for (User u : users) {
+			if (!u.getTasks().contains(t))
+				u.addTask(t);
+		}
 	}
 
-	public void setIdGroup(String idGroup) {
-		this.idGroup = idGroup;
+	public void deleteTask(Task t) {
+		for (User u : users) {
+			if (u.getTasks().contains(t))
+				u.deleteTask(t);
+		}
 	}
 
-	public String getName() {
-		return name;
+	public void deleteTask(String id) {
+		for (User u : users) {
+			if (u.getTasks().stream().map(Task::getIdTask).collect(Collectors.toList()).contains(id))
+				u.deleteTask(id);
+		}
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Integer getNumTasks() {
-		return numTasks;
-	}
-
-	public void setNumTasks(Integer numTasks) {
-		this.numTasks = numTasks;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-	
-	 public User getUser(String id) {
-		 if(users == null)
-			 return null;
-		 User user = null;
-		 for(User u : users) {
-			 if(u.getIdUser().equals(id)) {
-				 user = u;
-				 break;
-			 }
-		 }
-		 return user;
-	 }
-	 
-	 // Para modificar Users.
-	 public void addUser(User u) {
-		 if(users == null)
-			 users = new ArrayList<>();
-		 users.add(u);
-	 }
-
-	 public void deleteUser(User u) {
-		 users.remove(u);
-	 }
-
-	 public void deleteUser(String id) {
-		 User u = getUser(id);
-		 if(u != null)
-			 users.remove(u);
-	 }
-
-	@Override
-	public String toString() {
-		return "Group [idGroup=" + idGroup + ", name=" + name + ", description=" + description + ", numTasks="
-				+ numTasks + ", createdDate=" + createdDate + ", users=" + users + "]";
-	}
-	 
-	public Map<String, Object> getFields(String fieldsGroup, String fieldsUser, String fieldsTask) {
+    public Map<String, Object> getFields(String fieldsGroup, String fieldsUser, String fieldsTask) {
         List<String> attributesShown = Stream.of(fieldsGroup.split(",")).map(String::trim).collect(Collectors.toList());
         Map<String, Object> map = new TreeMap<>();
         for (String attribute : attributesShown) {
@@ -141,6 +158,6 @@ public class Group {
         }
         return map;
     }
-    
+
 
 }

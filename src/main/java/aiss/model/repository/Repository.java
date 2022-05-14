@@ -1,5 +1,6 @@
 package aiss.model.repository;
 
+import aiss.model.Group;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.github.Owner;
@@ -12,8 +13,6 @@ public interface Repository {
 
     // Para task.
     Collection<Task> getAllTask();
-
-
     Task getTask(String idTask);
 
     void addTask(Task task);
@@ -39,8 +38,19 @@ public interface Repository {
 
     void deleteTaskToOrder(String idUser, String idTask);
 
+    // Para Group.
+    Collection<Group> getAllGroup();
+    Group getGroup(String idGroup);
+    void addGroup(Group group);
+    void updateGroup(Group group);
+    void deleteGroup(String idUser);
+    Collection<User> getAllUser(String idGroup);
+    void addUserToGroup(String idGroup, String idUser);
+    void deleteUserToGroup(String idGroup, String idUser);
+    void deleteTaskToGroup(String idGroup, String idTask);
+    void addTaskToGroup(String idGroup, String idTask);
+    
     // Para GitHub.
     TaskGitHub getRepo(String account, String repo);
-
     Owner getOwner(String account);
 }
