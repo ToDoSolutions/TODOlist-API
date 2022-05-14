@@ -1,5 +1,15 @@
 package aiss.model.resources;
 
+import static org.junit.Assert.*;
+import java.sql.Date;
+import java.util.Collection;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import aiss.model.Difficulty;
+import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
@@ -11,7 +21,7 @@ public class UsersTest {
 
     static MapRepository repository = new MapRepository();
 
-    /*
+    
     @BeforeClass
     public static void setUp() throws Exception {
 
@@ -55,7 +65,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testGetPlaylist() {
+    public void testGetUser() {
         User u = repository.getUser(user1.getIdUser());
 
         assertEquals("The id of the playlists do not match", user1.getIdUser(), u.getIdUser());
@@ -68,7 +78,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testAddPlaylist() {
+    public void testAddUser() {
 
 
         String name = "Add user test name";
@@ -91,7 +101,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testUpdatePlaylist() {
+    public void testUpdateUser() {
         String name = "Updated user name";
 
         // Update playlist
@@ -104,7 +114,7 @@ public class UsersTest {
     }
 
     @Test
-    public void testDeletePlaylist() {
+    public void testDeleteUser() {
         repository.deleteUser(user2.getIdUser());
 
         User user = repository.getUser(user2.getIdUser());
@@ -128,5 +138,5 @@ public class UsersTest {
             assertEquals("The task has been removed correctly", 0, user.getTasks().size());
         }
     }
-    */
+ 
 }
