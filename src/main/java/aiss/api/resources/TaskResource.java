@@ -5,7 +5,10 @@ import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
-import aiss.utilities.*;
+import aiss.utilities.Filter;
+import aiss.utilities.Message;
+import aiss.utilities.Order;
+import aiss.utilities.Update;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -76,10 +79,9 @@ public class TaskResource {
         Task task = repository.getTask(taskId);
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        if (task == null)
-            return Message.send(Response.Status.BAD_REQUEST,
-                    Pair.of("status", "400"),
-                    Pair.of("message", "Task not found"));
+        Response response = Message.taskNotFound(task, taskId);
+        if (response != null) return response;
+
         return Response.ok(task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).build();
     }
 
@@ -87,11 +89,12 @@ public class TaskResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
-        // Comprueba contiene algún tipo de error.
-
+        // Comprobamos aquellos campos obligatorios.
+        Response response = Message.requiredForTask(task);
+        if (response != null) return response;
 
         // Comprobamos si los campos son correctos.
-        Response response = Message.checkTask(task);
+        response = Message.checkTask(task);
         if (response != null) return response;
 
         repository.addTask(task); // Añadimos la tarea a la base de datos.
@@ -108,16 +111,18 @@ public class TaskResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Response updateTask(Task task) {
+        // Comprobamos que nos ha dado una id.
+        Response response = Message.taskIdRequired(task);
+        if (response != null) return response;
+
         Task oldTask = repository.getTask(task.getIdTask());
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        if (oldTask == null)
-            return Message.send(Response.Status.NOT_FOUND,
-                    Pair.of("status", "404"),
-                    Pair.of("message", "The task with id=" + task.getIdTask() + " was not found"));
+        response = Message.taskNotFound(oldTask, task.getIdTask());
+        if (response != null) return response;
 
         // Comprobamos si los campos son correctos.
-        Response response = Message.checkTask(task);
+        response = Message.checkTask(task);
         if (response != null) return response;
 
         Update.taskFromOther(task, oldTask); // Actualiza los atributos del modelo.
@@ -135,13 +140,11 @@ public class TaskResource {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
 
         // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        if (toBeRemoved == null)
-            return Message.send(Response.Status.NOT_FOUND,
-                    Pair.of("status", "404"),
-                    Pair.of("message", "The task with id=" + taskId + " was not found"));
-            // Si no Elimina la tarea de la base de datos chapucera.
-        else
-            repository.deleteTask(taskId);
+        Response response = Message.taskNotFound(toBeRemoved, taskId);
+        if (response != null) return response;
+
+        // Elimina la tarea de la base de datos chapucera.
+        repository.deleteTask(taskId);
 
         return Response.noContent().build();
     }
