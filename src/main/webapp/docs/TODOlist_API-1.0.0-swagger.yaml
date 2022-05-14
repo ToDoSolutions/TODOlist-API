@@ -1,0 +1,1702 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: Crea tu propia lista de tareas para cualquier proyecto.
+  version: 1.0.0
+  title: TODOlist-API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Tasks
+    description: Task's operations
+  - name: User
+    description: User's operations
+  - name: GitHub User
+    description: GitHub user's operations (Using the GitHub API)
+paths:
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Get tasks
+      description: Get all tasks
+      operationId: getTasks
+      parameters:
+        - name: order
+          in: query
+          description: Order results by title, or then by the other attributes
+          required: false
+          schema:
+            type: string
+            enum:
+              - title
+              - '-title'
+              - status
+              - '-status'
+              - releaseDate
+              - '-releaseDate'
+              - finishedDate
+              - '-finishedDate'
+              - priority
+              - '-priority'
+              - difficulty
+              - '-difficulty'
+              - duration
+              - '-duration'
+        - name: q
+          in: query
+          description: Query to filter
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description:  Maximum number of results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: offset
+          in: query
+          description: Offset of the results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: fields
+          in: query
+          description: Attributes shown
+          required: false
+          schema:
+            type: string
+        - name: title
+          in: query
+          description: Title of a task
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of a task
+          required: false
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: When the task started
+          required: false
+          schema:
+            type: string
+        - name: finishedDate
+          in: query
+          description: When the task finished
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          description: Priority of a task
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          description: Difficulty of a task
+          required: false
+          schema:
+            type: string
+        - name: duration
+          in: query
+          description: Duration of a task
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - title
+                  properties:
+                    idTask:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                    finishedDate:
+                      type: string
+                    startedDate:
+                      type: string
+                    annotation:
+                      type: string
+                    priority:
+                      type: integer
+                    difficulty:
+                      type: string
+                    duration:
+                      type: integer
+                  example:
+                    idTask: t1
+                    title: Comprar el pan
+                    description: Ve a comprar el pan para almorzar hoy
+                    status: IN_PROGRESS
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: La panaderia abre a las 9
+                    priority: '10'
+                    difficulty: EASY
+                    duration: '15'
+        '400':
+          description: Bad request
+    post:
+      tags:
+        - Tasks
+      summary: Create a task
+      description: Create a task
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                idTask:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                finishedDate:
+                  type: string
+                startedDate:
+                  type: string
+                annotation:
+                  type: string
+                priority:
+                  type: integer
+                difficulty:
+                  type: string
+                duration:
+                  type: integer
+              example:
+                idTask: t1
+                title: Comprar el pan
+                description: Ve a comprar el pan para almorzar hoy
+                status: IN_PROGRESS
+                finishedDate: 12-12-22
+                startedDate: 12-12-22
+                annotation: La panaderia abre a las 9
+                priority: '10'
+                difficulty: EASY
+                duration: '15'
+        description: Task to create
+        required: true
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - title
+                properties:
+                  idTask:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  status:
+                    type: string
+                  finishedDate:
+                    type: string
+                  startedDate:
+                    type: string
+                  annotation:
+                    type: string
+                  priority:
+                    type: integer
+                  difficulty:
+                    type: string
+                  duration:
+                    type: integer
+                example:
+                  idTask: t1
+                  title: Comprar el pan
+                  description: Ve a comprar el pan para almorzar hoy
+                  status: IN_PROGRESS
+                  finishedDate: 12-12-22
+                  startedDate: 12-12-22
+                  annotation: La panaderia abre a las 9
+                  priority: '10'
+                  difficulty: EASY
+                  duration: '15'
+        '400':
+          description: Bad request
+    put:
+      tags:
+        - Tasks
+      summary: Update a Task
+      description: Update a Task
+      operationId: updateTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+              properties:
+                idTask:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                finishedDate:
+                  type: string
+                startedDate:
+                  type: string
+                annotation:
+                  type: string
+                priority:
+                  type: integer
+                difficulty:
+                  type: string
+                duration:
+                  type: integer
+              example:
+                idTask: t1
+                title: Comprar el pan
+                description: Ve a comprar el pan para almorzar hoy
+                status: IN_PROGRESS
+                finishedDate: 12-12-22
+                startedDate: 12-12-22
+                annotation: La panaderia abre a las 9
+                priority: '10'
+                difficulty: EASY
+                duration: '15'
+        description: Task to update
+      responses:
+        '204':
+          description: Task updated
+        '400':
+          description: Bad request
+        '404':
+          description: Task not found
+  '/tasks/{taskId}':
+    delete:
+      tags:
+        - Tasks
+      summary: Delete task
+      description: Delete task
+      operationId: deleteTask
+      parameters:
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
+    get:
+      tags:
+        - Tasks
+      summary: Get task
+      description: Get a task
+      operationId: getTask
+      parameters:
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - title
+                  properties:
+                    idTask:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                    finishedDate:
+                      type: string
+                    startedDate:
+                      type: string
+                    annotation:
+                      type: string
+                    priority:
+                      type: integer
+                    difficulty:
+                      type: string
+                    duration:
+                      type: integer
+                  example:
+                    idTask: t1
+                    title: Comprar el pan
+                    description: Ve a comprar el pan para almorzar hoy
+                    status: IN_PROGRESS
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: La panaderia abre a las 9
+                    priority: '10'
+                    difficulty: EASY
+                    duration: '15'
+        '400':
+          description: Bad request
+  /users:
+    get:
+      tags:
+        - User
+      summary: Get users
+      description: Get all users
+      operationId: getUsers
+      parameters:
+        - name: order
+          in: query
+          description: Order results by user id, or then by the other attributes except avatar and bio
+          required: false
+          schema:
+            type: string
+            enum:
+              - idUser
+              - '-idUser'
+              - name
+              - '-name'
+              - surname
+              - '-surname'
+              - email
+              - '-email'
+              - location
+              - '-location'
+              - taskCompleted
+              - '-taskCompleted'
+        - name: limit
+          in: query
+          description:  Maximum number of results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: offset
+          in: query
+          description: Offset of the results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: fieldsUser
+          in: query
+          description: Attributes shown
+          required: false
+          schema:
+            type: string
+        - name: fieldsTask
+          in: query
+          description: Attributes of a task
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: Name of a user
+          required: false
+          schema:
+            type: string
+        - name: surname
+          in: query
+          description: Surname of a user
+          required: false
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Email of a user
+          required: false
+          schema:
+            type: string
+        - name: location
+          in: query
+          description: Location of a user
+          required: false
+          schema:
+            type: string
+        - name: taskCompleted
+          in: query
+          description: How many tasks a user completed
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    idUser:
+                      type: string
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    email:
+                      type: string
+                    avatar:
+                      type: string
+                    bio:
+                      type: string
+                    location:
+                      type: string
+                    tasks:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - title
+                        properties:
+                          idTask:
+                            type: string
+                          title:
+                            type: string
+                          description:
+                            type: string
+                          status:
+                            type: string
+                          finishedDate:
+                            type: string
+                          startedDate:
+                            type: string
+                          annotation:
+                            type: string
+                          priority:
+                            type: integer
+                          difficulty:
+                            type: string
+                          duration:
+                            type: integer
+                    taskCompleted:
+                      type: integer
+                  example:
+                    idUser: u1
+                    name: Kujo
+                    surname: Jotaro
+                    email: oraora@gmail.com
+                    avatar: dolphin.jpg
+                    bio: Yare yare daze
+                    location: Morioh
+                    tasks:
+                      - idTask: t1
+                        title: Derrotar a Dio
+                        description: Cruza todo el mundo hasta llegar a Egipto
+                        status: DONE
+                        finishedDate: 12-12-22
+                        startedDate: 12-12-22
+                        annotation: Te encontrarás a un montón de randoms
+                        priority: '10'
+                        difficulty: HARDCORE
+                        duration: '300'
+                      - idTask: t2
+                        title: Parar a Kira
+                        description: Paren al psicopata explosivo
+                        status: DONE
+                        finishedDate: 12-12-22
+                        startedDate: 12-12-22
+                        annotation: Cuidado con Bites the Dust
+                        priority: '10'
+                        difficulty: HARDCORE
+                        duration: '150'
+                    taskCompleted: '3'
+        '400':
+          description: Bad request
+    put:
+      tags:
+        - User
+      summary: Update a user
+      description: Update a user
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                idUser:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  type: string
+                bio:
+                  type: string
+                location:
+                  type: string
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      finishedDate:
+                        type: string
+                      startedDate:
+                        type: string
+                      annotation:
+                        type: string
+                      priority:
+                        type: integer
+                      difficulty:
+                        type: string
+                      duration:
+                        type: integer
+                taskCompleted:
+                  type: integer
+              example:
+                idUser: u1
+                name: Kujo
+                surname: Jotaro
+                email: oraora@gmail.com
+                avatar: dolphin.jpg
+                bio: Yare yare daze
+                location: Morioh
+                tasks:
+                  - idTask: t1
+                    title: Derrotar a Dio
+                    description: Cruza todo el mundo hasta llegar a Egipto
+                    status: DONE
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: Te encontrarás a un montón de randoms
+                    priority: '10'
+                    difficulty: HARDCORE
+                    duration: '300'
+                  - idTask: t2
+                    title: Parar a Kira
+                    description: Paren al psicopata explosivo
+                    status: DONE
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: Cuidado con Bites the Dust
+                    priority: '10'
+                    difficulty: HARDCORE
+                    duration: '150'
+                taskCompleted: '3'
+        description: User to update
+      responses:
+        '204':
+          description: User updated
+        '400':
+          description: Bad request
+        '404':
+          description: User not found
+    post:
+      tags:
+        - User
+      summary: Create an user
+      description: Creates an user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                idUser:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  type: string
+                bio:
+                  type: string
+                location:
+                  type: string
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      finishedDate:
+                        type: string
+                      startedDate:
+                        type: string
+                      annotation:
+                        type: string
+                      priority:
+                        type: integer
+                      difficulty:
+                        type: string
+                      duration:
+                        type: integer
+                taskCompleted:
+                  type: integer
+              example:
+                idUser: u1
+                name: Kujo
+                surname: Jotaro
+                email: oraora@gmail.com
+                avatar: dolphin.jpg
+                bio: Yare yare daze
+                location: Morioh
+                tasks:
+                  - idTask: t1
+                    title: Derrotar a Dio
+                    description: Cruza todo el mundo hasta llegar a Egipto
+                    status: DONE
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: Te encontrarás a un montón de randoms
+                    priority: '10'
+                    difficulty: HARDCORE
+                    duration: '300'
+                  - idTask: t2
+                    title: Parar a Kira
+                    description: Paren al psicopata explosivo
+                    status: DONE
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: Cuidado con Bites the Dust
+                    priority: '10'
+                    difficulty: HARDCORE
+                    duration: '150'
+                taskCompleted: '3'
+        description: User to create
+        required: true
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u1
+                  name: Kujo
+                  surname: Jotaro
+                  email: oraora@gmail.com
+                  avatar: dolphin.jpg
+                  bio: Yare yare daze
+                  location: Morioh
+                  tasks:
+                    - idTask: t1
+                      title: Derrotar a Dio
+                      description: Cruza todo el mundo hasta llegar a Egipto
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Te encontrarás a un montón de randoms
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '300'
+                    - idTask: t2
+                      title: Parar a Kira
+                      description: Paren al psicopata explosivo
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Cuidado con Bites the Dust
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '150'
+                  taskCompleted: '3'
+        '400':
+          description: Bad request
+  '/users/{userId}':
+    get:
+      tags:
+        - User
+      summary: Get an user
+      description: Gets an user
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u1
+                  name: Kujo
+                  surname: Jotaro
+                  email: oraora@gmail.com
+                  avatar: dolphin.jpg
+                  bio: Yare yare daze
+                  location: Morioh
+                  tasks:
+                    - idTask: t1
+                      title: Derrotar a Dio
+                      description: Cruza todo el mundo hasta llegar a Egipto
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Te encontrarás a un montón de randoms
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '300'
+                    - idTask: t2
+                      title: Parar a Kira
+                      description: Paren al psicopata explosivo
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Cuidado con Bites the Dust
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '150'
+                  taskCompleted: '3'
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
+  '/users/{userId}/{taskId}':
+    post:
+      tags:
+        - User
+      summary: Add a task to a user
+      description: Add a task to a user
+      operationId: addTaskToUser
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              required:
+                  - name
+              properties:
+                idUser:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  type: string
+                bio:
+                  type: string
+                location:
+                  type: string
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      finishedDate:
+                        type: string
+                      startedDate:
+                        type: string
+                      annotation:
+                        type: string
+                      priority:
+                        type: integer
+                      difficulty:
+                        type: string
+                      duration:
+                        type: integer
+                taskCompleted:
+                  type: integer
+              example:
+                idUser: u6
+                name: I_Love_AISS
+                surname: AISS=IISSI2
+                email: ayquelasuspendo@yahoo.com
+                avatar: Asignatura
+                bio: Asignatura de Universidad
+                location: Sevilla
+                tasks:
+                  - idTask: s1
+                    title: Comprar el pan
+                    description: Ve a comprar el pan para almorzar hoy
+                    status: IN_PROGRESS
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: La panaderia abre a las 9
+                    priority: '10'
+                    difficulty: EASY
+                    duration: '15'    
+                taskCompleted: '0'
+      parameters:
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Task added to the user
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u6
+                  name: I_Love_AISS
+                  surname: AISS=IISSI
+                  email: ayquelasuspendo@yahoo.com
+                  avatar: Asignatura
+                  bio: Asignatura de Universidad
+                  location: Sevilla
+                  tasks:
+                    - idTask: s1
+                      title: Comprar el pan
+                      description: Ve a comprar el pan para almorzar hoy
+                      status: IN_PROGRESS
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: La panaderia abre a las 9
+                      priority: '10'
+                      difficulty: EASY
+                      duration: '15'    
+                  taskCompleted: '0'      
+        '400':
+          description: Bad request
+        '404':
+          description: User or task not found
+    delete:
+      tags:
+        - User
+      summary: Delete task from user
+      description: Delete task from user
+      operationId: deleteTaskToUser
+      parameters:
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted from user
+        '404':
+          description: User or task not found
+  /github/{account}:
+    get:
+      tags:
+        - GitHub User
+      summary: Get GitHub user
+      description: Gets a GitHub user
+      operationId: getGitHubUser
+      parameters:
+        - name: account
+          in: path
+          description: Name of the GitHub account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GitHub user found
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u1
+                  name: Kujo
+                  surname: Jotaro
+                  email: oraora@gmail.com
+                  avatar: dolphin.jpg
+                  bio: Yare yare daze
+                  location: Morioh
+                  tasks:
+                    - idTask: t1
+                      title: Derrotar a Dio
+                      description: Cruza todo el mundo hasta llegar a Egipto
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Te encontrarás a un montón de randoms
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '300'
+                    - idTask: t2
+                      title: Parar a Kira
+                      description: Paren al psicopata explosivo
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Cuidado con Bites the Dust
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '150'
+                  taskCompleted: '3'
+        '404':
+          description: GitHub user not found
+    post:
+      tags:
+        - GitHub User
+      summary: Add GitHub user
+      description: Adds a GitHub user
+      operationId: addGitHubUser
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              required:
+                  - name
+              properties:
+                idUser:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  type: string
+                bio:
+                  type: string
+                location:
+                  type: string
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      finishedDate:
+                        type: string
+                      startedDate:
+                        type: string
+                      annotation:
+                        type: string
+                      priority:
+                        type: integer
+                      difficulty:
+                        type: string
+                      duration:
+                        type: integer
+                taskCompleted:
+                  type: integer
+              example:
+                idUser: u6
+                name: I_Love_AISS
+                surname: AISS=IISSI2
+                email: ayquelasuspendo@yahoo.com
+                avatar: Asignatura
+                bio: Asignatura de Universidad
+                location: Sevilla
+                tasks:
+                  - idTask: s1
+                    title: Comprar el pan
+                    description: Ve a comprar el pan para almorzar hoy
+                    status: IN_PROGRESS
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: La panaderia abre a las 9
+                    priority: '10'
+                    difficulty: EASY
+                    duration: '15'    
+                taskCompleted: '0'
+      parameters:
+        - name: account
+          in: path
+          description: Name of the GitHub account
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: GitHub user added
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u6
+                  name: I_Love_AISS
+                  surname: AISS=IISSI
+                  email: ayquelasuspendo@yahoo.com
+                  avatar: Asignatura
+                  bio: Asignatura de Universidad
+                  location: Sevilla
+                  tasks:
+                    - idTask: s1
+                      title: Comprar el pan
+                      description: Ve a comprar el pan para almorzar hoy
+                      status: IN_PROGRESS
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: La panaderia abre a las 9
+                      priority: '10'
+                      difficulty: EASY
+                      duration: '15'    
+                  taskCompleted: '0'      
+        '400':
+          description: Bad request
+        '404':
+          description: GitHub user not found
+  '/github/{account}/{repo}':
+    get:
+      tags:
+        - GitHub User
+      summary: Get task from GitHub user
+      description: Gets a task from a GitHub user
+      operationId: getTaskGitHubUser
+      parameters:
+        - name: account
+          in: path
+          description: Name of a GitHub account
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          description: Name of a GitHub repository
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of a task
+          required: false
+          schema:
+            type: string
+        - name: finishedDate
+          in: query
+          description: When the task finished
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          description: Priority of a task
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          description: Difficulty of a task
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GitHub user found
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u1
+                  name: Kujo
+                  surname: Jotaro
+                  email: oraora@gmail.com
+                  avatar: dolphin.jpg
+                  bio: Yare yare daze
+                  location: Morioh
+                  tasks:
+                    - idTask: t1
+                      title: Derrotar a Dio
+                      description: Cruza todo el mundo hasta llegar a Egipto
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Te encontrarás a un montón de randoms
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '300'
+                    - idTask: t2
+                      title: Parar a Kira
+                      description: Paren al psicopata explosivo
+                      status: DONE
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: Cuidado con Bites the Dust
+                      priority: '10'
+                      difficulty: HARDCORE
+                      duration: '150'
+                  taskCompleted: '3'
+        '404':
+          description: GitHub user not found
+    post:
+      tags:
+        - GitHub User
+      summary: Add task to GitHub user
+      description: Adds a task to a GitHub user
+      operationId: addTaskGitHubUser
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              required:
+                  - name
+              properties:
+                idUser:
+                  type: string
+                name:
+                  type: string
+                surname:
+                  type: string
+                email:
+                  type: string
+                avatar:
+                  type: string
+                bio:
+                  type: string
+                location:
+                  type: string
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        type: string
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      status:
+                        type: string
+                      finishedDate:
+                        type: string
+                      startedDate:
+                        type: string
+                      annotation:
+                        type: string
+                      priority:
+                        type: integer
+                      difficulty:
+                        type: string
+                      duration:
+                        type: integer
+                taskCompleted:
+                  type: integer
+              example:
+                idUser: u6
+                name: I_Love_AISS
+                surname: AISS=IISSI2
+                email: ayquelasuspendo@yahoo.com
+                avatar: Asignatura
+                bio: Asignatura de Universidad
+                location: Sevilla
+                tasks:
+                  - idTask: s1
+                    title: Comprar el pan
+                    description: Ve a comprar el pan para almorzar hoy
+                    status: IN_PROGRESS
+                    finishedDate: 12-12-22
+                    startedDate: 12-12-22
+                    annotation: La panaderia abre a las 9
+                    priority: '10'
+                    difficulty: EASY
+                    duration: '15'    
+                taskCompleted: '0'
+      parameters:
+        - name: account
+          in: path
+          description: Name of a GitHub account
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          description: Name of a GitHub repository
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of a task
+          required: false
+          schema:
+            type: string
+        - name: finishedDate
+          in: query
+          description: When the task finished
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          description: Priority of a task
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          description: Difficulty of a task
+          required: false
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Task added to the GitHub user
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  idUser:
+                    type: string
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  email:
+                    type: string
+                  avatar:
+                    type: string
+                  bio:
+                    type: string
+                  location:
+                    type: string
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        idTask:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        status:
+                          type: string
+                        finishedDate:
+                          type: string
+                        startedDate:
+                          type: string
+                        annotation:
+                          type: string
+                        priority:
+                          type: integer
+                        difficulty:
+                          type: string
+                        duration:
+                          type: integer
+                  taskCompleted:
+                    type: integer
+                example:
+                  idUser: u6
+                  name: I_Love_AISS
+                  surname: AISS=IISSI
+                  email: ayquelasuspendo@yahoo.com
+                  avatar: Asignatura
+                  bio: Asignatura de Universidad
+                  location: Sevilla
+                  tasks:
+                    - idTask: s1
+                      title: Comprar el pan
+                      description: Ve a comprar el pan para almorzar hoy
+                      status: IN_PROGRESS
+                      finishedDate: 12-12-22
+                      startedDate: 12-12-22
+                      annotation: La panaderia abre a las 9
+                      priority: '10'
+                      difficulty: EASY
+                      duration: '15'    
+                  taskCompleted: '0'      
+        '400':
+          description: Bad request
+        '404':
+          description: GitHub user or task not found
