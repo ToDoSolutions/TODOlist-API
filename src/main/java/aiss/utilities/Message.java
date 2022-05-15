@@ -179,6 +179,18 @@ public class Message {
         return null;
     }
     
+    public static Response requiredForGroup(Group group) {
+    	if (group.getName() == null || "".equals(group.getName()))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The name of the group is required"));
+        if (group.getUsers() != null)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The users of the group are not allowed"));
+        return null; 
+    } 
+    
     public static Response taskNotFound(Task task, String taskId) {
     	if (task == null)
             return Message.send(Response.Status.NOT_FOUND,

@@ -51,7 +51,6 @@ public class UserResource {
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null || limit > users.size() ? users.size() : start + limit; // Donde va a terminar.
 
-
         for (int i = start; i < end; i++) {
             User user = users.get(i);
             if (user != null &&
@@ -62,8 +61,6 @@ public class UserResource {
                     (taskCompleted == null || Filter.isGEL(user.getTaskCompleted(), taskCompleted)))
                 result.add(user);
         }
-
-        // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
         return Response.ok(result.stream().map(user -> user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).collect(Collectors.toList())).build();
     }
 
@@ -176,7 +173,7 @@ public class UserResource {
         Response response = Message.userNotFound(user, userId);
         if (response != null) return response;
 
-        // >Comprobamos que existe una tarea con la id dada.
+        // Comprobamos que existe una tarea con la id dada.
         response = Message.taskNotFound(task, taskId);
         if (response != null) return response;
 
