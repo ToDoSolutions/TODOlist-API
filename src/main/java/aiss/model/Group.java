@@ -118,6 +118,7 @@ public class Group {
                 '}';
     }
 
+    //Comprobar si modifica el user. 
 	public void addTask(Task t) {
 		for (User u : users) {
 			if (!u.getTasks().contains(t))

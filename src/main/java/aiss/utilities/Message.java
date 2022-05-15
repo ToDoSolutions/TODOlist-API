@@ -1,13 +1,11 @@
 package aiss.utilities;
 
-import aiss.model.Difficulty;
-import aiss.model.Status;
-import aiss.model.Task;
-import aiss.model.User;
+import aiss.model.*;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.ws.rs.core.Response;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class Message {
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The title is too long"));
-        if (task.getDescription() != null && task.getDescription().length() > 50)
+        if (task.getDescription() != null && task.getDescription().length() > 200)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The description is too long"));
@@ -74,6 +72,22 @@ public class Message {
         return null;
     }
 
+    public static Response checkGroup(Group group) {
+        if (group.getName() != null && group.getName().length() > 50)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The name of the group is not valid"));
+        if (group.getDescription() != null && group.getDescription().length() > 200)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The description of the group is not valid"));
+        if (group.getCreatedDate() != null && group.getCreatedDate().before(new Date(0)))
+            return Message.send(Response.Status.BAD_REQUEST,
+                            Pair.of("status", "400"),
+                            Pair.of("message", "The created date of the group is not valid"));
+        return null;
+    }
+
     public static Response isTaskInUser(User user, Task task, String userId, String taskId) {
         if (user == null)
             return Message.send(Response.Status.NOT_FOUND,
@@ -87,6 +101,22 @@ public class Message {
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The task with id=" + taskId + " is already assigned to the user with id=" + userId));
+        return null;
+    }
+
+    public static Response isUserInGroup(Group group, User user, String groupId, String userId) {
+        if (group == null)
+            return Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The group with id=" + groupId + " was not found"));
+        if (user == null)
+            return Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + userId + " was not found"));
+        if (group.getUser(userId) != null)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The user with id=" + userId + " is already in the group with id=" + groupId));
         return null;
     }
     
@@ -134,6 +164,22 @@ public class Message {
     	return null;
     }
 
+    public static Response groupNotFound(Group group, String groupId) {
+    	if (group == null)
+            return Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The group with id=" + groupId + " was not found"));
+    	return null;
+    }
+
+    public static Response taskIdRequired(Task task) {
+        if (task.getIdTask() == null)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The id of the task is required"));
+        return null;
+    }
+
     public static Response userIdRequired(User user) {
     	if (user.getIdUser() == null)
             return Message.send(Response.Status.BAD_REQUEST,
@@ -142,11 +188,11 @@ public class Message {
     	return null;
     }
 
-    public static Response taskIdRequired(Task task) {
-    	if (task.getIdTask() == null)
+    public static Response groupIdRequired(Group group) {
+    	if (group.getIdGroup() == null)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The id of the task is required"));
+                    Pair.of("message", "The id of the group is required"));
     	return null;
     }
 }

@@ -68,6 +68,8 @@ public class MapRepository implements Repository {
         Group g1 = Group.of("Pepe", "Hola", Date.valueOf("2022-12-12"));
         Group g2 = Group.of("Pepito", "Hola", Date.valueOf("2022-12-12"));
 
+        addGroups(g1, g2);
+
 
         // Si uno de los modelos es contenedor de otro.
         addTaskToUser(u1.getIdUser(), t1.getIdTask());
@@ -77,6 +79,7 @@ public class MapRepository implements Repository {
         addTaskToUser(u5.getIdUser(), t5.getIdTask());
         addTaskToUser(u6.getIdUser(), t6.getIdTask());
         addTaskToUser(u6.getIdUser(), t7.getIdTask());
+
         addUserToGroup(g1.getIdGroup(), u1.getIdUser());
         addUserToGroup(g1.getIdGroup(), u2.getIdUser());
         addUserToGroup(g2.getIdGroup(), u3.getIdUser());

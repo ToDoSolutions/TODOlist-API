@@ -1,5 +1,6 @@
 package aiss.utilities;
 
+import aiss.model.Group;
 import aiss.model.Task;
 import aiss.model.User;
 
@@ -43,5 +44,17 @@ public class Update {
         // Update location.
         if (user.getLocation() != null)
             oldUser.setLocation(user.getLocation());
+    }
+
+    public static void groupFromOther(Group group, Group oldGroup) {
+        // Update name.
+        if (group.getName() != null)
+            oldGroup.setName(group.getName());
+        // Update description.
+        if (group.getDescription() != null)
+            oldGroup.setDescription(group.getDescription());
+        // Update avatar.
+        if (group.getCreatedDate() != null)
+            oldGroup.setCreatedDate(group.getCreatedDate());
     }
 }

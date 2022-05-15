@@ -1,5 +1,6 @@
 package aiss.utilities;
 
+import aiss.model.Group;
 import aiss.model.Task;
 import aiss.model.User;
 
@@ -68,5 +69,24 @@ public class Order {
             result.sort(Comparator.comparing(User::getTaskCompleted));
         else if (order.equals("-taskCompleted"))
             result.sort(Comparator.comparing(User::getTaskCompleted).reversed());
+    }
+
+    public static void sequenceGroup(List<Group> result, String order) {
+        if (order.equals("idGroup"))
+            result.sort(Comparator.comparing(Group::getIdGroup));
+        else if (order.equals("-idGroup"))
+            result.sort(Comparator.comparing(Group::getIdGroup).reversed());
+        else if (order.equals("name"))
+            result.sort(Comparator.comparing(Group::getName));
+        else if (order.equals("-name"))
+            result.sort(Comparator.comparing(Group::getName).reversed());
+        else if (order.equals("description"))
+            result.sort(Comparator.comparing(Group::getDescription));
+        else if (order.equals("-description"))
+            result.sort(Comparator.comparing(Group::getDescription).reversed());
+        else if (order.equals("numTask"))
+            result.sort(Comparator.comparing(Group::getNumTasks));
+        else if (order.equals("-numTask"))
+            result.sort(Comparator.comparing(Group::getNumTasks).reversed());
     }
 }
