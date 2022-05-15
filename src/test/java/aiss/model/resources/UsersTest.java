@@ -1,15 +1,5 @@
 package aiss.model.resources;
 
-import static org.junit.Assert.*;
-import java.sql.Date;
-import java.util.Collection;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import aiss.model.Difficulty;
-import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
@@ -139,5 +129,5 @@ public class UsersTest {
         }
     }
      */
- 
+
 }

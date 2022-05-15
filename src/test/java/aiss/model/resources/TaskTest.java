@@ -1,20 +1,7 @@
 package aiss.model.resources;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.sql.Date;
-import java.util.Collection;
-
-import aiss.model.Difficulty;
-import aiss.model.Status;
 import aiss.model.Task;
-
-
 import aiss.model.repository.MapRepository;
-import javassist.NotFoundException;
 
 
 public class TaskTest {

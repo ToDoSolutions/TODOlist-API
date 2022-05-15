@@ -36,7 +36,8 @@ public class Filter {
                 restriccion.contains("<") && value.before(date) ||
                 restriccion.contains(">") && value.after(date);
     }
-    
+
+    /*
     public static boolean isGEL(Integer value, String parameter) {
         String restriccion = String.valueOf(parameter.charAt(0));
         String aux = String.valueOf(parameter.charAt(1));
@@ -52,4 +53,5 @@ public class Filter {
                 restriccion.contains("<") && value < num ||
                 restriccion.contains(">") && value > num;
     }
+     */
 }

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class Group {
 
     // Para el getFields.
-    public static final String ALL_ATTRIBUTES = "idUser,name,surname,email,avatar,bio,location,taskCompleted,tasks";
+    public static final String ALL_ATTRIBUTES = "idGroup,name,description,createdDate,users,numTasks";
 
     // Atributos de la clase.
     private String idGroup, name, description;
@@ -32,7 +32,9 @@ public class Group {
     }
 
     public Integer getNumTasks() {
-        return 0;
+        return users.stream()
+                .flatMap(user -> user.getTasks().stream().map(Task::getIdTask))
+                .collect(Collectors.toSet()).size();
     }
 
     // Getter y setters.
@@ -119,26 +121,26 @@ public class Group {
     }
 
     //Comprobar si modifica el user. 
-	public void addTask(Task t) {
-		for (User u : users) {
-			if (!u.getTasks().contains(t))
-				u.addTask(t);
-		}
-	}
+    public void addTask(Task t) {
+        for (User u : users) {
+            if (!u.getTasks().contains(t))
+                u.addTask(t);
+        }
+    }
 
-	public void deleteTask(Task t) {
-		for (User u : users) {
-			if (u.getTasks().contains(t))
-				u.deleteTask(t);
-		}
-	}
+    public void deleteTask(Task t) {
+        for (User u : users) {
+            if (u.getTasks().contains(t))
+                u.deleteTask(t);
+        }
+    }
 
-	public void deleteTask(String id) {
-		for (User u : users) {
-			if (u.getTasks().stream().map(Task::getIdTask).collect(Collectors.toList()).contains(id))
-				u.deleteTask(id);
-		}
-	}
+    public void deleteTask(String id) {
+        for (User u : users) {
+            if (u.getTasks().stream().map(Task::getIdTask).collect(Collectors.toList()).contains(id))
+                u.deleteTask(id);
+        }
+    }
 
     public Map<String, Object> getFields(String fieldsGroup, String fieldsUser, String fieldsTask) {
         List<String> attributesShown = Stream.of(fieldsGroup.split(",")).map(String::trim).collect(Collectors.toList());

@@ -18,7 +18,7 @@ public class Message {
     }
 
     public static Response checkTask(Task task) {
-        
+
         if (task.getTitle() != null && task.getTitle().length() > 50)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
@@ -52,6 +52,7 @@ public class Message {
                     Pair.of("message", "The difficulty of the task must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
         return null;
     }
+
     public static Response checkUser(User user) {
         if (user.getEmail() != null && !EmailValidator.getInstance().isValid(user.getEmail()))
             return Message.send(Response.Status.BAD_REQUEST,
@@ -91,8 +92,8 @@ public class Message {
                     Pair.of("message", "The description of the group must be less than 200 characters and it's " + group.getDescription().length()));
         if (group.getCreatedDate() != null && group.getCreatedDate().before(new Date(0)))
             return Message.send(Response.Status.BAD_REQUEST,
-                            Pair.of("status", "400"),
-                            Pair.of("message", "The created date must be before the current date ant it's " + group.getCreatedDate()));
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The created date must be before the current date ant it's " + group.getCreatedDate()));
         return null;
     }
 
@@ -150,17 +151,17 @@ public class Message {
                     Pair.of("message", "The user with id=" + userId + " is already in the group with id=" + groupId));
         return null;
     }
-    
+
     public static Response requiredForTask(Task task) {
-    	if (task.getTitle() == null || "".equals(task.getTitle()))
+        if (task.getTitle() == null || "".equals(task.getTitle()))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "Title is required"));
-    	return null;
+        return null;
     }
-    
+
     public static Response requiredForUser(User user) {
-    	if (user.getName() == null || "".equals(user.getName()))
+        if (user.getName() == null || "".equals(user.getName()))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The name of the user is required"));
@@ -178,9 +179,9 @@ public class Message {
                     Pair.of("message", "The tasks of the user are not allowed"));
         return null;
     }
-    
+
     public static Response requiredForGroup(Group group) {
-    	if (group.getName() == null || "".equals(group.getName()))
+        if (group.getName() == null || "".equals(group.getName()))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The name of the group is required"));
@@ -188,31 +189,31 @@ public class Message {
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The users of the group are not allowed"));
-        return null; 
-    } 
-    
+        return null;
+    }
+
     public static Response taskNotFound(Task task, String taskId) {
-    	if (task == null)
+        if (task == null)
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The task with id=" + taskId + " was not found"));
-    	return null;
+        return null;
     }
-    
+
     public static Response userNotFound(User user, String userId) {
-    	if (user == null)
+        if (user == null)
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The user with id=" + userId + " was not found"));
-    	return null;
+        return null;
     }
 
     public static Response groupNotFound(Group group, String groupId) {
-    	if (group == null)
+        if (group == null)
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status", "404"),
                     Pair.of("message", "The group with id=" + groupId + " was not found"));
-    	return null;
+        return null;
     }
 
     public static Response taskIdRequired(Task task) {
@@ -224,18 +225,18 @@ public class Message {
     }
 
     public static Response userIdRequired(User user) {
-    	if (user.getIdUser() == null)
+        if (user.getIdUser() == null)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The id of the user is required"));
-    	return null;
+        return null;
     }
 
     public static Response groupIdRequired(Group group) {
-    	if (group.getIdGroup() == null)
+        if (group.getIdGroup() == null)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The id of the group is required"));
-    	return null;
+        return null;
     }
 }

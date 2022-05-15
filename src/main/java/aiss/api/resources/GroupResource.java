@@ -1,26 +1,7 @@
 package aiss.api.resources;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
 import aiss.model.Group;
+import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
@@ -28,12 +9,22 @@ import aiss.utilities.Filter;
 import aiss.utilities.Message;
 import aiss.utilities.Order;
 import aiss.utilities.Update;
-import javassist.NotFoundException;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/groups")
 public class GroupResource {
-	
-	protected static GroupResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
+
+    protected static GroupResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
     final Repository repository; // Para poder trabajar con los datos
 
     private GroupResource() {
@@ -44,15 +35,16 @@ public class GroupResource {
         // Creamos una instancia si no existe.
         instance = (instance == null) ? new GroupResource() : instance;
         return instance;
-    }    
-    
+    }
+
     @GET
     @Produces("application/json")
     public Response getAll(@QueryParam("order") String order,
                            @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                            @QueryParam("fieldsGroup") String fieldsGroup, @QueryParam("fieldsUser") String fieldsUser,
-                           @QueryParam("fieldsTask") String fieldsTask, @QueryParam("name") String name, 
-                           @QueryParam("description") String description, @QueryParam("numTasks") String numTasks) {
+                           @QueryParam("fieldsTask") String fieldsTask, @QueryParam("name") String name,
+                           @QueryParam("description") String description, @QueryParam("numTasks") String numTasks,
+                           @QueryParam("createdDate") String createdDate) {
         List<Group> result = new ArrayList<>(), groups = new ArrayList<>(repository.getAllGroup()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
             Order.sequenceGroup(groups, order);
@@ -63,34 +55,35 @@ public class GroupResource {
             Group group = groups.get(i);
             if (group != null &&
                     (name == null || group.getName().equals(name)) &&
-                    (description == null || group.getDescription().equals(description)) &&     
-                    (numTasks == null || Filter.isGEL(group.getNumTasks(), numTasks)))
+                    (description == null || group.getDescription().equals(description)) &&
+                    (numTasks == null || Filter.isGEL((long) group.getNumTasks(), numTasks)) &&
+                    (createdDate == null || Filter.isGEL(group.getCreatedDate(), createdDate)))
                 result.add(group);
-        } 
-        return Response.ok(result.stream().map(g -> g.getFields((fieldsGroup == null ? User.ALL_ATTRIBUTES : fieldsGroup), fieldsUser, fieldsTask)).collect(Collectors.toList())).build();
+        }
+        return Response.ok(result.stream().map(g -> g.getFields((fieldsGroup == null ? Group.ALL_ATTRIBUTES : fieldsGroup), fieldsUser, fieldsTask)).collect(Collectors.toList())).build();
     }
-    
+
     @GET
     @Path("/{groupId}")
     @Produces("application/json")
-    public Response getGroup(@PathParam("groupId") String groupId, @QueryParam("fieldsGroup") String fieldsGroup, 
-    		@QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Response getGroup(@PathParam("groupId") String groupId, @QueryParam("fieldsGroup") String fieldsGroup,
+                             @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         Group group = repository.getGroup(groupId);
 
         // Comprobamos si se encuentra el objeto en la base de datos.
         Response response = Message.groupNotFound(group, groupId);
         if (response != null) return response;
 
-        return Response.ok(group.getFields((fieldsGroup == null ? User.ALL_ATTRIBUTES : fieldsGroup), fieldsUser, fieldsTask)).build();
+        return Response.ok(group.getFields((fieldsGroup == null ? Group.ALL_ATTRIBUTES : fieldsGroup), fieldsUser, fieldsTask)).build();
     }
-    
+
     @POST
     @Consumes("application/json")
     @Produces("application/json")
     public Response addGroup(@Context UriInfo uriInfo, Group group) {
-    	// Comprobamos aquellos campos obligatorios.
-    	Response response = Message.requiredForGroup(group);
-    	if (response != null) return response;
+        // Comprobamos aquellos campos obligatorios.
+        Response response = Message.requiredForGroup(group);
+        if (response != null) return response;
 
         // Comprobamos si algún campo no es correcto.
         response = Message.checkGroup(group);
@@ -105,7 +98,7 @@ public class GroupResource {
         resp.entity(group);
         return resp.build();
     }
-    
+
     @PUT
     @Consumes("application/json")
     @Produces("application/json")
@@ -129,14 +122,14 @@ public class GroupResource {
 
         return Response.noContent().build();
     }
-    
+
     @DELETE
     @Path("/{groupId}")
     @Produces("application/json")
     public Response deleteGroup(@PathParam("groupId") String groupId) {
         Group toBeRemoved = repository.getGroup(groupId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
-        // Comprobamos si se encuentra el usuario en la base de datos.
+        // Comprobamos si se encuentra el grupo en la base de datos.
         Response response = Message.groupNotFound(toBeRemoved, groupId);
         if (response != null) return response;
 
@@ -145,11 +138,11 @@ public class GroupResource {
 
         return Response.noContent().build();
     }
-    
+
     @POST
     @Path("/{groupId}/{userId}")
     @Produces("application/json")
-    public Response addUserToGroup(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("groupId") String groupId) throws NotFoundException {
+    public Response addUserToGroup(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
         User user = repository.getUser(userId);
 
@@ -166,7 +159,7 @@ public class GroupResource {
         resp.entity(group);
         return resp.build();
     }
-    
+
     @DELETE
     @Path("/{groupId}/{userId}")
     @Produces("application/json")
@@ -178,11 +171,64 @@ public class GroupResource {
         Response response = Message.groupNotFound(group, groupId);
         if (response != null) return response;
 
-        // >Comprobamos que existe un usuario con la id dada.
+        // Comprobamos que existe un usuario con la id dada.
         response = Message.userNotFound(user, userId);
         if (response != null) return response;
 
         repository.deleteUserToGroup(groupId, userId);
+
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{groupId}/{taskId}")
+    @Produces("application/json")
+    public Response addTaskToGroup(@Context UriInfo uriInfo, @PathParam("taskId") String taskId, @PathParam("groupId") String groupId) {
+        Group group = repository.getGroup(groupId);
+        Task task = repository.getTask(taskId);
+
+        // Comprobamos que existe un grupo con la id dada.
+        Response response = Message.groupNotFound(group, groupId);
+        if (response != null) return response;
+
+        // Comprobamos que existe una tarea con la id dada.
+        response = Message.taskNotFound(task, taskId);
+        if (response != null) return response;
+
+        // >Comprobamos que existe una tarea con la id dada.
+        response = Message.taskNotFound(task, taskId);
+        if (response != null) return response;
+
+        repository.addTaskToGroup(groupId, taskId);
+
+        // Builds the response
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getGroup");
+        URI uri = ub.build(groupId);
+        ResponseBuilder resp = Response.created(uri);
+        resp.entity(group);
+        return resp.build();
+    }
+
+    @DELETE
+    @Path("/{groupId}/{taskId}")
+    @Produces("application/json")
+    public Response deleteTaskToGroup(@PathParam("groupId") String groupId, @PathParam("taskId") String taskId) {
+        Group group = repository.getGroup(groupId);
+        Task task = repository.getTask(taskId);
+
+        // Comprobamos que existe un grupo con la id dada.
+        Response response = Message.groupNotFound(group, groupId);
+        if (response != null) return response;
+
+        // Comprobamos que existe una tarea con la id dada.
+        response = Message.taskNotFound(task, taskId);
+        if (response != null) return response;
+
+        // >Comprobamos que existe una tarea con la id dada.
+        response = Message.taskNotFound(task, taskId);
+        if (response != null) return response;
+
+        repository.deleteTaskToGroup(groupId, taskId);
 
         return Response.noContent().build();
     }

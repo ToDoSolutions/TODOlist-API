@@ -1,6 +1,7 @@
 package aiss.api;
 
 import aiss.api.resources.GitHubResource;
+import aiss.api.resources.GroupResource;
 import aiss.api.resources.TaskResource;
 import aiss.api.resources.UserResource;
 
@@ -18,6 +19,7 @@ public class TODOlistApplication extends Application {
         singletons.add(UserResource.getInstance());
         singletons.add(TaskResource.getInstance());
         singletons.add(GitHubResource.getInstance());
+        singletons.add(GroupResource.getInstance());
     }
 
     @Override

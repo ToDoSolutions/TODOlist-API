@@ -11,8 +11,6 @@ import java.sql.Date;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MapRepository implements Repository {
 
@@ -65,10 +63,11 @@ public class MapRepository implements Repository {
         addUsers(u1, u2, u3, u4, u5, u6);
 
         // Create group
-        Group g1 = Group.of("Pepe", "Hola", Date.valueOf("2022-12-12"));
-        Group g2 = Group.of("Pepito", "Hola", Date.valueOf("2022-12-12"));
+        Group g1 = Group.of("Pepe", "Solo quieren ver el mundo arder", Date.valueOf("2006-10-12"));
+        Group g2 = Group.of("Otakus", "Dicen que su factura del agua es negativa", Date.valueOf("2022-05-06"));
+        Group g3 = Group.of("AISS enjoyers", "Se dice que son seres que existen desde el inicio de los multiversos", Date.valueOf("2000-03-09"));
 
-        addGroups(g1, g2);
+        addGroups(g1, g2, g3);
 
 
         // Si uno de los modelos es contenedor de otro.
@@ -84,8 +83,8 @@ public class MapRepository implements Repository {
         addUserToGroup(g1.getIdGroup(), u2.getIdUser());
         addUserToGroup(g2.getIdGroup(), u3.getIdUser());
         addUserToGroup(g2.getIdGroup(), u4.getIdUser());
-        addUserToGroup(g2.getIdGroup(), u5.getIdUser());
-        addUserToGroup(g2.getIdGroup(), u6.getIdUser());
+        addUserToGroup(g3.getIdGroup(), u5.getIdUser());
+        addUserToGroup(g3.getIdGroup(), u6.getIdUser());
     }
 
     // Para task.
@@ -116,16 +115,16 @@ public class MapRepository implements Repository {
 
     @Override
     public void updateTask(Task t) {
-        Task task = taskMap.get(t.getIdTask());
-        // taskMap.put(t.getIdTask() , t);
-        task.setTitle(t.getTitle());
-        task.setDescription(t.getDescription());
-        task.setStatus(t.getStatus());
-        task.setFinishedDate(t.getFinishedDate());
-        task.setReleaseDate(t.getStartDate());
-        task.setAnnotation(t.getAnnotation());
-        task.setPriority(t.getPriority());
-        task.setDifficulty(t.getDifficulty());
+        // Task task = taskMap.get(t.getIdTask());
+        taskMap.put(t.getIdTask(), t);
+        //task.setTitle(t.getTitle());
+        //task.setDescription(t.getDescription());
+        //task.setStatus(t.getStatus());
+        //task.setFinishedDate(t.getFinishedDate());
+        //task.setReleaseDate(t.getStartDate());
+        //task.setAnnotation(t.getAnnotation());
+        //task.setPriority(t.getPriority());
+        //task.setDifficulty(t.getDifficulty());
     }
 
     @Override
@@ -254,7 +253,7 @@ public class MapRepository implements Repository {
             e.printStackTrace();
         }
         String uri = "https://api.github.com/repos/" + account + "/" + repo;
-        Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(TaskGitHub.class);
     }
@@ -268,7 +267,7 @@ public class MapRepository implements Repository {
             e.printStackTrace();
         }
         String uri = "https://api.github.com/users/" + account;
-        Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Owner.class);
     }

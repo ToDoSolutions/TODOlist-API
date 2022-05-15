@@ -9,7 +9,6 @@ import aiss.utilities.Filter;
 import aiss.utilities.Message;
 import aiss.utilities.Order;
 import aiss.utilities.Update;
-import javassist.NotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -68,7 +67,7 @@ public class UserResource {
     @GET
     @Path("/{userId}")
     @Produces("application/json")
-    public Response getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) throws NotFoundException /* No debería de ser necesario este throw */ {
+    public Response getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         User user = repository.getUser(userId);
 
         // Comprobamos si se encuentra el objeto en la base de datos.
@@ -144,7 +143,7 @@ public class UserResource {
     @POST
     @Path("/{userId}/{taskId}")
     @Produces("application/json")
-    public Response addTaskToUser(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) throws NotFoundException {
+    public Response addTaskToUser(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
 

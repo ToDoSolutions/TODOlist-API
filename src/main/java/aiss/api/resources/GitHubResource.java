@@ -33,7 +33,6 @@ public class GitHubResource {
     }
 
 
-
     @GET
     @Path("/{account}/{repo}")
     @Produces("application/json")
