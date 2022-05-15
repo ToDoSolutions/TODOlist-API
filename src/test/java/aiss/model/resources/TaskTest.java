@@ -1,16 +1,28 @@
 package aiss.model.resources;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+import java.sql.Date;
+import java.util.Collection;
+
+import aiss.model.Difficulty;
+import aiss.model.Status;
 import aiss.model.Task;
+
+
 import aiss.model.repository.MapRepository;
+import javassist.NotFoundException;
 
 
 public class TaskTest {
 
 
     static Task task1, task2, task3;
-    static MapRepository repository = new MapRepository(); // hay alguna forma de quitar que sea publico
-
-    /*
+    static MapRepository repository = new MapRepository(); 
+    
     @BeforeClass
     public static void setup() throws Exception {
 
@@ -133,5 +145,5 @@ public class TaskTest {
         Task task = repository.getTask(task2.getIdTask()); // Esta línea debe de petar.
         assertNull("The song has not been deleted correctly", task);
     }
-    */
+
 }
