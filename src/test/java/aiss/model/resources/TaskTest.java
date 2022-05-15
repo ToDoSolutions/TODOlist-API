@@ -22,7 +22,8 @@ public class TaskTest {
 
     static Task task1, task2, task3;
     static MapRepository repository = new MapRepository(); 
-    
+
+    /*
     @BeforeClass
     public static void setup() throws Exception {
 
@@ -145,5 +146,6 @@ public class TaskTest {
         Task task = repository.getTask(task2.getIdTask()); // Esta línea debe de petar.
         assertNull("The song has not been deleted correctly", task);
     }
+     */
 
 }

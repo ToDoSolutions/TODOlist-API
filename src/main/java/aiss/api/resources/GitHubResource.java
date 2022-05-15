@@ -47,6 +47,11 @@ public class GitHubResource {
             return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
+
+        // Comprobamos si el repo es correcto
+        Response response = Message.checkRepo(task);
+        if (response != null) return response;
+
         return Response.ok(task).build();
 
 
@@ -66,6 +71,11 @@ public class GitHubResource {
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
+
+        // Comprobamos si el repo es correcto
+        Response response = Message.checkRepo(task);
+        if (response != null) return response;
+
 
         repository.addTask(task); // Añadimos el modelo a la base de datos.
         // Builds the response. Returns the playlist the has just been added.

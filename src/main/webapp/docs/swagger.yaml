@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: http://localhost:8089/api/v1 
+  - url: http://localhost:8089/api/v1
   - url: https://todolist-api-348718.ew.r.appspot.com/api/v1
 info:
   description: Crea tu propia lista de tareas para cualquier proyecto.
@@ -45,15 +45,9 @@ paths:
               - '-difficulty'
               - duration
               - '-duration'
-        - name: q
-          in: query
-          description: Query to filter
-          required: false
-          schema:
-            type: string
         - name: limit
           in: query
-          description:  Maximum number of results
+          description: Maximum number of results
           required: false
           schema:
             type: integer
@@ -87,13 +81,13 @@ paths:
             type: string
         - name: startDate
           in: query
-          description: When the task started
+          description: When the task started (you must add >, <, >=, <= or = before the date)
           required: false
           schema:
             type: string
         - name: finishedDate
           in: query
-          description: When the task finished
+          description: When the task finished (you must add >, <, >=, <= or = before the date)
           required: false
           schema:
             type: string
@@ -111,7 +105,7 @@ paths:
             type: string
         - name: duration
           in: query
-          description: Duration of a task
+          description: Duration of a task (you must add >, <, >=, <= or = before the number)
           required: false
           schema:
             type: string
@@ -123,41 +117,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  required:
-                    - title
-                  properties:
-                    idTask:
-                      type: string
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    status:
-                      type: string
-                    finishedDate:
-                      type: string
-                    startedDate:
-                      type: string
-                    annotation:
-                      type: string
-                    priority:
-                      type: integer
-                    difficulty:
-                      type: string
-                    duration:
-                      type: integer
-                  example:
-                    idTask: t1
-                    title: Comprar el pan
-                    description: Ve a comprar el pan para almorzar hoy
-                    status: IN_PROGRESS
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: La panaderia abre a las 9
-                    priority: '10'
-                    difficulty: EASY
-                    duration: '15'
+                  $ref: '#/components/schemas/Task'
         '400':
           description: Bad request
     post:
@@ -170,41 +130,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - title
-              properties:
-                idTask:
-                  type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                status:
-                  type: string
-                finishedDate:
-                  type: string
-                startedDate:
-                  type: string
-                annotation:
-                  type: string
-                priority:
-                  type: integer
-                difficulty:
-                  type: string
-                duration:
-                  type: integer
-              example:
-                idTask: t1
-                title: Comprar el pan
-                description: Ve a comprar el pan para almorzar hoy
-                status: IN_PROGRESS
-                finishedDate: 2022-12-12
-                startedDate: 2022-12-12
-                annotation: La panaderia abre a las 9
-                priority: '10'
-                difficulty: EASY
-                duration: '15'
+              $ref: '#/components/schemas/Task'
         description: Task to create
         required: true
       responses:
@@ -213,41 +139,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - title
-                properties:
-                  idTask:
-                    type: string
-                  title:
-                    type: string
-                  description:
-                    type: string
-                  status:
-                    type: string
-                  finishedDate:
-                    type: string
-                  startedDate:
-                    type: string
-                  annotation:
-                    type: string
-                  priority:
-                    type: integer
-                  difficulty:
-                    type: string
-                  duration:
-                    type: integer
-                example:
-                  idTask: t1
-                  title: Comprar el pan
-                  description: Ve a comprar el pan para almorzar hoy
-                  status: IN_PROGRESS
-                  finishedDate: 2022-12-12
-                  startedDate: 2022-12-12
-                  annotation: La panaderia abre a las 9
-                  priority: '10'
-                  difficulty: EASY
-                  duration: '15'
+                $ref: '#/components/schemas/Task'
         '400':
           description: Bad request
     put:
@@ -260,40 +152,7 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - title
-              properties:
-                idTask:
-                  type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                status:
-                  type: string
-                finishedDate:
-                  type: string
-                startedDate:
-                  type: string
-                annotation:
-                  type: string
-                priority:
-                  type: integer
-                difficulty:
-                  type: string
-                duration:
-                  type: integer
-              example:
-                idTask: t1
-                title: Comprar el pan
-                description: Ve a comprar el pan para almorzar hoy
-                status: IN_PROGRESS
-                finishedDate: 2022-12-12
-                startedDate: 2022-12-12
-                annotation: La panaderia abre a las 9
-                priority: '10'
-                difficulty: EASY
-                duration: '15'
+              $ref: '#/components/schemas/Task'
         description: Task to update
       responses:
         '204':
@@ -303,24 +162,6 @@ paths:
         '404':
           description: Task not found
   '/tasks/{taskId}':
-    delete:
-      tags:
-        - Tasks
-      summary: Delete task
-      description: Delete task
-      operationId: deleteTask
-      parameters:
-        - name: taskId
-          in: path
-          description: Id of the task
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Task deleted
-        '404':
-          description: Task not found
     get:
       tags:
         - Tasks
@@ -340,45 +181,28 @@ paths:
           content:
             application/json:
               schema:
-                type: array
                 items:
-                  type: object
-                  required:
-                    - title
-                  properties:
-                    idTask:
-                      type: string
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    status:
-                      type: string
-                    finishedDate:
-                      type: string
-                    startedDate:
-                      type: string
-                    annotation:
-                      type: string
-                    priority:
-                      type: integer
-                    difficulty:
-                      type: string
-                    duration:
-                      type: integer
-                  example:
-                    idTask: t1
-                    title: Comprar el pan
-                    description: Ve a comprar el pan para almorzar hoy
-                    status: IN_PROGRESS
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: La panaderia abre a las 9
-                    priority: '10'
-                    difficulty: EASY
-                    duration: '15'
+                  $ref: '#/components/schemas/Task'
         '400':
           description: Bad request
+    delete:
+      tags:
+        - Tasks
+      summary: Delete task
+      description: Delete task
+      operationId: deleteTask
+      parameters:
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
   /users:
     get:
       tags:
@@ -408,7 +232,7 @@ paths:
               - '-taskCompleted'
         - name: limit
           in: query
-          description:  Maximum number of results
+          description: Maximum number of results
           required: false
           schema:
             type: integer
@@ -460,7 +284,7 @@ paths:
             type: string
         - name: taskCompleted
           in: query
-          description: How many tasks a user completed
+          description: How many tasks a user completed (you must add >, <, >=, <= or = before the number)
           required: false
           schema:
             type: string
@@ -472,83 +296,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  required:
-                    - name
-                  properties:
-                    idUser:
-                      type: string
-                    name:
-                      type: string
-                    surname:
-                      type: string
-                    email:
-                      type: string
-                    avatar:
-                      type: string
-                    bio:
-                      type: string
-                    location:
-                      type: string
-                    tasks:
-                      type: array
-                      items:
-                        type: object
-                        required:
-                          - title
-                        properties:
-                          idTask:
-                            type: string
-                          title:
-                            type: string
-                          description:
-                            type: string
-                          status:
-                            type: string
-                          finishedDate:
-                            type: string
-                          startedDate:
-                            type: string
-                          annotation:
-                            type: string
-                          priority:
-                            type: integer
-                          difficulty:
-                            type: string
-                          duration:
-                            type: integer
-                    taskCompleted:
-                      type: integer
-                  example:
-                    idUser: u1
-                    name: Kujo
-                    surname: Jotaro
-                    email: oraora@gmail.com
-                    avatar: dolphin.jpg
-                    bio: Yare yare daze
-                    location: Morioh
-                    tasks:
-                      - idTask: t1
-                        title: Derrotar a Dio
-                        description: Cruza todo el mundo hasta llegar a Egipto
-                        status: DONE
-                        finishedDate: 2022-12-12
-                        startedDate: 2022-12-12
-                        annotation: Te encontrarás a un montón de randoms
-                        priority: '10'
-                        difficulty: HARDCORE
-                        duration: '300'
-                      - idTask: t2
-                        title: Parar a Kira
-                        description: Paren al psicopata explosivo
-                        status: DONE
-                        finishedDate: 2022-12-12
-                        startedDate: 2022-12-12
-                        annotation: Cuidado con Bites the Dust
-                        priority: '10'
-                        difficulty: HARDCORE
-                        duration: '150'
-                    taskCompleted: '3'
+                  $ref: '#/components/schemas/User'
         '400':
           description: Bad request
     put:
@@ -561,82 +309,7 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - name
-              properties:
-                idUser:
-                  type: string
-                name:
-                  type: string
-                surname:
-                  type: string
-                email:
-                  type: string
-                avatar:
-                  type: string
-                bio:
-                  type: string
-                location:
-                  type: string
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - title
-                    properties:
-                      idTask:
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      status:
-                        type: string
-                      finishedDate:
-                        type: string
-                      startedDate:
-                        type: string
-                      annotation:
-                        type: string
-                      priority:
-                        type: integer
-                      difficulty:
-                        type: string
-                      duration:
-                        type: integer
-                taskCompleted:
-                  type: integer
-              example:
-                idUser: u1
-                name: Kujo
-                surname: Jotaro
-                email: oraora@gmail.com
-                avatar: dolphin.jpg
-                bio: Yare yare daze
-                location: Morioh
-                tasks:
-                  - idTask: t1
-                    title: Derrotar a Dio
-                    description: Cruza todo el mundo hasta llegar a Egipto
-                    status: DONE
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: Te encontrarás a un montón de randoms
-                    priority: '10'
-                    difficulty: HARDCORE
-                    duration: '300'
-                  - idTask: t2
-                    title: Parar a Kira
-                    description: Paren al psicopata explosivo
-                    status: DONE
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: Cuidado con Bites the Dust
-                    priority: '10'
-                    difficulty: HARDCORE
-                    duration: '150'
-                taskCompleted: '3'
+              $ref: '#/components/schemas/User'
         description: User to update
       responses:
         '204':
@@ -655,83 +328,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - title
-              properties:
-                idUser:
-                  type: string
-                name:
-                  type: string
-                surname:
-                  type: string
-                email:
-                  type: string
-                avatar:
-                  type: string
-                bio:
-                  type: string
-                location:
-                  type: string
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - title
-                    properties:
-                      idTask:
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      status:
-                        type: string
-                      finishedDate:
-                        type: string
-                      startedDate:
-                        type: string
-                      annotation:
-                        type: string
-                      priority:
-                        type: integer
-                      difficulty:
-                        type: string
-                      duration:
-                        type: integer
-                taskCompleted:
-                  type: integer
-              example:
-                idUser: u1
-                name: Kujo
-                surname: Jotaro
-                email: oraora@gmail.com
-                avatar: dolphin.jpg
-                bio: Yare yare daze
-                location: Morioh
-                tasks:
-                  - idTask: t1
-                    title: Derrotar a Dio
-                    description: Cruza todo el mundo hasta llegar a Egipto
-                    status: DONE
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: Te encontrarás a un montón de randoms
-                    priority: '10'
-                    difficulty: HARDCORE
-                    duration: '300'
-                  - idTask: t2
-                    title: Parar a Kira
-                    description: Paren al psicopata explosivo
-                    status: DONE
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: Cuidado con Bites the Dust
-                    priority: '10'
-                    difficulty: HARDCORE
-                    duration: '150'
-                taskCompleted: '3'
+              $ref: '#/components/schemas/User'
         description: User to create
         required: true
       responses:
@@ -740,83 +337,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u1
-                  name: Kujo
-                  surname: Jotaro
-                  email: oraora@gmail.com
-                  avatar: dolphin.jpg
-                  bio: Yare yare daze
-                  location: Morioh
-                  tasks:
-                    - idTask: t1
-                      title: Derrotar a Dio
-                      description: Cruza todo el mundo hasta llegar a Egipto
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Te encontrarás a un montón de randoms
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '300'
-                    - idTask: t2
-                      title: Parar a Kira
-                      description: Paren al psicopata explosivo
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Cuidado con Bites the Dust
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '150'
-                  taskCompleted: '3'
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad request
   '/users/{userId}':
@@ -833,88 +354,26 @@ paths:
           required: true
           schema:
             type: string
+        - name: fieldsUser
+          in: query
+          description: Attributes of a User
+          required: false
+          schema:
+            type: string
+        - name: fieldsTask
+          in: query
+          description: Attributes of a task
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: User found
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u1
-                  name: Kujo
-                  surname: Jotaro
-                  email: oraora@gmail.com
-                  avatar: dolphin.jpg
-                  bio: Yare yare daze
-                  location: Morioh
-                  tasks:
-                    - idTask: t1
-                      title: Derrotar a Dio
-                      description: Cruza todo el mundo hasta llegar a Egipto
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Te encontrarás a un montón de randoms
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '300'
-                    - idTask: t2
-                      title: Parar a Kira
-                      description: Paren al psicopata explosivo
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Cuidado con Bites the Dust
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '150'
-                  taskCompleted: '3'
+                $ref: '#/components/schemas/User'
+
         '404':
           description: User not found
     delete:
@@ -946,72 +405,7 @@ paths:
         content:
           text/plain:
             schema:
-              required:
-                  - name
-              properties:
-                idUser:
-                  type: string
-                name:
-                  type: string
-                surname:
-                  type: string
-                email:
-                  type: string
-                avatar:
-                  type: string
-                bio:
-                  type: string
-                location:
-                  type: string
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - title
-                    properties:
-                      idTask:
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      status:
-                        type: string
-                      finishedDate:
-                        type: string
-                      startedDate:
-                        type: string
-                      annotation:
-                        type: string
-                      priority:
-                        type: integer
-                      difficulty:
-                        type: string
-                      duration:
-                        type: integer
-                taskCompleted:
-                  type: integer
-              example:
-                idUser: u6
-                name: I_Love_AISS
-                surname: AISS=IISSI2
-                email: ayquelasuspendo@yahoo.com
-                avatar: Asignatura
-                bio: Asignatura de Universidad
-                location: Sevilla
-                tasks:
-                  - idTask: s1
-                    title: Comprar el pan
-                    description: Ve a comprar el pan para almorzar hoy
-                    status: IN_PROGRESS
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: La panaderia abre a las 9
-                    priority: '10'
-                    difficulty: EASY
-                    duration: '15'    
-                taskCompleted: '0'
+              $ref: '#/components/schemas/User'
       parameters:
         - name: userId
           in: path
@@ -1031,72 +425,7 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u6
-                  name: I_Love_AISS
-                  surname: AISS=IISSI
-                  email: ayquelasuspendo@yahoo.com
-                  avatar: Asignatura
-                  bio: Asignatura de Universidad
-                  location: Sevilla
-                  tasks:
-                    - idTask: s1
-                      title: Comprar el pan
-                      description: Ve a comprar el pan para almorzar hoy
-                      status: IN_PROGRESS
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: La panaderia abre a las 9
-                      priority: '10'
-                      difficulty: EASY
-                      duration: '15'    
-                  taskCompleted: '0'      
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad request
         '404':
@@ -1145,82 +474,7 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u1
-                  name: Kujo
-                  surname: Jotaro
-                  email: oraora@gmail.com
-                  avatar: dolphin.jpg
-                  bio: Yare yare daze
-                  location: Morioh
-                  tasks:
-                    - idTask: t1
-                      title: Derrotar a Dio
-                      description: Cruza todo el mundo hasta llegar a Egipto
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Te encontrarás a un montón de randoms
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '300'
-                    - idTask: t2
-                      title: Parar a Kira
-                      description: Paren al psicopata explosivo
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Cuidado con Bites the Dust
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '150'
-                  taskCompleted: '3'
+                $ref: '#/components/schemas/User'
         '404':
           description: GitHub user not found
     post:
@@ -1233,72 +487,7 @@ paths:
         content:
           text/plain:
             schema:
-              required:
-                  - name
-              properties:
-                idUser:
-                  type: string
-                name:
-                  type: string
-                surname:
-                  type: string
-                email:
-                  type: string
-                avatar:
-                  type: string
-                bio:
-                  type: string
-                location:
-                  type: string
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - title
-                    properties:
-                      idTask:
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      status:
-                        type: string
-                      finishedDate:
-                        type: string
-                      startedDate:
-                        type: string
-                      annotation:
-                        type: string
-                      priority:
-                        type: integer
-                      difficulty:
-                        type: string
-                      duration:
-                        type: integer
-                taskCompleted:
-                  type: integer
-              example:
-                idUser: u6
-                name: I_Love_AISS
-                surname: AISS=IISSI2
-                email: ayquelasuspendo@yahoo.com
-                avatar: Asignatura
-                bio: Asignatura de Universidad
-                location: Sevilla
-                tasks:
-                  - idTask: s1
-                    title: Comprar el pan
-                    description: Ve a comprar el pan para almorzar hoy
-                    status: IN_PROGRESS
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: La panaderia abre a las 9
-                    priority: '10'
-                    difficulty: EASY
-                    duration: '15'    
-                taskCompleted: '0'
+              $ref: '#/components/schemas/User'
       parameters:
         - name: account
           in: path
@@ -1312,72 +501,7 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u6
-                  name: I_Love_AISS
-                  surname: AISS=IISSI
-                  email: ayquelasuspendo@yahoo.com
-                  avatar: Asignatura
-                  bio: Asignatura de Universidad
-                  location: Sevilla
-                  tasks:
-                    - idTask: s1
-                      title: Comprar el pan
-                      description: Ve a comprar el pan para almorzar hoy
-                      status: IN_PROGRESS
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: La panaderia abre a las 9
-                      priority: '10'
-                      difficulty: EASY
-                      duration: '15'    
-                  taskCompleted: '0'      
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad request
         '404':
@@ -1410,19 +534,19 @@ paths:
             type: string
         - name: finishedDate
           in: query
-          description: When the task finished
+          description: When the task finished (after start date)
           required: false
           schema:
             type: string
         - name: priority
           in: query
-          description: Priority of a task
+          description: Priority of a task (between 0 and 5)
           required: false
           schema:
             type: string
         - name: difficulty
           in: query
-          description: Difficulty of a task
+          description: Difficulty of a task (it could be EASY, MEDIUM, HARD, HARDCORE and I WANT TO DIE)
           required: false
           schema:
             type: string
@@ -1432,82 +556,7 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u1
-                  name: Kujo
-                  surname: Jotaro
-                  email: oraora@gmail.com
-                  avatar: dolphin.jpg
-                  bio: Yare yare daze
-                  location: Morioh
-                  tasks:
-                    - idTask: t1
-                      title: Derrotar a Dio
-                      description: Cruza todo el mundo hasta llegar a Egipto
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Te encontrarás a un montón de randoms
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '300'
-                    - idTask: t2
-                      title: Parar a Kira
-                      description: Paren al psicopata explosivo
-                      status: DONE
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: Cuidado con Bites the Dust
-                      priority: '10'
-                      difficulty: HARDCORE
-                      duration: '150'
-                  taskCompleted: '3'
+                $ref: '#/components/schemas/User'
         '404':
           description: GitHub user not found
     post:
@@ -1520,72 +569,7 @@ paths:
         content:
           text/plain:
             schema:
-              required:
-                  - name
-              properties:
-                idUser:
-                  type: string
-                name:
-                  type: string
-                surname:
-                  type: string
-                email:
-                  type: string
-                avatar:
-                  type: string
-                bio:
-                  type: string
-                location:
-                  type: string
-                tasks:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - title
-                    properties:
-                      idTask:
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      status:
-                        type: string
-                      finishedDate:
-                        type: string
-                      startedDate:
-                        type: string
-                      annotation:
-                        type: string
-                      priority:
-                        type: integer
-                      difficulty:
-                        type: string
-                      duration:
-                        type: integer
-                taskCompleted:
-                  type: integer
-              example:
-                idUser: u6
-                name: I_Love_AISS
-                surname: AISS=IISSI2
-                email: ayquelasuspendo@yahoo.com
-                avatar: Asignatura
-                bio: Asignatura de Universidad
-                location: Sevilla
-                tasks:
-                  - idTask: s1
-                    title: Comprar el pan
-                    description: Ve a comprar el pan para almorzar hoy
-                    status: IN_PROGRESS
-                    finishedDate: 2022-12-12
-                    startedDate: 2022-12-12
-                    annotation: La panaderia abre a las 9
-                    priority: '10'
-                    difficulty: EASY
-                    duration: '15'    
-                taskCompleted: '0'
+              $ref: '#/components/schemas/User'
       parameters:
         - name: account
           in: path
@@ -1607,19 +591,19 @@ paths:
             type: string
         - name: finishedDate
           in: query
-          description: When the task finished
+          description: When the task finished (after start date)
           required: false
           schema:
             type: string
         - name: priority
           in: query
-          description: Priority of a task
+          description: Priority of a task (between 0 and 5)
           required: false
           schema:
             type: string
         - name: difficulty
           in: query
-          description: Difficulty of a task
+          description: Difficulty of a task (it could be EASY, MEDIUM, HARD, HARDCORE and I WANT TO DIE)
           required: false
           schema:
             type: string
@@ -1629,73 +613,158 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - name
-                properties:
-                  idUser:
-                    type: string
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  email:
-                    type: string
-                  avatar:
-                    type: string
-                  bio:
-                    type: string
-                  location:
-                    type: string
-                  tasks:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - title
-                      properties:
-                        idTask:
-                          type: string
-                        title:
-                          type: string
-                        description:
-                          type: string
-                        status:
-                          type: string
-                        finishedDate:
-                          type: string
-                        startedDate:
-                          type: string
-                        annotation:
-                          type: string
-                        priority:
-                          type: integer
-                        difficulty:
-                          type: string
-                        duration:
-                          type: integer
-                  taskCompleted:
-                    type: integer
-                example:
-                  idUser: u6
-                  name: I_Love_AISS
-                  surname: AISS=IISSI
-                  email: ayquelasuspendo@yahoo.com
-                  avatar: Asignatura
-                  bio: Asignatura de Universidad
-                  location: Sevilla
-                  tasks:
-                    - idTask: s1
-                      title: Comprar el pan
-                      description: Ve a comprar el pan para almorzar hoy
-                      status: IN_PROGRESS
-                      finishedDate: 2022-12-12
-                      startedDate: 2022-12-12
-                      annotation: La panaderia abre a las 9
-                      priority: '10'
-                      difficulty: EASY
-                      duration: '15'    
-                  taskCompleted: '0'      
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad request
         '404':
           description: GitHub user or task not found
+
+
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - title
+      properties:
+        idTask:
+          description: Id of the task (is automatically generated)
+          type: string
+        title:
+          description: Title of the task (it must be less than 50 characters)
+          type: string
+        description:
+          description: Description of the task (it must be less than 200 characters)
+          type: string
+        status:
+          description: Status of the task (it could be DRAFT, IN_PROGRESS, IN_REVISION, DONE, CANCELLED)
+          type: string
+        finishedDate:
+          description: When the task finished (the following pattern should be used YYYY-MM-DD)
+          type: string
+        startedDate:
+          description: When the task started (the following pattern should be used YYYY-MM-DD)
+          type: string
+        annotation:
+          description: Annotation of the task (it must be less than 50 characters)
+          type: string
+        priority:
+          description: Priority of the task (between 0 and 5)
+          type: integer
+        difficulty:
+          description: Difficulty of the task (it could be EASY, MEDIUM, HARD, HARDCORE and I WANT TO DIE)
+          type: string
+        duration:
+          description: Duration of the task (it's calculated using the start and finish date)
+          type: integer
+        taskCompleted:
+          description: If the task is completed (no negatives numbers)
+          type: integer
+      example:
+        idTask: t1
+        title: Comprar el pan
+        description: Ve a comprar el pan para almorzar hoy
+        status: IN_PROGRESS
+        finishedDate: '2022-12-12'
+        startedDate: '2022-12-27'
+        annotation: La panadería abre a las 9
+        priority: '10'
+        difficulty: EASY
+        duration: '15'
+    User:
+      type: object
+      required:
+        - name
+      properties:
+        idUser:
+          description: Id of the user (is automatically generated)
+          type: string
+        name:
+          description: Name of the user (it must be less than 50 characters)
+          type: string
+        surname:
+          description: Surname of the user (it must be less than 50 characters)
+          type: string
+        email:
+          description: Email of the user (has a validation system, put a mail that makes sense)
+          type: string
+        avatar:
+          description: Avatar of the user (has a validation system, put an URL that makes sense)
+          type: string
+        bio:
+          description: Bio of the user (it must be less than 500 characters)
+          type: string
+        location:
+          description: Location of the user (it must be less than 50 characters)
+          type: string
+        tasks:
+          description: Tasks of the user
+          type: array
+          items:
+            type: object
+            required:
+              - title
+            properties:
+              idTask:
+                description: Id of the task (is automatically generated)
+                type: string
+              title:
+                description: Title of the task (it must be less than 50 characters)
+                type: string
+              description:
+                description: Description of the task (it must be less than 200 characters)
+                type: string
+              status:
+                description: Status of the task (it could be DRAFT, IN_PROGRESS, IN_REVISION, DONE, CANCELLED)
+                type: string
+              finishedDate:
+                description: When the task finished (the following pattern should be used YYYY-MM-DD)
+                type: string
+              startedDate:
+                description: When the task started (the following pattern should be used YYYY-MM-DD)
+                type: string
+              annotation:
+                description: Annotation of the task (it must be less than 50 characters)
+                type: string
+              priority:
+                description: Priority of the task (between 0 and 5)
+                type: integer
+              difficulty:
+                description: Difficulty of the task (it could be EASY, MEDIUM, HARD, HARDCORE and I WANT TO DIE)
+                type: string
+              duration:
+                description: Duration of the task (it's calculated using the start and finish date)
+                type: integer
+              taskCompleted:
+                description: If the task is completed (no negatives numbers)
+                type: integer
+      example:
+        idUser: u1
+        name: Kujo
+        surname: Jotaro
+        email: oraora@gmail.com
+        avatar: https://codigoesports.com/wp-content/uploads/2019/07/quien-es-belle-delphine.jpg
+        bio: Yare yare daze
+        location: Morioh
+        tasks:
+          - idTask: t1
+            title: Derrotar a Dio
+            description: Cruza todo el mundo hasta llegar a Egipto
+            status: DONE
+            finishedDate: '2023-10-08'
+            startedDate: '2022-12-12'
+            annotation: Te encontrarás a un montón de randoms
+            priority: '10'
+            difficulty: HARDCORE
+            duration: '300'
+          - idTask: t2
+            title: Parar a Kira
+            description: Paren al psicópata explosivo
+            status: DONE
+            finishedDate: '2023-05-11'
+            startedDate: '2022-12-12'
+            annotation: Cuidado con Bites the Dust
+            priority: '10'
+            difficulty: HARDCORE
+            duration: '150'
+        taskCompleted: '2'

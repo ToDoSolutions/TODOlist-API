@@ -26,30 +26,30 @@ public class Message {
         if (task.getDescription() != null && task.getDescription().length() > 200)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The description is too long"));
+                    Pair.of("message", "The description of the task must be less than 200 characters and it's " + task.getDescription().length()));
         if (task.getStatus() != null && task.getStatus() != Status.DRAFT && task.getStatus() != Status.IN_PROGRESS &&
                 task.getStatus() != Status.DONE && task.getStatus() != Status.IN_REVISION && task.getStatus() != Status.CANCELLED)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The status is not valid, it must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED"));
+                    Pair.of("message", "The status of the task must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED"));
         if (task.getFinishedDate() != null && task.getStartDate() != null && task.getDuration() < 0)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The duration is not valid, it must be a positive number"));
+                    Pair.of("message", "The duration of the task must be a positive number and it's " + task.getDuration()));
         if (task.getAnnotation() != null && task.getAnnotation().length() > 50)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The annotation is too long"));
+                    Pair.of("message", "The annotation of the task must be less than 50 characters and it's " + task.getAnnotation().length()));
         if (task.getPriority() != null && (task.getPriority() < 0 || task.getPriority() > 5))
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The priority is not valid, it must be a number between 0 and 5"));
+                    Pair.of("message", "The priority of the task is not valid, it must be a number between 0 and 5 and it's " + task.getPriority()));
         if (task.getDifficulty() != null && task.getDifficulty() != Difficulty.EASY &&
                 task.getDifficulty() != Difficulty.MEDIUM && task.getDifficulty() != Difficulty.HARD &&
                 task.getDifficulty() != Difficulty.HARDCORE && task.getDifficulty() != Difficulty.I_WANT_TO_DIE)
             return send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The difficulty is not valid, it must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
+                    Pair.of("message", "The difficulty of the task must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
         return null;
     }
     public static Response checkUser(User user) {
@@ -60,15 +60,23 @@ public class Message {
         if (user.getName() != null && user.getName().length() > 50)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The name of the user is not valid"));
+                    Pair.of("message", "The name of the user must be less than 50 characters and it's " + user.getName().length()));
         if (user.getSurname() != null && user.getSurname().length() > 50)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The surname of the user is not valid"));
+                    Pair.of("message", "The surname of the user must be less than 50 characters and it's " + user.getSurname().length()));
         if (user.getAvatar() != null && !UrlValidator.getInstance().isValid(user.getAvatar()))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The avatar of the user is not valid"));
+        if (user.getBio() != null && user.getBio().length() > 500)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The bio of the user must be less than 500 characters and it's " + user.getBio().length()));
+        if (user.getLocation() != null && user.getLocation().length() > 50)
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The location of the user must be less than 50 characters and it's " + user.getLocation().length()));
         return null;
     }
 
@@ -76,15 +84,38 @@ public class Message {
         if (group.getName() != null && group.getName().length() > 50)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The name of the group is not valid"));
+                    Pair.of("message", "The name of the group must be less than 50 characters and it's " + group.getName().length()));
         if (group.getDescription() != null && group.getDescription().length() > 200)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The description of the group is not valid"));
+                    Pair.of("message", "The description of the group must be less than 200 characters and it's " + group.getDescription().length()));
         if (group.getCreatedDate() != null && group.getCreatedDate().before(new Date(0)))
             return Message.send(Response.Status.BAD_REQUEST,
                             Pair.of("status", "400"),
-                            Pair.of("message", "The created date of the group is not valid"));
+                            Pair.of("message", "The created date must be before the current date ant it's " + group.getCreatedDate()));
+        return null;
+    }
+
+    public static Response checkRepo(Task repo) {
+        if (repo.getFinishedDate() != null && repo.getFinishedDate().before(new Date(0)))
+            return Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The finished date must be before the current date ant it's " + repo.getFinishedDate()));
+        if (repo.getPriority() != null && (repo.getPriority() < 0 || repo.getPriority() > 5))
+            return send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The priority of the task is not valid, it must be a number between 0 and 5 and it's " + repo.getPriority()));
+        if (repo.getStatus() != null && repo.getStatus() != Status.DRAFT && repo.getStatus() != Status.IN_PROGRESS &&
+                repo.getStatus() != Status.DONE && repo.getStatus() != Status.IN_REVISION && repo.getStatus() != Status.CANCELLED)
+            return send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The status of the task must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED"));
+        if (repo.getDifficulty() != null && repo.getDifficulty() != Difficulty.EASY &&
+                repo.getDifficulty() != Difficulty.MEDIUM && repo.getDifficulty() != Difficulty.HARD &&
+                repo.getDifficulty() != Difficulty.HARDCORE && repo.getDifficulty() != Difficulty.I_WANT_TO_DIE)
+            return send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The difficulty of the task must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE"));
         return null;
     }
 
