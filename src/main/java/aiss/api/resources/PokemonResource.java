@@ -32,12 +32,12 @@ public class PokemonResource {
     public Response getPokemon(@PathParam("name") String name, @QueryParam("status") String status,
                               @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority) {
         Task task;
-        //try {
+        try {
             task = Parse.taskFromPokemon(repository.getPokemon(name), status, finishedDate, priority);
-        //} catch (Exception e) {
-        //    return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
-        //            Pair.of("message: ", "The pokemon with the name " + e + " was not found"));
-        //}
+        } catch (Exception e) {
+            return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The pokemon with the name " + e + " was not found"));
+        }
         return Response.ok(task).build();
     }
 

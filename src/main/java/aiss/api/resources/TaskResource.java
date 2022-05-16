@@ -1,9 +1,6 @@
 package aiss.api.resources;
 
-import aiss.model.Difficulty;
-import aiss.model.Status;
-import aiss.model.Task;
-import aiss.model.User;
+import aiss.model.*;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Filter;
@@ -143,9 +140,13 @@ public class TaskResource {
         // Elimina la tarea de la base de datos chapucera.
         repository.deleteTask(taskId);
 
-        // Elimina las tareas de los usuarios.
+        // Elimina la tarea de los usuarios.
         for (User user : repository.getAllUser())
             user.deleteTask(toBeRemoved);
+
+        // Elimina la tarea de los grupos.
+        for (Group group : repository.getAllGroup())
+            group.deleteTask(toBeRemoved);
 
         return Response.noContent().build();
     }

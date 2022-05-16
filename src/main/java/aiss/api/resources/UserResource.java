@@ -1,6 +1,7 @@
 package aiss.api.resources;
 
 
+import aiss.model.Group;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
@@ -132,6 +133,10 @@ public class UserResource {
 
         // Elimina el usuario de la base de datos chapucera.
         repository.deleteUser(userId);
+
+        // Elimina el usario de los grupos.
+        for (Group group : repository.getAllGroup())
+            group.deleteUser(toBeRemoved);
 
         return Response.noContent().build();
     }
