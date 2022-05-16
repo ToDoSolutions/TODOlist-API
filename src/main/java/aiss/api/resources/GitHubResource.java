@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("/github")
+@Produces("application/json")
 public class GitHubResource {
 
     protected static GitHubResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
@@ -35,7 +36,6 @@ public class GitHubResource {
 
     @GET
     @Path("/{account}/{repo}")
-    @Produces("application/json")
     public Response getTask(@PathParam("account") String account, @PathParam("repo") String repo,
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
@@ -58,7 +58,6 @@ public class GitHubResource {
 
     @POST
     @Path("/{account}/{repo}")
-    @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, @PathParam("account") String account, @PathParam("repo") String repo,
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {

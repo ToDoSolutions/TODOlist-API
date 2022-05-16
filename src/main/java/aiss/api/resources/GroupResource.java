@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/groups")
+@Produces("application/json")
 public class GroupResource {
 
     protected static GroupResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
@@ -38,7 +39,6 @@ public class GroupResource {
     }
 
     @GET
-    @Produces("application/json")
     public Response getAll(@QueryParam("order") String order,
                            @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                            @QueryParam("fieldsGroup") String fieldsGroup, @QueryParam("fieldsUser") String fieldsUser,
@@ -65,7 +65,6 @@ public class GroupResource {
 
     @GET
     @Path("/{groupId}")
-    @Produces("application/json")
     public Response getGroup(@PathParam("groupId") String groupId, @QueryParam("fieldsGroup") String fieldsGroup,
                              @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         Group group = repository.getGroup(groupId);
@@ -79,7 +78,6 @@ public class GroupResource {
 
     @POST
     @Consumes("application/json")
-    @Produces("application/json")
     public Response addGroup(@Context UriInfo uriInfo, Group group) {
         // Comprobamos aquellos campos obligatorios.
         Response response = Message.requiredForGroup(group);
@@ -101,7 +99,6 @@ public class GroupResource {
 
     @PUT
     @Consumes("application/json")
-    @Produces("application/json")
     public Response updateGroup(Group group) {
         // Comprobamos que nos ha dado una id.
         Response response = Message.groupIdRequired(group);
@@ -125,7 +122,6 @@ public class GroupResource {
 
     @DELETE
     @Path("/{groupId}")
-    @Produces("application/json")
     public Response deleteGroup(@PathParam("groupId") String groupId) {
         Group toBeRemoved = repository.getGroup(groupId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
@@ -182,7 +178,6 @@ public class GroupResource {
 
     @POST
     @Path("/{groupId}/{taskId}")
-    @Produces("application/json")
     public Response addTaskToGroup(@Context UriInfo uriInfo, @PathParam("taskId") String taskId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);
@@ -211,7 +206,6 @@ public class GroupResource {
 
     @DELETE
     @Path("/{groupId}/{taskId}")
-    @Produces("application/json")
     public Response deleteTaskToGroup(@PathParam("groupId") String groupId, @PathParam("taskId") String taskId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);

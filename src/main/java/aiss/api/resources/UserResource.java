@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/users")
+@Produces("application/json")
 public class UserResource {
 
     protected static UserResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
@@ -38,7 +39,6 @@ public class UserResource {
     }
 
     @GET
-    @Produces("application/json")
     public Response getAll(@QueryParam("order") String order,
                            @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
@@ -66,7 +66,6 @@ public class UserResource {
 
     @GET
     @Path("/{userId}")
-    @Produces("application/json")
     public Response getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         User user = repository.getUser(userId);
 
@@ -79,7 +78,6 @@ public class UserResource {
 
     @POST
     @Consumes("application/json")
-    @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
         // Comprobamos aquellos campos obligatorios.
         Response response = Message.requiredForUser(user);
@@ -101,7 +99,6 @@ public class UserResource {
 
     @PUT
     @Consumes("application/json")
-    @Produces("application/json")
     public Response updateUser(User user) {
         // Comprobamos que nos ha dado una id.
         Response response = Message.userIdRequired(user);
@@ -126,7 +123,6 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}")
-    @Produces("application/json")
     public Response deleteUser(@PathParam("userId") String userId) {
         User toBeRemoved = repository.getUser(userId); // Obtiene el modelo a eliminar de la base de datos chapucera.
 
@@ -142,7 +138,6 @@ public class UserResource {
 
     @POST
     @Path("/{userId}/{taskId}")
-    @Produces("application/json")
     public Response addTaskToUser(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
@@ -163,7 +158,6 @@ public class UserResource {
 
     @DELETE
     @Path("/{userId}/{taskId}")
-    @Produces("application/json")
     public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);

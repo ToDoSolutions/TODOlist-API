@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/tasks")
+@Produces("application/json")
 public class TaskResource {
 
     protected static TaskResource instance = null; // La instancia inicialmente no existe, se crea al ejecutar .getInstance().
@@ -39,7 +40,6 @@ public class TaskResource {
     }
 
     @GET
-    @Produces("application/json")
     public Response getAllTasks(@QueryParam("order") String order,
                                 @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
                                 @QueryParam("fields") String fields, @QueryParam("title") String title,
@@ -75,7 +75,6 @@ public class TaskResource {
 
     @GET
     @Path("/{taskId}")
-    @Produces("application/json")
     public Response getTask(@PathParam("taskId") String taskId, @QueryParam("fields") String fields) {
         Task task = repository.getTask(taskId);
 
@@ -88,7 +87,6 @@ public class TaskResource {
 
     @POST
     @Consumes("application/json")
-    @Produces("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
         // Comprobamos aquellos campos obligatorios.
         Response response = Message.requiredForTask(task);
@@ -110,7 +108,6 @@ public class TaskResource {
 
     @PUT
     @Consumes("application/json")
-    @Produces("application/json")
     public Response updateTask(Task task) {
         // Comprobamos que nos ha dado una id.
         Response response = Message.taskIdRequired(task);
@@ -136,7 +133,6 @@ public class TaskResource {
 
     @DELETE
     @Path("/{taskId}")
-    @Produces("application/json")
     public Response deleteTask(@PathParam("taskId") String taskId) {
         Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
 

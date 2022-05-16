@@ -3,6 +3,7 @@ package aiss.model.repository;
 import aiss.model.*;
 import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
+import aiss.model.pokemon.Pokemon;
 import org.restlet.resource.ClientResource;
 
 import java.io.UnsupportedEncodingException;
@@ -258,7 +259,6 @@ public class MapRepository implements Repository {
         return cr.get(TaskGitHub.class);
     }
 
-
     @Override
     public Owner getOwner(String account) {
         try {
@@ -270,6 +270,20 @@ public class MapRepository implements Repository {
         // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Owner.class);
+    }
+
+    // Para pokemon.
+    @Override
+    public Pokemon getPokemon(String name) {
+        try {
+            name = URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String uri = "https://aisspkmnapi.ts.r.appspot.com/api/pokemons/" + name;
+        // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        ClientResource cr = new ClientResource(uri);
+        return cr.get(Pokemon.class);
     }
 
     public void resetIndex() {

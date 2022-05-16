@@ -6,6 +6,7 @@ import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
+import aiss.model.pokemon.Pokemon;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -50,5 +51,57 @@ public class Parse {
     private static String getAdditional(Map<String, Object> additional, String key) {
         Object aux = additional.get(key);
         return aux == null ? null : aux.toString();
+    }
+
+    public static Task taskFromPokemon(Pokemon pokemon, String status, String finishedDate, String priority) {
+        Date auxFinishedDate = Date.valueOf(finishedDate);
+        Status auxStatus = Status.parse(status);
+        return Task.of(
+                "Catch " + pokemon.getName(),
+                "The pokemon is type " + (pokemon.getType2() == null ? pokemon.getType1() : pokemon.getType1() + " and " + pokemon.getType2()),
+                auxStatus,
+                Date.valueOf(new java.util.Date().toString().split(" ")[0]),
+                auxFinishedDate,
+                getPokemonAnnotation(pokemon),
+                Integer.parseInt(priority),
+                getPokemonDifficulty(pokemon));
+    }
+
+    private static String getPokemonAnnotation(Pokemon pokemon) {
+        if (pokemon.getLegend()) {
+            return "Be careful, you will need a masterball!!!";
+        } else {
+            if (pokemon.getLegend()) {
+              return "easy peasy lemon squeezy, take one pokeball";
+            } else if (getAvgStats(pokemon) < 100) {
+                return "mmmh, you will nead some pokeballs";
+            } else if (getAvgStats(pokemon) < 150) {
+                return "uffff, you must take a great a amount of superballs";
+            } else if (getAvgStats(pokemon) < 200) {
+                return "Yisus, if you do not catch dozens of super balls, you will not be able to catch it.";
+            } else {
+                return "LMFAO, take the entire Pokemon Center in your bag";
+            }
+        }
+    }
+
+    private static Difficulty getPokemonDifficulty(Pokemon pokemon) {
+        if (pokemon.getLegend()) {
+            return Difficulty.I_WANT_TO_DIE;
+        } else {
+            if (getAvgStats(pokemon) < 100) {
+                return Difficulty.EASY;
+            } else if (getAvgStats(pokemon) < 150) {
+                return Difficulty.MEDIUM;
+            } else if (getAvgStats(pokemon) < 200) {
+                return Difficulty.HARD;
+            } else {
+                return Difficulty.HARDCORE;
+            }
+        }
+    }
+
+    private static Integer getAvgStats(Pokemon pokemon) {
+        return (pokemon.getHp() + pokemon.getAttack() + pokemon.getDefense()) / 3;
     }
 }

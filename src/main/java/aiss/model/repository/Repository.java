@@ -5,6 +5,7 @@ import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
+import aiss.model.pokemon.Pokemon;
 
 import java.util.Collection;
 
@@ -64,4 +65,7 @@ public interface Repository {
     TaskGitHub getRepo(String account, String repo);
 
     Owner getOwner(String account);
+
+    // Para pokemon.
+    Pokemon getPokemon(String name);
 }
