@@ -9,6 +9,9 @@ import aiss.model.github.TaskGitHub;
 import aiss.model.pokemon.Pokemon;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -54,16 +57,18 @@ public class Parse {
     }
 
     public static Task taskFromPokemon(Pokemon pokemon, String status, String finishedDate, String priority) {
-        Date auxFinishedDate = Date.valueOf(finishedDate);
-        Status auxStatus = Status.parse(status);
+        Date auxFinishedDate = finishedDate == null ? null: Date.valueOf(finishedDate);
+        Status auxStatus = status == null ? null: Status.parse(status);
+        Integer auxPriority = priority == null ? null: Integer.parseInt(priority);
+        String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
         return Task.of(
                 "Catch " + pokemon.getName(),
                 "The pokemon is type " + (pokemon.getType2() == null ? pokemon.getType1() : pokemon.getType1() + " and " + pokemon.getType2()),
                 auxStatus,
-                Date.valueOf(new java.util.Date().toString().split(" ")[0]),
+                Date.valueOf(startDate),
                 auxFinishedDate,
                 getPokemonAnnotation(pokemon),
-                Integer.parseInt(priority),
+                auxPriority,
                 getPokemonDifficulty(pokemon));
     }
 

@@ -2,6 +2,7 @@ package aiss.api;
 
 import aiss.api.resources.GitHubResource;
 import aiss.api.resources.GroupResource;
+import aiss.api.resources.PokemonResource;
 import aiss.api.resources.TaskResource;
 import aiss.api.resources.UserResource;
 
@@ -20,6 +21,7 @@ public class TODOlistApplication extends Application {
         singletons.add(TaskResource.getInstance());
         singletons.add(GitHubResource.getInstance());
         singletons.add(GroupResource.getInstance());
+        singletons.add(PokemonResource.getInstance());
     }
 
     @Override
