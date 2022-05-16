@@ -51,6 +51,9 @@ public class GroupResource {
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null || limit > groups.size() ? groups.size() : start + limit; // Donde va a terminar.
 
+        Response response = Message.checkDate(createdDate);
+        if (response != null) return response;
+
         for (int i = start; i < end; i++) {
             Group group = groups.get(i);
             if (group != null &&

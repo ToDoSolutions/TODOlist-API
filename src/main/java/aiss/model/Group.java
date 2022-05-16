@@ -12,11 +12,11 @@ public class Group {
 
     // Atributos de la clase.
     private String idGroup, name, description;
-    private Date createdDate;
+    private String createdDate;
     private List<User> users;
 
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
-    public Group(String name, String description, Date createdDate) {
+    public Group(String name, String description, String createdDate) {
         this.idGroup = null;
         this.name = name;
         this.description = description;
@@ -27,7 +27,7 @@ public class Group {
     private Group() {
     }
 
-    public static Group of(String name, String description, Date createdDate) {
+    public static Group of(String name, String description, String createdDate) {
         return new Group(name, description, createdDate);
     }
 
@@ -63,10 +63,14 @@ public class Group {
     }
 
     public Date getCreatedDate() {
+        return Date.valueOf(createdDate);
+    }
+
+    public String getCreatedDateString() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 

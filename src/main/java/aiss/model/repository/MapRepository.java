@@ -40,13 +40,13 @@ public class MapRepository implements Repository {
         taskMap = new HashMap<>();
 
         // Create task
-        Task t1 = Task.of("Vacaciones", "Quiero vacaciones", Status.DRAFT, Date.valueOf("2020-01-01"), Date.valueOf("2020-01-31"), "Vacaciones", 5, Difficulty.HARDCORE);
-        Task t2 = Task.of("Bronce", "Salir de bronce en el lol", Status.IN_PROGRESS, Date.valueOf("2021-01-01"), Date.valueOf("2022-12-15"), "Quiero subir o mantenerme no bajar a hierro", 5, Difficulty.I_WANT_TO_DIE);
-        Task t3 = Task.of("Aceitunas", "Comprar aceitunas sin hueso", Status.IN_PROGRESS, Date.valueOf("2022-05-19"), Date.valueOf("2022-05-29"), "Sin hueso pero con pepinillo", 2, Difficulty.MEDIUM);
-        Task t4 = Task.of("VIVA ER BETIS", "Ver el betis", Status.DONE, Date.valueOf("2022-08-07"), Date.valueOf("2022-08-08"), "err Betiss", 5, Difficulty.EASY);
-        Task t5 = Task.of("Entrenador Pokemon", "Completar la pokedex para el profesor Oak", Status.IN_REVISION, Date.valueOf("2021-05-17"), Date.valueOf("2022-11-30"), "Hazte con todos, los 892...", 3, Difficulty.I_WANT_TO_DIE);
-        Task t6 = Task.of("Comprar mando nuevo", "Nuevo mando para jugar elden ring", Status.DRAFT, Date.valueOf("2022-01-19"), Date.valueOf("2022-06-06"), "Comprar uno a prueba de enfados", 4, Difficulty.MEDIUM);
-        Task t7 = Task.of("¿Aprender Inglés? Na", "El inglés se enseña mal y punto", Status.CANCELLED, Date.valueOf("2020-04-22"), Date.valueOf("2023-05-26"), "Como aprendo el inglés si ni se el español", 0, Difficulty.HARDCORE);
+        Task t1 = Task.of("Vacaciones", "Quiero vacaciones", Status.DRAFT, "2020-01-01", "2020-01-31", "Vacaciones", 5, Difficulty.HARDCORE);
+        Task t2 = Task.of("Bronce", "Salir de bronce en el lol", Status.IN_PROGRESS, "2021-01-01", "2022-12-15", "Quiero subir o mantenerme no bajar a hierro", 5, Difficulty.I_WANT_TO_DIE);
+        Task t3 = Task.of("Aceitunas", "Comprar aceitunas sin hueso", Status.IN_PROGRESS, "2022-05-19", "2022-05-29", "Sin hueso pero con pepinillo", 2, Difficulty.MEDIUM);
+        Task t4 = Task.of("VIVA ER BETIS", "Ver el betis", Status.DONE, "2022-08-07", "2022-08-08", "err Betiss", 5, Difficulty.EASY);
+        Task t5 = Task.of("Entrenador Pokemon", "Completar la pokedex para el profesor Oak", Status.IN_REVISION, "2021-05-17", "2022-11-30", "Hazte con todos, los 892...", 3, Difficulty.I_WANT_TO_DIE);
+        Task t6 = Task.of("Comprar mando nuevo", "Nuevo mando para jugar elden ring", Status.DRAFT, "2022-01-19", "2022-06-06", "Comprar uno a prueba de enfados", 4, Difficulty.MEDIUM);
+        Task t7 = Task.of("¿Aprender Inglés? Na", "El inglés se enseña mal y punto", Status.CANCELLED, "2020-04-22", "2023-05-26", "Como aprendo el inglés si ni se el español", 0, Difficulty.HARDCORE);
 
         addTasks(t1, t2, t3, t4, t5, t6, t7);
 
@@ -64,9 +64,9 @@ public class MapRepository implements Repository {
         addUsers(u1, u2, u3, u4, u5, u6);
 
         // Create group
-        Group g1 = Group.of("Pepe", "Solo quieren ver el mundo arder", Date.valueOf("2006-10-12"));
-        Group g2 = Group.of("Otakus", "Dicen que su factura del agua es negativa", Date.valueOf("2022-05-06"));
-        Group g3 = Group.of("AISS enjoyers", "Se dice que son seres que existen desde el inicio de los multiversos", Date.valueOf("2000-03-09"));
+        Group g1 = Group.of("Pepe", "Solo quieren ver el mundo arder", "2006-10-12");
+        Group g2 = Group.of("Otakus", "Dicen que su factura del agua es negativa", "2022-05-06");
+        Group g3 = Group.of("AISS enjoyers", "Se dice que son seres que existen desde el inicio de los multiversos", "2000-03-09");
 
         addGroups(g1, g2, g3);
 

@@ -6,6 +6,8 @@ import org.apache.commons.validator.routines.UrlValidator;
 
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,16 @@ public class Message {
     }
 
     public static Response checkTask(Task task) {
+
+        Response response;
+
+        // Comprobamos formato de fecha de incio.
+        response = Message.checkDate(task.getStartDateString());
+        if (response != null) return response;
+
+        // Comprobamos formato de fecha de fin.
+        response = Message.checkDate(task.getFinishedDateString());
+        if (response != null) return response;
 
         if (task.getTitle() != null && task.getTitle().length() > 50)
             return send(Response.Status.BAD_REQUEST,
@@ -82,6 +94,10 @@ public class Message {
     }
 
     public static Response checkGroup(Group group) {
+        // Comprobamos formato de fecha de incio.
+        Response response = Message.checkDate(group.getCreatedDateString());
+        if (response != null) return response;
+
         if (group.getName() != null && group.getName().length() > 50)
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
@@ -98,6 +114,10 @@ public class Message {
     }
 
     public static Response checkRepo(Task repo) {
+
+        Response response = Message.checkDate(repo.getFinishedDateString());
+        if (response != null) return response;
+
         if (repo.getFinishedDate() != null && repo.getFinishedDate().before(new Date(0)))
             return Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
@@ -238,5 +258,21 @@ public class Message {
                     Pair.of("status", "400"),
                     Pair.of("message", "The id of the group is required"));
         return null;
+    }
+
+    public static Response checkDate(String date) {
+        if (date == null) return null;
+        else {
+            SimpleDateFormat sdfrmt = new SimpleDateFormat("yyyy-MM-dd");
+            sdfrmt.setLenient(false);
+            try {
+                sdfrmt.parse(date);
+            } catch (ParseException e) {
+                return send(Response.Status.BAD_REQUEST,
+                        Pair.of("status", "400"),
+                        Pair.of("message", "The date is not in the correct format, it should be yyyy-MM-dd and it's " + date));
+            }
+            return null;
+        }
     }
 }

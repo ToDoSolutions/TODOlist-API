@@ -48,6 +48,19 @@ public class TaskResource {
             Order.sequenceTask(result, order);
         Status auxStatus = status != null ? Status.parse(status) : null;
         Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
+        Response response;
+
+        // Comprobamos formato de fecha de incio.
+        response = Message.checkDate(startDate != null ?
+                startDate.replace(">", "").replace("<", "").replace("=", "") : null);
+        if (response != null) return response;
+
+        // Comprobamos formato de fecha de fin.
+        response = Message.checkDate(finishedDate != null ?
+                finishedDate.replace(">", "").replace("<", "").replace("=", "") : null);
+        if (response != null) return response;
+
+
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null || limit > tasks.size() ? tasks.size() : start + limit; // Donde va a terminar.
         for (int i = start; i < end; i++) {

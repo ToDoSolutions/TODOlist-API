@@ -37,15 +37,14 @@ public class Parse {
 
     public static Task taskFromGitHub(TaskGitHub repo, String status, String finishedDate, Integer priority, String difficulty) {
         Status auxStatus = status == null ? null : Status.parse(status);
-        Date auxFinishedDate = finishedDate == null ? null : Date.valueOf(finishedDate);
         Difficulty auxDifficulty = difficulty == null ? null : Difficulty.valueOf(difficulty);
         Object language = repo.getLanguage();
         return Task.of(
                 repo.getName(),
                 repo.getDescription(),
                 auxStatus,
-                Date.valueOf(repo.getCreatedAt().split("T")[0]),
-                auxFinishedDate,
+                repo.getCreatedAt().split("T")[0],
+                finishedDate,
                 language == null ? null : language.toString(),
                 priority,
                 auxDifficulty);
@@ -57,7 +56,7 @@ public class Parse {
     }
 
     public static Task taskFromPokemon(Pokemon pokemon, String status, String finishedDate, String priority) {
-        Date auxFinishedDate = finishedDate == null ? null: Date.valueOf(finishedDate);
+
         Status auxStatus = status == null ? null: Status.parse(status);
         Integer auxPriority = priority == null ? null: Integer.parseInt(priority);
         String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
@@ -65,8 +64,8 @@ public class Parse {
                 "Catch " + pokemon.getName(),
                 "The pokemon is type " + (pokemon.getType2() == null ? pokemon.getType1() : pokemon.getType1() + " and " + pokemon.getType2()),
                 auxStatus,
-                Date.valueOf(startDate),
-                auxFinishedDate,
+                startDate,
+                finishedDate,
                 getPokemonAnnotation(pokemon),
                 auxPriority,
                 getPokemonDifficulty(pokemon));

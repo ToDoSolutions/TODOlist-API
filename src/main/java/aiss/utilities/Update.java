@@ -14,9 +14,9 @@ public class Update {
         if (task.getStatus() != null)
             oldTask.setStatus(task.getStatus());
         if (task.getFinishedDate() != null)
-            oldTask.setFinishedDate(task.getFinishedDate());
+            oldTask.setFinishedDate(task.getFinishedDateString());
         if (task.getStartDate() != null)
-            oldTask.setReleaseDate(task.getStartDate());
+            oldTask.setReleaseDate(task.getStartDateString());
         if (task.getAnnotation() != null)
             oldTask.setAnnotation(task.getAnnotation());
         if (task.getPriority() != null)
@@ -55,6 +55,6 @@ public class Update {
             oldGroup.setDescription(group.getDescription());
         // Update avatar.
         if (group.getCreatedDate() != null)
-            oldGroup.setCreatedDate(group.getCreatedDate());
+            oldGroup.setCreatedDate(group.getCreatedDateString());
     }
 }

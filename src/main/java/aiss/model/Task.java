@@ -17,13 +17,13 @@ public class Task {
     // Atributos de la clase.
     private String idTask, title, description, annotation;
     private Status status;
-    private Date finishedDate, startDate;
+    private String finishedDate, startDate;
     private Integer priority;
     private Difficulty difficulty;
 
 
     // Constructor, crear nueva clase para disminuir parámetros (ni idea).
-    public Task(String title, String description, Status status, Date startDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
+    public Task(String title, String description, Status status, String startDate, String finishedDate, String annotation, Integer priority, Difficulty difficulty) {
         this.idTask = null;
         this.title = title;
         this.description = description;
@@ -39,14 +39,14 @@ public class Task {
     }
 
     // Método de factoría para crear un objeto Task.
-    public static Task of(String title, String description, Status status, Date startedDate, Date finishedDate, String annotation, Integer priority, Difficulty difficulty) {
+    public static Task of(String title, String description, Status status, String startedDate, String finishedDate, String annotation, Integer priority, Difficulty difficulty) {
         return new Task(title, description, status, startedDate, finishedDate, annotation, priority, difficulty);
     }
 
     // Métodos derivados
     public Long getDuration() {
 
-        return finishedDate == null ? null : (finishedDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        return finishedDate == null ? null : (getFinishedDate().getTime() - getStartDate().getTime()) / (1000 * 60 * 60 * 24);
     }
 
     public String getIdTask() {
@@ -83,18 +83,26 @@ public class Task {
     }
 
     public Date getFinishedDate() {
+        return Date.valueOf(finishedDate);
+    }
+
+    public String getFinishedDateString() {
         return finishedDate;
     }
 
-    public void setFinishedDate(Date finishedDate) {
+    public void setFinishedDate(String finishedDate) {
         this.finishedDate = finishedDate;
     }
 
     public Date getStartDate() {
+        return Date.valueOf(startDate);
+    }
+
+    public String getStartDateString() {
         return startDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.startDate = releaseDate;
     }
 

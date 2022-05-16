@@ -40,6 +40,7 @@ public class GitHubResource {
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
         Task task;
+
         try {
             task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
