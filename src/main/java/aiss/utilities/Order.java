@@ -89,4 +89,7 @@ public class Order {
         else if (order.equals("-numTask"))
             result.sort(Comparator.comparing(Group::getNumTasks).reversed());
     }
+
+    private Order() {
+    }
 }

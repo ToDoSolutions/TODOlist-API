@@ -4,9 +4,11 @@ import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
-import aiss.utilities.Message;
 import aiss.utilities.Pair;
 import aiss.utilities.Parse;
+import aiss.utilities.messages.Checker;
+import aiss.utilities.messages.ControllerResponse;
+import aiss.utilities.messages.Message;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -40,17 +42,16 @@ public class GitHubResource {
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
         Task task;
-
         try {
             task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
         } catch (Exception e) {
             return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si el repo es correcto
-        Response response = Message.checkRepo(task);
-        if (response != null) return response;
+        Checker.isRepoCorrect(task, controller); // Comprobamos si el repo es correcto.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         return Response.ok(task).build();
 
@@ -70,13 +71,14 @@ public class GitHubResource {
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si el repo es correcto
-        Response response = Message.checkRepo(task);
-        if (response != null) return response;
+        Checker.isRepoCorrect(task, controller); // Comprobamos si el repo es correcto
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
 
         repository.addTask(task); // Añadimos el modelo a la base de datos.
+
         // Builds the response. Returns the playlist the has just been added.
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(TaskResource.getInstance().getClass(), "getTask");
         URI uri = ub.build(task.getIdTask());
@@ -114,6 +116,7 @@ public class GitHubResource {
         }
 
         repository.addUser(user); // Añadimos el modelo a la base de datos.
+
         // Builds the response. Returns the playlist the has just been added.
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(UserResource.getInstance().getClass(), "getUser");
         URI uri = ub.build(user.getIdUser());

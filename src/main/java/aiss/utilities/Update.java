@@ -57,4 +57,7 @@ public class Update {
         if (group.getCreatedDate() != null)
             oldGroup.setCreatedDate(group.getCreatedDateString());
     }
+
+    private Update() {
+    }
 }

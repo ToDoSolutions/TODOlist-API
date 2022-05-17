@@ -6,9 +6,9 @@ import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Filter;
-import aiss.utilities.Message;
 import aiss.utilities.Order;
 import aiss.utilities.Update;
+import aiss.utilities.messages.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -33,8 +33,7 @@ public class GroupResource {
     }
 
     public static GroupResource getInstance() {
-        // Creamos una instancia si no existe.
-        instance = (instance == null) ? new GroupResource() : instance;
+        instance = (instance == null) ? new GroupResource() : instance; // Creamos una instancia si no existe.
         return instance;
     }
 
@@ -50,9 +49,10 @@ public class GroupResource {
             Order.sequenceGroup(groups, order);
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null || limit > groups.size() ? groups.size() : start + limit; // Donde va a terminar.
+        ControllerResponse controller = ControllerResponse.create();
 
-        Response response = Message.checkDate(createdDate);
-        if (response != null) return response;
+        Checker.isDateCorrect(createdDate, controller); // Comprueba que la fecha esté bien formada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         for (int i = start; i < end; i++) {
             Group group = groups.get(i);
@@ -71,10 +71,11 @@ public class GroupResource {
     public Response getGroup(@PathParam("groupId") String groupId, @QueryParam("fieldsGroup") String fieldsGroup,
                              @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         Group group = repository.getGroup(groupId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el objeto en la base de datos.
-        Response response = Message.groupNotFound(group, groupId);
-        if (response != null) return response;
+
+        NotFound.isGroupFound(group, groupId, controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         return Response.ok(group.getFields((fieldsGroup == null ? Group.ALL_ATTRIBUTES : fieldsGroup), fieldsUser, fieldsTask)).build();
     }
@@ -82,13 +83,12 @@ public class GroupResource {
     @POST
     @Consumes("application/json")
     public Response addGroup(@Context UriInfo uriInfo, Group group) {
-        // Comprobamos aquellos campos obligatorios.
-        Response response = Message.requiredForGroup(group);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si algún campo no es correcto.
-        response = Message.checkGroup(group);
-        if (response != null) return response;
+        Required.forGroup(group, controller); // Comprobamos aquellos campos obligatorios.
+        Checker.isGroupCorrect(group, controller); // Comprobamos si algún campo no es correcto.
+
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addGroup(group); // Añadimos el usuario a la base de datos.
 
@@ -103,22 +103,19 @@ public class GroupResource {
     @PUT
     @Consumes("application/json")
     public Response updateGroup(Group group) {
-        // Comprobamos que nos ha dado una id.
-        Response response = Message.groupIdRequired(group);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
+
+        Required.haveGroupId(group, controller); // Comprobamos que nos ha dado una id.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         Group oldGroup = repository.getGroup(group.getIdGroup());
 
-        // Comprobamos si se encuentra el objeto en la base de datos.
-        response = Message.groupNotFound(oldGroup, group.getIdGroup());
-        if (response != null) return response;
-
-        // Comprobamos si algún campo no es correcto.
-        response = Message.checkGroup(group);
-        if (response != null) return response;
+        NotFound.isGroupFound(oldGroup, group.getIdGroup(), controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        Checker.isGroupCorrect(group, controller); // Comprobamos si algún campo no es correcto.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         Update.groupFromOther(group, oldGroup); // Actualiza los atributos del modelo.
-        repository.updateGroup(oldGroup);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
+        repository.updateGroup(oldGroup); // Actualiza el objeto en la base de datos.
 
         return Response.noContent().build();
     }
@@ -127,10 +124,11 @@ public class GroupResource {
     @Path("/{groupId}")
     public Response deleteGroup(@PathParam("groupId") String groupId) {
         Group toBeRemoved = repository.getGroup(groupId); // Obtiene el modelo a eliminar de la base de datos chapucera.
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el grupo en la base de datos.
-        Response response = Message.groupNotFound(toBeRemoved, groupId);
-        if (response != null) return response;
+        NotFound.isGroupFound(toBeRemoved, groupId, controller); // Comprobamos si se encuentra el grupo en la base de datos.
+
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         // Elimina el usuario de la base de datos chapucera.
         repository.deleteGroup(groupId);
@@ -144,10 +142,11 @@ public class GroupResource {
     public Response addUserToGroup(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
         User user = repository.getUser(userId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si el grupo tiene al usuario dado.
-        Response response = Message.isUserInGroup(group, user, groupId, userId);
-        if (response != null) return response;
+
+        Container.isUserInGroup(group, user, groupId, userId, controller); // Comprobamos si el grupo tiene al usuario dado.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addTaskToUser(groupId, userId);
 
@@ -165,14 +164,11 @@ public class GroupResource {
     public Response deleteUserToGroup(@PathParam("groupId") String groupId, @PathParam("userId") String userId) {
         Group group = repository.getGroup(groupId);
         User user = repository.getUser(userId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos que existe un grupo con la id dada.
-        Response response = Message.groupNotFound(group, groupId);
-        if (response != null) return response;
-
-        // Comprobamos que existe un usuario con la id dada.
-        response = Message.userNotFound(user, userId);
-        if (response != null) return response;
+        NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
+        NotFound.isUserFound(user, userId, controller); // Comprobamos que existe un usuario con la id dada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteUserToGroup(groupId, userId);
 
@@ -184,18 +180,11 @@ public class GroupResource {
     public Response addTaskToGroup(@Context UriInfo uriInfo, @PathParam("taskId") String taskId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos que existe un grupo con la id dada.
-        Response response = Message.groupNotFound(group, groupId);
-        if (response != null) return response;
-
-        // Comprobamos que existe una tarea con la id dada.
-        response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
-
-        // >Comprobamos que existe una tarea con la id dada.
-        response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
+        NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
+        NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addTaskToGroup(groupId, taskId);
 
@@ -212,18 +201,11 @@ public class GroupResource {
     public Response deleteTaskToGroup(@PathParam("groupId") String groupId, @PathParam("taskId") String taskId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos que existe un grupo con la id dada.
-        Response response = Message.groupNotFound(group, groupId);
-        if (response != null) return response;
-
-        // Comprobamos que existe una tarea con la id dada.
-        response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
-
-        // >Comprobamos que existe una tarea con la id dada.
-        response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
+        NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
+        NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteTaskToGroup(groupId, taskId);
 

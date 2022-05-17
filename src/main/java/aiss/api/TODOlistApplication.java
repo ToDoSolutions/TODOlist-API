@@ -1,10 +1,6 @@
 package aiss.api;
 
-import aiss.api.resources.GitHubResource;
-import aiss.api.resources.GroupResource;
-import aiss.api.resources.PokemonResource;
-import aiss.api.resources.TaskResource;
-import aiss.api.resources.UserResource;
+import aiss.api.resources.*;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;

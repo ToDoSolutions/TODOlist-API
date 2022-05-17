@@ -260,7 +260,7 @@ public class TaskGitHub {
     @JsonProperty("subscribers_count")
     private Integer subscribersCount;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("id")
     public Integer getId() {

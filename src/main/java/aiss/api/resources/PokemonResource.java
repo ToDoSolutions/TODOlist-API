@@ -3,9 +3,9 @@ package aiss.api.resources;
 import aiss.model.Task;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
-import aiss.utilities.Message;
 import aiss.utilities.Pair;
 import aiss.utilities.Parse;
+import aiss.utilities.messages.Message;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -22,15 +22,14 @@ public class PokemonResource {
     }
 
     public static PokemonResource getInstance() {
-        // Creamos una instancia si no existe.
-        instance = (instance == null) ? new PokemonResource() : instance;
+        instance = (instance == null) ? new PokemonResource() : instance; // Creamos una instancia si no existe.
         return instance;
     }
 
     @GET
     @Path("/{name}")
     public Response getPokemon(@PathParam("name") String name, @QueryParam("status") String status,
-                              @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority) {
+                               @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority) {
         Task task;
         try {
             task = Parse.taskFromPokemon(repository.getPokemon(name), status, finishedDate, priority);

@@ -28,7 +28,7 @@ public class License {
     @JsonProperty("node_id")
     private String nodeId;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("key")
     public String getKey() {

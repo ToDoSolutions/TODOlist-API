@@ -66,12 +66,12 @@ public class Group {
         return Date.valueOf(createdDate);
     }
 
-    public String getCreatedDateString() {
-        return createdDate;
-    }
-
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getCreatedDateString() {
+        return createdDate;
     }
 
     public List<User> getUsers() {

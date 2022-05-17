@@ -7,9 +7,9 @@ import aiss.model.User;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Filter;
-import aiss.utilities.Message;
 import aiss.utilities.Order;
 import aiss.utilities.Update;
+import aiss.utilities.messages.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -45,7 +45,7 @@ public class UserResource {
                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
                            @QueryParam("name") String name, @QueryParam("surname") String surname, @QueryParam("email") String email,
                            @QueryParam("location") String location, @QueryParam("taskCompleted") String taskCompleted) {
-        List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
+        List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser());
         if (order != null)
             Order.sequenceUser(users, order);
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
@@ -69,10 +69,10 @@ public class UserResource {
     @Path("/{userId}")
     public Response getUser(@PathParam("userId") String userId, @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask) {
         User user = repository.getUser(userId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el objeto en la base de datos.
-        Response response = Message.userNotFound(user, userId);
-        if (response != null) return response;
+        NotFound.isUserFound(user, userId, controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         return Response.ok(user.getFields((fieldsUser == null ? User.ALL_ATTRIBUTES : fieldsUser), fieldsTask)).build();
     }
@@ -80,13 +80,12 @@ public class UserResource {
     @POST
     @Consumes("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
-        // Comprobamos aquellos campos obligatorios.
-        Response response = Message.requiredForUser(user);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si algún campo no es correcto.
-        response = Message.checkUser(user);
-        if (response != null) return response;
+
+        Required.forUser(user, controller); // Comprobamos aquellos campos obligatorios.
+        Checker.isUserCorrect(user, controller); // Comprobamos si algún campo no es correcto.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addUser(user); // Añadimos el usuario a la base de datos.
 
@@ -101,22 +100,21 @@ public class UserResource {
     @PUT
     @Consumes("application/json")
     public Response updateUser(User user) {
-        // Comprobamos que nos ha dado una id.
-        Response response = Message.userIdRequired(user);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
+
+
+        Required.haveUserId(user, controller); // Comprobamos que nos ha dado una id.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         User oldUser = repository.getUser(user.getIdUser());
 
-        // Comprobamos si se encuentra el objeto en la base de datos.
-        response = Message.userNotFound(oldUser, user.getIdUser());
-        if (response != null) return response;
 
-        // Comprobamos si algún campo no es correcto.
-        response = Message.checkUser(user);
-        if (response != null) return response;
+        NotFound.isUserFound(oldUser, user.getIdUser(), controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        Checker.isUserCorrect(user, controller); // Comprobamos si algún campo no es correcto.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         Update.userFromOther(user, oldUser); // Actualiza los atributos del modelo.
-        repository.updateUser(oldUser);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
+        repository.updateUser(oldUser);  // Actualiza la base de datos.
 
         return Response.noContent().build();
     }
@@ -126,15 +124,15 @@ public class UserResource {
     @Path("/{userId}")
     public Response deleteUser(@PathParam("userId") String userId) {
         User toBeRemoved = repository.getUser(userId); // Obtiene el modelo a eliminar de la base de datos chapucera.
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el usuario en la base de datos.
-        Response response = Message.userNotFound(toBeRemoved, userId);
-        if (response != null) return response;
+        NotFound.isUserFound(toBeRemoved, userId, controller); // Comprobamos si se encuentra el usuario en la base de datos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         // Elimina el usuario de la base de datos chapucera.
         repository.deleteUser(userId);
 
-        // Elimina el usario de los grupos.
+        // Elimina el usuario de los grupos.
         for (Group group : repository.getAllGroup())
             group.deleteUser(toBeRemoved);
 
@@ -146,10 +144,10 @@ public class UserResource {
     public Response addTaskToUser(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si el usuario tiene la tarea asignada.
-        Response response = Message.isTaskInUser(user, task, userId, taskId);
-        if (response != null) return response;
+        Container.isTaskInUser(user, task, userId, taskId, controller); // Comprobamos si el usuario tiene la tarea asignada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addTaskToUser(userId, taskId);
 
@@ -166,14 +164,12 @@ public class UserResource {
     public Response deleteTaskToUser(@PathParam("userId") String userId, @PathParam("taskId") String taskId) {
         User user = repository.getUser(userId);
         Task task = repository.getTask(taskId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos que existe un usuario con la id dada.
-        Response response = Message.userNotFound(user, userId);
-        if (response != null) return response;
 
-        // Comprobamos que existe una tarea con la id dada.
-        response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
+        NotFound.isUserFound(user, userId, controller); // Comprobamos que existe un usuario con la id dada.
+        NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteTaskToOrder(userId, taskId);
 

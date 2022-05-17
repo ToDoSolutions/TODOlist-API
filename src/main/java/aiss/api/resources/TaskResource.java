@@ -4,9 +4,12 @@ import aiss.model.*;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Filter;
-import aiss.utilities.Message;
 import aiss.utilities.Order;
 import aiss.utilities.Update;
+import aiss.utilities.messages.Checker;
+import aiss.utilities.messages.ControllerResponse;
+import aiss.utilities.messages.NotFound;
+import aiss.utilities.messages.Required;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -31,8 +34,7 @@ public class TaskResource {
     }
 
     public static TaskResource getInstance() {
-        // Creamos una instancia si no existe.
-        instance = (instance == null) ? new TaskResource() : instance;
+        instance = (instance == null) ? new TaskResource() : instance; // Creamos una instancia si no existe.
         return instance;
     }
 
@@ -48,17 +50,17 @@ public class TaskResource {
             Order.sequenceTask(result, order);
         Status auxStatus = status != null ? Status.parse(status) : null;
         Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
-        Response response;
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos formato de fecha de incio.
-        response = Message.checkDate(startDate != null ?
-                startDate.replace(">", "").replace("<", "").replace("=", "") : null);
-        if (response != null) return response;
-
+        // Comprobamos formato de fecha de inicio.
+        Checker.isDateCorrect(startDate != null ?
+                startDate.replace(">", "").replace("<", "").replace("=", "") :
+                null, controller);
         // Comprobamos formato de fecha de fin.
-        response = Message.checkDate(finishedDate != null ?
-                finishedDate.replace(">", "").replace("<", "").replace("=", "") : null);
-        if (response != null) return response;
+        Checker.isDateCorrect(finishedDate != null ?
+                finishedDate.replace(">", "").replace("<", "").replace("=", "") :
+                null, controller);
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
 
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
@@ -76,8 +78,6 @@ public class TaskResource {
                 result.add(task);
         }
 
-
-        // fields lo hemos dado en teoría, pero no en práctica, quizás en vez de esto sea con un Response.
         return Response.ok(result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList())).build();
 
     }
@@ -87,10 +87,10 @@ public class TaskResource {
     @Path("/{taskId}")
     public Response getTask(@PathParam("taskId") String taskId, @QueryParam("fields") String fields) {
         Task task = repository.getTask(taskId);
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        Response response = Message.taskNotFound(task, taskId);
-        if (response != null) return response;
+        NotFound.isTaskFound(task, taskId, controller); // Comprobamos si se encuentra el objeto en la base de datos chapucera.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         return Response.ok(task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).build();
     }
@@ -98,13 +98,11 @@ public class TaskResource {
     @POST
     @Consumes("application/json")
     public Response addTask(@Context UriInfo uriInfo, Task task) {
-        // Comprobamos aquellos campos obligatorios.
-        Response response = Message.requiredForTask(task);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si los campos son correctos.
-        response = Message.checkTask(task);
-        if (response != null) return response;
+        Required.forTask(task, controller); // Comprobamos aquellos campos obligatorios.
+        Checker.isTaskCorrect(task, controller); // Comprobamos si los campos son correctos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addTask(task); // Añadimos la tarea a la base de datos.
 
@@ -119,23 +117,20 @@ public class TaskResource {
     @PUT
     @Consumes("application/json")
     public Response updateTask(Task task) {
-        // Comprobamos que nos ha dado una id.
-        Response response = Message.taskIdRequired(task);
-        if (response != null) return response;
+        ControllerResponse controller = ControllerResponse.create();
+
+        Required.haveTaskId(task, controller); // Comprobamos que nos ha dado una id.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         Task oldTask = repository.getTask(task.getIdTask());
 
-        // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        response = Message.taskNotFound(oldTask, task.getIdTask());
-        if (response != null) return response;
-
-        // Comprobamos si los campos son correctos.
-        response = Message.checkTask(task);
-        if (response != null) return response;
+        NotFound.isTaskFound(oldTask, task.getIdTask(), controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        Checker.isTaskCorrect(task, controller); // Comprobamos si los campos son correctos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         Update.taskFromOther(task, oldTask); // Actualiza los atributos del modelo.
 
-        repository.updateTask(oldTask);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos chapucera.
+        repository.updateTask(oldTask);  // No está en la práctica 7, pero deduzco que falta, ya que de la otra manera no se actualiza en la base de datos.
 
         return Response.noContent().build();
     }
@@ -144,14 +139,13 @@ public class TaskResource {
     @DELETE
     @Path("/{taskId}")
     public Response deleteTask(@PathParam("taskId") String taskId) {
-        Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos chapucera.
+        Task toBeRemoved = repository.getTask(taskId); // Obtiene la tarea a eliminar de la base de datos.
+        ControllerResponse controller = ControllerResponse.create();
 
-        // Comprobamos si se encuentra el objeto en la base de datos chapucera.
-        Response response = Message.taskNotFound(toBeRemoved, taskId);
-        if (response != null) return response;
+        NotFound.isTaskFound(toBeRemoved, taskId, controller); // Comprobamos si se encuentra el objeto en la base de datos.
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
-        // Elimina la tarea de la base de datos chapucera.
-        repository.deleteTask(taskId);
+        repository.deleteTask(taskId); // Elimina la tarea de la base de datos.
 
         // Elimina la tarea de los usuarios.
         for (User user : repository.getAllUser())

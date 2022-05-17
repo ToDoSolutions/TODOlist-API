@@ -8,8 +8,6 @@ import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
 import aiss.model.pokemon.Pokemon;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -57,9 +55,9 @@ public class Parse {
 
     public static Task taskFromPokemon(Pokemon pokemon, String status, String finishedDate, String priority) {
 
-        Status auxStatus = status == null ? null: Status.parse(status);
-        Integer auxPriority = priority == null ? null: Integer.parseInt(priority);
-        String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
+        Status auxStatus = status == null ? null : Status.parse(status);
+        Integer auxPriority = priority == null ? null : Integer.parseInt(priority);
+        String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return Task.of(
                 "Catch " + pokemon.getName(),
                 "The pokemon is type " + (pokemon.getType2() == null ? pokemon.getType1() : pokemon.getType1() + " and " + pokemon.getType2()),
@@ -76,7 +74,7 @@ public class Parse {
             return "Be careful, you will need a masterball!!!";
         } else {
             if (pokemon.getLegend()) {
-              return "easy peasy lemon squeezy, take one pokeball";
+                return "easy peasy lemon squeezy, take one pokeball";
             } else if (getAvgStats(pokemon) < 100) {
                 return "mmmh, you will nead some pokeballs";
             } else if (getAvgStats(pokemon) < 150) {
@@ -108,4 +106,6 @@ public class Parse {
     private static Integer getAvgStats(Pokemon pokemon) {
         return (pokemon.getHp() + pokemon.getAttack() + pokemon.getDefense()) / 3;
     }
+
+    private Parse() {}
 }

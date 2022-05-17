@@ -245,7 +245,7 @@ public class Source {
     @JsonProperty("default_branch")
     private String defaultBranch;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("id")
     public Integer getId() {

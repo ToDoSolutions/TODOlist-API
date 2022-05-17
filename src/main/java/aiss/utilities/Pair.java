@@ -28,4 +28,7 @@ public class Pair {
     public void setB(String b) {
         this.b = b;
     }
+
+    private Pair() {
+    }
 }

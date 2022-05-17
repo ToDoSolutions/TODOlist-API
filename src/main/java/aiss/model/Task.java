@@ -86,12 +86,12 @@ public class Task {
         return Date.valueOf(finishedDate);
     }
 
-    public String getFinishedDateString() {
-        return finishedDate;
-    }
-
     public void setFinishedDate(String finishedDate) {
         this.finishedDate = finishedDate;
+    }
+
+    public String getFinishedDateString() {
+        return finishedDate;
     }
 
     public Date getStartDate() {
