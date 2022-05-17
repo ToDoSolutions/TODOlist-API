@@ -13,6 +13,8 @@ tags:
     description: Task's operations
   - name: User
     description: User's operations
+  - name: Group
+    description: Group's operations
   - name: GitHub User
     description: GitHub user's operations (Using the GitHub API)
 paths:
@@ -356,7 +358,7 @@ paths:
             type: string
         - name: fieldsUser
           in: query
-          description: Attributes of a User
+          description: Attributes of a user
           required: false
           schema:
             type: string
@@ -454,6 +456,319 @@ paths:
           description: Task deleted from user
         '404':
           description: User or task not found
+  /groups:
+    get:
+      tags:
+        - Group
+      summary: Get groups
+      description: Get all groups
+      operationId: getGroups
+      parameters:
+        - name: order
+          in: query
+          description: Order results by group id, name, description or numTask
+          required: false
+          schema:
+            type: string
+            enum:
+              - idGroup
+              - '-idGroup'
+              - name
+              - '-name'
+              - description
+              - '-description'
+              - numTask
+              - '-numTask'
+        - name: limit
+          in: query
+          description: Maximum number of results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: offset
+          in: query
+          description: Offset of the results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: fieldsGroup
+          in: query
+          description: Attributes shown
+          required: false
+          schema:
+            type: string
+        - name: fieldsUser
+          in: query
+          description: Attributes of a user
+          required: false
+          schema:
+            type: string
+        - name: fieldsTask
+          in: query
+          description: Attributes of a task
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: Name of a user
+          required: false
+          schema:
+            type: string
+        - name: description
+          in: query
+          description: Description of a group
+          required: false
+          schema:
+            type: string
+        - name: numTasks
+          in: query
+          description: Number of tasks completed by a group
+          required: false
+          schema:
+            type: string
+        - name: createdDate
+          in: query
+          description: When a group was created
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        '400':
+          description: Bad request
+    post:
+      tags:
+        - Group
+      summary: Add a group
+      description: Adds a group
+      operationId: addGroup
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '201':
+          description: Group added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Bad request
+        '404':
+          description: Group not found
+    put:
+      tags:
+        - Group
+      summary: Update a group
+      description: Updates a group
+      operationId: updateGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+        description: Group to update
+      responses:
+        '204':
+          description: Group updated
+        '400':
+          description: Bad request
+        '404':
+          description: Group not found
+  '/groups/{groupId}':
+    get:
+      tags:
+        - Group
+      summary: Get a Group
+      description: Gets a Group
+      operationId: getGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the Group
+          required: true
+          schema:
+            type: string
+        - name: fieldsGroup
+          in: query
+          description: Attributes of a group
+          required: false
+          schema:
+            type: string
+        - name: fieldsUser
+          in: query
+          description: Attributes of a user
+          required: false
+          schema:
+            type: string
+        - name: fieldsTask
+          in: query
+          description: Attributes of a task
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Group found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+
+        '404':
+          description: Group not found
+    delete:
+      tags:
+        - Group
+      summary: Delete group
+      description: Deletes a group
+      operationId: deleteGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the group
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Group deleted
+        '404':
+          description: Group not found
+  '/groups/{groupId}/{userId}':
+    post:
+      tags:
+        - Group
+      summary: Add user to group
+      description: Adds an user to a group
+      operationId: addUserToGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the group
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User added to the group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or user not found
+    delete:
+      tags:
+        - Group
+      summary: Delete user from group
+      description: Deletes an user from a group
+      operationId: deleteUserToGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the group
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted from the group
+        '404':
+          description: Group or user not found
+  '/groups/{groupId}/{taskId}':
+    post:
+      tags:
+        - Group
+      summary: Add task to group
+      description: Adds a task to a group(to its members)
+      operationId: addTaskToGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the group
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task added to the group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Bad request
+        '404':
+          description: Group or task not found
+    delete:
+      tags:
+        - Group
+      summary: Delete task from group
+      description: Deletes a task from a group(to its members)
+      operationId: deleteTaskToGroup
+      parameters:
+        - name: groupId
+          in: path
+          description: Id of the group
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Id of the task
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted from the group
+        '404':
+          description: Group or task not found
   /github/{account}:
     get:
       tags:
@@ -768,3 +1083,157 @@ components:
             difficulty: HARDCORE
             duration: '150'
         taskCompleted: '2'
+    Group:
+        type: object
+        required:
+          - name
+        properties:
+          idGroup:
+            description: Id of the group (is automatically generated)
+            type: string
+          name:
+            description: Name of the group (it must be less than 50 characters)
+            type: string
+          description:
+            description: Description of the group (it must be less than 200 characters)
+            type: string
+          createdDate:
+            description: When the group was created
+            type: string
+          users:
+            description: Users that belong to the group
+            type: array
+            items:
+              type: object
+              required:
+                - title
+              properties:
+                idUser:
+                  description: Id of the user (is automatically generated)
+                  type: string
+                name:
+                  description: Name of the user (it must be less than 50 characters)
+                  type: string
+                surname:
+                  description: Surname of the user (it must be less than 50 characters)
+                  type: string
+                email:
+                  description: Email of the user (has a validation system, put a mail that makes sense)
+                  type: string
+                avatar:
+                  description: Avatar of the user (has a validation system, put an URL that makes sense)
+                  type: string
+                bio:
+                  description: Bio of the user (it must be less than 500 characters)
+                  type: string
+                location:
+                  description: Location of the user (it must be less than 50 characters)
+                  type: string
+                tasks:
+                  description: Tasks of the user
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      idTask:
+                        description: Id of the task (is automatically generated)
+                        type: string
+                      title:
+                        description: Title of the task (it must be less than 50 characters)
+                        type: string
+                      description:
+                        description: Description of the task (it must be less than 200 characters)
+                        type: string
+                      status:
+                        description: Status of the task (it could be DRAFT, IN_PROGRESS, IN_REVISION, DONE, CANCELLED)
+                        type: string
+                      finishedDate:
+                        description: When the task finished (the following pattern should be used YYYY-MM-DD)
+                        type: string
+                      startedDate:
+                        description: When the task started (the following pattern should be used YYYY-MM-DD)
+                        type: string
+                      annotation:
+                        description: Annotation of the task (it must be less than 50 characters)
+                        type: string
+                      priority:
+                        description: Priority of the task (between 0 and 5)
+                        type: integer
+                      difficulty:
+                        description: Difficulty of the task (it could be EASY, MEDIUM, HARD, HARDCORE and I WANT TO DIE)
+                        type: string
+                      duration:
+                        description: Duration of the task (it's calculated using the start and finish date)
+                        type: integer
+                      taskCompleted:
+                        description: If the task is completed (no negatives numbers)
+                        type: integer
+          numTasks:
+            description: Number of tasks of the group (sum of the tasks of each user in the group)
+            type: string
+        example:
+          idGroup: g1
+          name: Kujos
+          description: Familia Kujo
+          createdDate: '2022-05-17'
+          users:
+            - idUser: u1
+              name: Kujo
+              surname: Jotaro
+              email: oraora@gmail.com
+              avatar: https://codigoesports.com/wp-content/uploads/2019/07/quien-es-belle-delphine.jpg
+              bio: Yare yare daze
+              location: Morioh
+              tasks:
+                - idTask: t1
+                  title: Derrotar a Dio
+                  description: Cruza todo el mundo hasta llegar a Egipto
+                  status: DONE
+                  finishedDate: '2023-10-08'
+                  startedDate: '2022-12-12'
+                  annotation: Te encontrarás a un montón de randoms
+                  priority: '10'
+                  difficulty: HARDCORE
+                  duration: '300'
+                - idTask: t2
+                  title: Parar a Kira
+                  description: Paren al psicópata explosivo
+                  status: DONE
+                  finishedDate: '2023-05-11'
+                  startedDate: '2022-12-12'
+                  annotation: Cuidado con Bites the Dust
+                  priority: '10'
+                  difficulty: HARDCORE
+                  duration: '150'
+              taskCompleted: '2'
+            - idUser: u2
+              name: Kujo
+              surname: Jolyne
+              email: oraorajunior@gmail.com
+              avatar: frog.jpg
+              bio: Yare yare dawa
+              location: Prision
+              tasks:
+                - idTask: t3
+                  title: Derrotar a Dio again
+                  description: Resucito de la nada
+                  status: IN_PROGRESS
+                  finishedDate: '2023-10-08'
+                  startedDate: '2022-12-12'
+                  annotation: 
+                  priority: '10'
+                  difficulty: HARDCORE
+                  duration: '300'
+                - idTask: t4
+                  title: Comprar el pan
+                  description: Ve a comprar el pan para almorzar hoy
+                  status: DONE
+                  finishedDate: '2022-12-12'
+                  startedDate: '2022-12-27'
+                  annotation: La panadería abre a las 9
+                  priority: '10'
+                  difficulty: EASY
+                  duration: '15'
+              taskCompleted: '1'
