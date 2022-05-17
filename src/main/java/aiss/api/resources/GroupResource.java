@@ -51,7 +51,8 @@ public class GroupResource {
         int end = limit == null || limit > groups.size() ? groups.size() : start + limit; // Donde va a terminar.
         ControllerResponse controller = ControllerResponse.create();
 
-        Checker.isDateCorrect(createdDate, controller); // Comprueba que la fecha esté bien formada.
+        Checker.isParamGELDate(createdDate, controller);
+        Checker.isParamGELNumber(numTasks, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         for (int i = start; i < end; i++) {
@@ -87,7 +88,6 @@ public class GroupResource {
 
         Required.forGroup(group, controller); // Comprobamos aquellos campos obligatorios.
         Checker.isGroupCorrect(group, controller); // Comprobamos si algún campo no es correcto.
-
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addGroup(group); // Añadimos el usuario a la base de datos.

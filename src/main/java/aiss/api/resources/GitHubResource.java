@@ -1,5 +1,7 @@
 package aiss.api.resources;
 
+import aiss.model.Difficulty;
+import aiss.model.Status;
 import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.repository.MapRepository;
@@ -42,13 +44,16 @@ public class GitHubResource {
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
         Task task;
+        ControllerResponse controller = ControllerResponse.create();
+        Status auxStatus = Checker.isStatusCorrect(status, controller);
+        Difficulty auxDifficulty = Checker.isDifficultyCorrect(difficulty, controller);
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
         try {
-            task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+            task = Parse.taskFromGitHub(repository.getRepo(account, repo), auxStatus, finishedDate, priority, auxDifficulty);
         } catch (Exception e) {
             return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
-        ControllerResponse controller = ControllerResponse.create();
 
         Checker.isRepoCorrect(task, controller); // Comprobamos si el repo es correcto.
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
@@ -64,15 +69,17 @@ public class GitHubResource {
                             @QueryParam("status") String status, @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") Integer priority,
                             @QueryParam("difficulty") String difficulty) {
         Task task;
+        ControllerResponse controller = ControllerResponse.create();
+        Status auxStatus = Checker.isStatusCorrect(status, controller);
+        Difficulty auxDifficulty = Checker.isDifficultyCorrect(difficulty, controller);
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
         try {
-            task = Parse.taskFromGitHub(repository.getRepo(account, repo), status, finishedDate, priority, difficulty);
+            task = Parse.taskFromGitHub(repository.getRepo(account, repo), auxStatus, finishedDate, priority, auxDifficulty);
         } catch (Exception e) {
             return Message.send(Response.Status.NOT_FOUND,
                     Pair.of("status: ", "404"),
                     Pair.of("message: ", "The repository with the name " + repo + " was not found"));
         }
-        ControllerResponse controller = ControllerResponse.create();
-
         Checker.isRepoCorrect(task, controller); // Comprobamos si el repo es correcto
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 

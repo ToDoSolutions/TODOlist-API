@@ -8,15 +8,16 @@ public enum Status {
     CANCELLED;
 
     public static Status parse(String status) {
-        if (status.equals("draft")) {
+        String statusLowerCase = status.toLowerCase();
+        if (statusLowerCase.equals("draft")) {
             return DRAFT;
-        } else if (status.equals("in_progress") || status.equals("in progress")) {
+        } else if (statusLowerCase.equals("in_progress") || statusLowerCase.equals("in progress")) {
             return IN_PROGRESS;
-        } else if (status.equals("in_revision") || status.equals("in revision")) {
+        } else if (statusLowerCase.equals("in_revision") || statusLowerCase.equals("in revision")) {
             return IN_REVISION;
-        } else if (status.equals("done")) {
+        } else if (statusLowerCase.equals("done")) {
             return DONE;
-        } else if (status.equals("cancelled")) {
+        } else if (statusLowerCase.equals("cancelled")) {
             return CANCELLED;
         } else {
             return null;

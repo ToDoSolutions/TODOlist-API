@@ -48,18 +48,13 @@ public class TaskResource {
         List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
         if (order != null)
             Order.sequenceTask(result, order);
-        Status auxStatus = status != null ? Status.parse(status) : null;
-        Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
         ControllerResponse controller = ControllerResponse.create();
-
-        // Comprobamos formato de fecha de inicio.
-        Checker.isDateCorrect(startDate != null ?
-                startDate.replace(">", "").replace("<", "").replace("=", "") :
-                null, controller);
-        // Comprobamos formato de fecha de fin.
-        Checker.isDateCorrect(finishedDate != null ?
-                finishedDate.replace(">", "").replace("<", "").replace("=", "") :
-                null, controller);
+        Status auxStatus = Checker.isStatusCorrect(status, controller);
+        Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
+        Checker.isParamGELDate(startDate, controller); // Comprobamos formato de fecha de inicio.
+        Checker.isParamGELDate(finishedDate, controller); // Comprobamos formato de fecha de fin.
+        Checker.isParamGELNumber(priority, controller);
+        Checker.isParamGELNumber(duration, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
 

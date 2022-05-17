@@ -44,7 +44,7 @@ public class Checker {
                     Pair.of("status", "400"),
                     Pair.of("message", "The priority of the task is not valid, it must be a number between 0 and 5 and it's " + task.getPriority())));
         else if (task.getDifficulty() != null)
-            isDifficultyCorrect(task.getDifficulty(), controller);
+            auxIsDifficultyCorrect(task.getDifficulty(), controller);
     }
 
     public static void isUserCorrect(User user, ControllerResponse controller) {
@@ -111,10 +111,10 @@ public class Checker {
                     Pair.of("status", "400"),
                     Pair.of("message", "The status of the task must be one of the following: DRAFT, IN_PROGRESS, DONE, IN_REVISION, CANCELLED")));
         else if (repo.getDifficulty() != null)
-            isDifficultyCorrect(repo.getDifficulty(), controller);
+            auxIsDifficultyCorrect(repo.getDifficulty(), controller);
     }
 
-    private static void isDifficultyCorrect(Difficulty difficulty, ControllerResponse controller) {
+    private static void auxIsDifficultyCorrect(Difficulty difficulty, ControllerResponse controller) {
         if (difficulty != Difficulty.EASY &&
                 difficulty != Difficulty.MEDIUM && difficulty != Difficulty.HARD &&
                 difficulty != Difficulty.HARDCORE && difficulty != Difficulty.I_WANT_TO_DIE)
@@ -129,6 +129,44 @@ public class Checker {
                     Pair.of("status", "400"),
                     Pair.of("message", "The date is not valid, it should be yyyy-MM-dd format")));
     }
+    
+    public static Status isStatusCorrect(String status, ControllerResponse controller) {
+    	Status auxStatus = null;
+        if (status != null) {
+            auxStatus = Status.parse(status);
+            if (auxStatus == null)  controller.addError(Message.send(Response.Status.BAD_REQUEST, Pair.of("status: ", "400"),
+                    Pair.of("message: ", "The status is not correct, it must be one of the following: DRAFT, IN_PROGRESS, IN_REVIEW, DONE, CANCELLED")));
+        }
+        return auxStatus;
+    }
+    
+    public static Difficulty isDifficultyCorrect(String status, ControllerResponse controller) {
+    	Difficulty auxDifficulty = null;
+        if (status != null) {
+            auxDifficulty = Difficulty.parse(status);
+            if (auxDifficulty == null)  controller.addError(Message.send(Response.Status.BAD_REQUEST, Pair.of("status: ", "400"),
+                    Pair.of("message: ", "The difficulty is not correct, it must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE")));
+        }
+        return auxDifficulty;
+    }
+
+    public static void isParamGELNumber(String param, ControllerResponse controller) {
+        if (param != null && !param.matches("[<>=]{2}\\d+") && !param.matches("[<>=]\\d+")
+                && !param.matches("\\d+"))
+            controller.addError(Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The parameter is not valid, one or two of the following: =, <, >")));
+    }
+
+    public static void isParamGELDate(String param, ControllerResponse controller) {
+        if (param != null && !param.matches("[<>=]{2}\\d{4}-\\d{2}-\\d{2}")
+                && !param.matches("[<>=]\\d{4}-\\d{2}-\\d{2}") && !param.matches("\\d{4}-\\d{2}-\\d{2}"))
+            controller.addError(Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The parameter is not valid, one or two of the following: =, <, >")));
+    }
+    
+    
 
     private Checker() {
     }

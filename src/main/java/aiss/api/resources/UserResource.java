@@ -51,6 +51,10 @@ public class UserResource {
         int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
         int end = limit == null || limit > users.size() ? users.size() : start + limit; // Donde va a terminar.
 
+        ControllerResponse controller = ControllerResponse.create();
+        Checker.isParamGELNumber(taskCompleted,  controller);
+        if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
+
         for (int i = start; i < end; i++) {
             User user = users.get(i);
             if (user != null &&

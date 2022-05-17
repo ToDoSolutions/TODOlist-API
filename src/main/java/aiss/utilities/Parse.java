@@ -33,19 +33,18 @@ public class Parse {
         return User.of(name, surname, email, owner.getAvatarUrl(), bio, location);
     }
 
-    public static Task taskFromGitHub(TaskGitHub repo, String status, String finishedDate, Integer priority, String difficulty) {
-        Status auxStatus = status == null ? null : Status.parse(status);
-        Difficulty auxDifficulty = difficulty == null ? null : Difficulty.valueOf(difficulty);
+    public static Task taskFromGitHub(TaskGitHub repo, Status status, String finishedDate, Integer priority, Difficulty difficulty) {
+
         Object language = repo.getLanguage();
         return Task.of(
                 repo.getName(),
                 repo.getDescription(),
-                auxStatus,
+                status,
                 repo.getCreatedAt().split("T")[0],
                 finishedDate,
                 language == null ? null : language.toString(),
                 priority,
-                auxDifficulty);
+                difficulty);
     }
 
     private static String getAdditional(Map<String, Object> additional, String key) {
@@ -53,15 +52,13 @@ public class Parse {
         return aux == null ? null : aux.toString();
     }
 
-    public static Task taskFromPokemon(Pokemon pokemon, String status, String finishedDate, String priority) {
-
-        Status auxStatus = status == null ? null : Status.parse(status);
+    public static Task taskFromPokemon(Pokemon pokemon, Status status, String finishedDate, String priority) {
         Integer auxPriority = priority == null ? null : Integer.parseInt(priority);
         String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return Task.of(
                 "Catch " + pokemon.getName(),
                 "The pokemon is type " + (pokemon.getType2() == null ? pokemon.getType1() : pokemon.getType1() + " and " + pokemon.getType2()),
-                auxStatus,
+                status,
                 startDate,
                 finishedDate,
                 getPokemonAnnotation(pokemon),

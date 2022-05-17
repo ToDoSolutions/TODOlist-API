@@ -83,7 +83,7 @@ public class Task {
     }
 
     public Date getFinishedDate() {
-        return Date.valueOf(finishedDate);
+    	return finishedDate != null ? Date.valueOf(finishedDate): null;	
     }
 
     public void setFinishedDate(String finishedDate) {
