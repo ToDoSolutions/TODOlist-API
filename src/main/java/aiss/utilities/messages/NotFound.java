@@ -32,4 +32,25 @@ public class NotFound {
 
     private NotFound() {
     }
+
+	public static void isTaskFoundInUser(User user, Task task, ControllerResponse controller) {
+        if (controller.hasError()) {} 
+        else {
+        	if (!user.getTasks().contains(task))
+        		controller.addError(Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The task with id=" + task.getIdTask() + " was not found in the user with id=" + user.getIdUser())));
+        }
+	}
+
+	public static void isUserFoundInGroup(Group group, User user, ControllerResponse controller) {
+		if (controller.hasError()) {} 
+        else {
+        	if (!group.getUsers().contains(user))
+        		controller.addError(Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status", "404"),
+                    Pair.of("message", "The user with id=" + user.getIdUser() + " was not found in the group with id=" + group.getIdGroup())));
+        }
+		
+	}
 }

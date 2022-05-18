@@ -173,6 +173,7 @@ public class UserResource {
 
         NotFound.isUserFound(user, userId, controller); // Comprobamos que existe un usuario con la id dada.
         NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        NotFound.isTaskFoundInUser(user, task, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteTaskToOrder(userId, taskId);

@@ -168,6 +168,7 @@ public class GroupResource {
 
         NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
         NotFound.isUserFound(user, userId, controller); // Comprobamos que existe un usuario con la id dada.
+        NotFound.isUserFoundInGroup(group, user, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteUserToGroup(groupId, userId);
