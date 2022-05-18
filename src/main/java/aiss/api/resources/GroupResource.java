@@ -93,7 +93,7 @@ public class GroupResource {
         repository.addGroup(group); // Añadimos el usuario a la base de datos.
 
         // Builds the response. Returns the user the has just been added.
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getUser");
+        UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getGroup");
         URI uri = ub.build(group.getIdGroup());
         ResponseBuilder resp = Response.created(uri);
         resp.entity(group);

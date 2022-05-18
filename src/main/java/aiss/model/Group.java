@@ -32,7 +32,7 @@ public class Group {
     }
 
     public Integer getNumTasks() {
-        return users.stream()
+        return users == null ? 0: users.stream()
                 .flatMap(user -> user.getTasks().stream().map(Task::getIdTask))
                 .collect(Collectors.toSet()).size();
     }
