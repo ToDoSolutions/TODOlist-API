@@ -50,7 +50,7 @@ public class TaskResource {
             Order.sequenceTask(result, order);
         ControllerResponse controller = ControllerResponse.create();
         Status auxStatus = Checker.isStatusCorrect(status, controller);
-        Difficulty auxDifficulty = difficulty != null ? Difficulty.parse(difficulty) : null;
+        Difficulty auxDifficulty = Checker.isDifficultyCorrect(difficulty, controller);
         Checker.isParamGELDate(startDate, controller); // Comprobamos formato de fecha de inicio.
         Checker.isParamGELDate(finishedDate, controller); // Comprobamos formato de fecha de fin.
         Checker.isParamGELNumber(priority, controller);

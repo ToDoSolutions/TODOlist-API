@@ -53,12 +53,12 @@ public class MapRepository implements Repository {
         // Aquí yace la vista de laura que no se ha logueado con la cuenta correcta en Gooogle CLooud y puede que sea baneada.
 
         // Create user
-        User u1 = User.of("Misco", "Jones", "miscosama@gmail.com", "Robin Lord Taylor", "ser celestial, nacido para ayudar ", "mi casa");
-        User u2 = User.of("El Pelón", "Calvo", "niunpelotonto@tortilla.ong", "Calvo de Brazzers", "nacío en un día en el que el sol brillo de tal manera que dislumbró a los imples mortales", "3000 viviendas");
-        User u3 = User.of("Yonatan", "Yostar", "jojito@gmail.com", "JoJoGigaChad", "Solamente defender al mundo del caos", "La Tierra");
-        User u4 = User.of("Kaeya", "Alberich", "tucopito@hotmal.com", "Un manco cojo", "Kaeya Alberich es el hijo adoptivo de los Ragnvindr, una familia magnate con muchas bodegas.", "Khaenri'ah");
-        User u5 = User.of("Aurelion", "Sol", "ElForjadorDeLasEstrellas@riot.com", "Dragon Cosmico", "El ao shin que nunca salió", "en el espacio picha");
-        User u6 = User.of("Paquito", "El Chocolatero", "kingafrica@us.es", "Tableta milka", "Fui sifu de Willy Wonka, el sabe todo gracias a mí", "ESPAÑA");
+        User u1 = User.of("Misco", "Jones", "miscosama@gmail.com", "https://es.web.img3.acsta.net/pictures/17/05/19/13/05/463219.jpg", "Ser celestial, nacido para ayudar", "mi casa");
+        User u2 = User.of("El Pelón", "Calvo", "niunpelotonto@tortilla.ong", "http://pm1.narvii.com/6120/9cd70762280f430ded8158c06c287e82b84d0101_00.jpg", "Nacío en un día en el que el sol brillo de tal manera que dislumbró a los imples mortales", "3000 viviendas");
+        User u3 = User.of("Yonatan", "Yostar", "jojito@gmail.com", "https://i.pinimg.com/originals/09/52/27/095227e83b41e44b8de3ba8e81efe2e1.jpg", "Solamente defender al mundo del caos", "La Tierra");
+        User u4 = User.of("Kaeya", "Alberich", "tucopito@hotmal.com", "https://img-17.ccm2.net/M5IDYIxs4R9RmHBLCt9l-PWqYLc=/500x/eff2597a02394167920c9d1cf7945a3c/ccm-faq/C3.JPG", "Kaeya Alberich es el hijo adoptivo de los Ragnvindr, una familia magnate con muchas bodegas", "Khaenri'ah");
+        User u5 = User.of("Aurelion", "Sol", "ElForjadorDeLasEstrellas@riot.com", "https://static.wikia.nocookie.net/yugiohenespanol/images/c/c4/Drag%C3%B3n_c%C3%B3smico_blazar.jpg/revision/latest/scale-to-width-down/1200?cb=20200201203300&path-prefix=es", "El ao shin que nunca salió", "En el espacio picha");
+        User u6 = User.of("Paquito", "El Chocolatero", "kingafrica@us.es", "https://pbs.twimg.com/media/FNgG3rCXEAEng6B.jpg", "Fui sifu de Willy Wonka, el sabe todo gracias a mí", "ESPAÑA");
 
         addUsers(u1, u2, u3, u4, u5, u6);
 

@@ -155,7 +155,7 @@ public class Checker {
                 && !param.matches("\\d+"))
             controller.addError(Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The parameter is not valid, one or two of the following: =, <, >")));
+                    Pair.of("message", "The parameter is not valid, does not have a number or has more than two of the following characters: =, <, >")));
     }
 
     public static void isParamGELDate(String param, ControllerResponse controller) {
@@ -163,7 +163,7 @@ public class Checker {
                 && !param.matches("[<>=]\\d{4}-\\d{2}-\\d{2}") && !param.matches("\\d{4}-\\d{2}-\\d{2}"))
             controller.addError(Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The parameter is not valid, one or two of the following: =, <, >")));
+                    Pair.of("message", "The parameter is not valid, does not have a date or has more than two of the following characters: =, <, >")));
     }
     
     
