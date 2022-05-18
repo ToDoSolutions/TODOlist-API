@@ -166,6 +166,12 @@ public class Checker {
                     Pair.of("message", "The parameter is not valid, does not have a date or has more than two of the following characters: =, <, >")));
     }
     
+    /*
+    public static void isPriorityCorrect(String priority, ControllerResponse controller) {
+    	if (priority == null && (priority < 0 || priority > 5))
+	}
+	*/
+    
     
 
     private Checker() {

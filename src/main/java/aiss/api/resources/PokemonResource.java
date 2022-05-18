@@ -37,6 +37,7 @@ public class PokemonResource {
         ControllerResponse controller = ControllerResponse.create();
         Checker.isDateCorrect(finishedDate, controller);
         Status auxStatus = Checker.isStatusCorrect(status, controller);
+        //Checker.isPriorityCorrect(priority, controller);
         if (controller.hasError()) return controller.getMessage();
         try {
             task = Parse.taskFromPokemon(repository.getPokemon(name), auxStatus, finishedDate, priority);
@@ -44,7 +45,7 @@ public class PokemonResource {
             return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
                     Pair.of("message: ", "The pokemon with the name " + name + " was not found"));
         }
-        return Response.ok(task).build();
+        return Response.ok(task.getFields(task.ALL_ATTRIBUTES)).build();
     }
 
     @POST

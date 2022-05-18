@@ -137,7 +137,7 @@ public class GroupResource {
     }
 
     @POST
-    @Path("/{groupId}/{userId}")
+    @Path("/{groupId}/user/{userId}")
     @Produces("application/json")
     public Response addUserToGroup(@Context UriInfo uriInfo, @PathParam("userId") String userId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
@@ -148,7 +148,7 @@ public class GroupResource {
         Container.isUserInGroup(group, user, groupId, userId, controller); // Comprobamos si el grupo tiene al usuario dado.
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
-        repository.addTaskToUser(groupId, userId);
+        repository.addUserToGroup(groupId, userId);
 
         // Builds the response
         UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "getGroup");
@@ -159,7 +159,7 @@ public class GroupResource {
     }
 
     @DELETE
-    @Path("/{groupId}/{userId}")
+    @Path("/{groupId}/user/{userId}")
     @Produces("application/json")
     public Response deleteUserToGroup(@PathParam("groupId") String groupId, @PathParam("userId") String userId) {
         Group group = repository.getGroup(groupId);
@@ -177,7 +177,7 @@ public class GroupResource {
     }
 
     @POST
-    @Path("/{groupId}/{taskId}")
+    @Path("/{groupId}/task/{taskId}")
     public Response addTaskToGroup(@Context UriInfo uriInfo, @PathParam("taskId") String taskId, @PathParam("groupId") String groupId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);
