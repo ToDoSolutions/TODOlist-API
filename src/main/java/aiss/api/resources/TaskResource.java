@@ -72,7 +72,7 @@ public class TaskResource {
                     (duration == null || Filter.isGEL(task.getDuration(), duration)))
                 result.add(task);
         }
-
+        
         return Response.ok(result.stream().map(task -> task.getFields(fields == null ? Task.ALL_ATTRIBUTES : fields)).collect(Collectors.toList())).build();
 
     }

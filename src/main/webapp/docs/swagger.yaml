@@ -37,8 +37,8 @@ paths:
               - '-title'
               - status
               - '-status'
-              - releaseDate
-              - '-releaseDate'
+              - startDate
+              - '-startDate'
               - finishedDate
               - '-finishedDate'
               - priority
@@ -957,7 +957,7 @@ components:
         finishedDate:
           description: When the task finished (the following pattern should be used YYYY-MM-DD)
           type: string
-        startedDate:
+        startDate:
           description: When the task started (the following pattern should be used YYYY-MM-DD)
           type: string
         annotation:
@@ -972,20 +972,16 @@ components:
         duration:
           description: Duration of the task (it's calculated using the start and finish date)
           type: integer
-        taskCompleted:
-          description: If the task is completed (no negatives numbers)
-          type: integer
       example:
-        idTask: t1
+        idTask: quitar si haces post o cambiarlo si haces put
         title: Comprar el pan
         description: Ve a comprar el pan para almorzar hoy
-        status: IN_PROGRESS
+        status: DONE
         finishedDate: '2022-12-12'
-        startedDate: '2022-12-27'
+        startDate: '2022-12-11'
         annotation: La panadería abre a las 9
-        priority: '10'
+        priority: '4'
         difficulty: EASY
-        duration: '15'
     User:
       type: object
       required:
@@ -1035,7 +1031,7 @@ components:
               finishedDate:
                 description: When the task finished (the following pattern should be used YYYY-MM-DD)
                 type: string
-              startedDate:
+              startDate:
                 description: When the task started (the following pattern should be used YYYY-MM-DD)
                 type: string
               annotation:
@@ -1050,11 +1046,11 @@ components:
               duration:
                 description: Duration of the task (it's calculated using the start and finish date)
                 type: integer
-              taskCompleted:
-                description: If the task is completed (no negatives numbers)
-                type: integer
+        taskCompleted:
+          description: Number of tasks completed (no negatives numbers)
+          type: integer
       example:
-        idUser: u1
+        idUser: quitar si haces post o cambiarlo si haces put
         name: Kujo
         surname: Jotaro
         email: oraora@gmail.com
@@ -1062,27 +1058,24 @@ components:
         bio: Yare yare daze
         location: Morioh
         tasks:
-          - idTask: t1
+          - idTask: quitar si haces post o cambiarlo si haces put
             title: Derrotar a Dio
             description: Cruza todo el mundo hasta llegar a Egipto
             status: DONE
             finishedDate: '2023-10-08'
-            startedDate: '2022-12-12'
+            startDate: '2022-05-08'
             annotation: Te encontrarás a un montón de randoms
-            priority: '10'
+            priority: '5'
             difficulty: HARDCORE
-            duration: '300'
-          - idTask: t2
+          - idTask: quitar si haces post o cambiarlo si haces put
             title: Parar a Kira
             description: Paren al psicópata explosivo
             status: DONE
             finishedDate: '2023-05-11'
-            startedDate: '2022-12-12'
+            startDate: '2022-01-12'
             annotation: Cuidado con Bites the Dust
-            priority: '10'
+            priority: '5'
             difficulty: HARDCORE
-            duration: '150'
-        taskCompleted: '2'
     Group:
         type: object
         required:
@@ -1152,7 +1145,7 @@ components:
                       finishedDate:
                         description: When the task finished (the following pattern should be used YYYY-MM-DD)
                         type: string
-                      startedDate:
+                      startDate:
                         description: When the task started (the following pattern should be used YYYY-MM-DD)
                         type: string
                       annotation:
@@ -1174,12 +1167,12 @@ components:
             description: Number of tasks of the group (sum of the tasks of each user in the group)
             type: string
         example:
-          idGroup: g1
+          idGroup: quitar si haces post o cambiarlo si haces put
           name: Kujos
           description: Familia Kujo
           createdDate: '2022-05-17'
           users:
-            - idUser: u1
+            - idUser: quitar si haces post o cambiarlo si haces put
               name: Kujo
               surname: Jotaro
               email: oraora@gmail.com
@@ -1187,53 +1180,47 @@ components:
               bio: Yare yare daze
               location: Morioh
               tasks:
-                - idTask: t1
+                - idTask: quitar si haces post o cambiarlo si haces put
                   title: Derrotar a Dio
                   description: Cruza todo el mundo hasta llegar a Egipto
                   status: DONE
                   finishedDate: '2023-10-08'
-                  startedDate: '2022-12-12'
+                  startDate: '2022-12-12'
                   annotation: Te encontrarás a un montón de randoms
-                  priority: '10'
+                  priority: '5'
                   difficulty: HARDCORE
-                  duration: '300'
-                - idTask: t2
+                - idTask: quitar si haces post o cambiarlo si haces put
                   title: Parar a Kira
                   description: Paren al psicópata explosivo
                   status: DONE
                   finishedDate: '2023-05-11'
-                  startedDate: '2022-12-12'
+                  startDate: '2022-12-12'
                   annotation: Cuidado con Bites the Dust
-                  priority: '10'
+                  priority: '5'
                   difficulty: HARDCORE
-                  duration: '150'
-              taskCompleted: '2'
-            - idUser: u2
+            - idUser: quitar si haces post o cambiarlo si haces put
               name: Kujo
               surname: Jolyne
               email: oraorajunior@gmail.com
-              avatar: frog.jpg
+              avatar: https://oyster.ignimgs.com/wordpress/stg.ign.com/2021/04/EyIBaakU8AMs4Zh-720x1018.jpg
               bio: Yare yare dawa
               location: Prision
               tasks:
-                - idTask: t3
+                - idTask: quitar si haces post o cambiarlo si haces put
                   title: Derrotar a Dio again
                   description: Resucito de la nada
                   status: IN_PROGRESS
                   finishedDate: '2023-10-08'
-                  startedDate: '2022-12-12'
+                  startDate: '2022-12-12'
                   annotation: 
-                  priority: '10'
+                  priority: '5'
                   difficulty: HARDCORE
-                  duration: '300'
-                - idTask: t4
+                - idTask: quitar si haces post o cambiarlo si haces put
                   title: Comprar el pan
                   description: Ve a comprar el pan para almorzar hoy
                   status: DONE
                   finishedDate: '2022-12-12'
-                  startedDate: '2022-12-27'
+                  startDate: '2022-12-11'
                   annotation: La panadería abre a las 9
-                  priority: '10'
+                  priority: '3'
                   difficulty: EASY
-                  duration: '15'
-              taskCompleted: '1'
