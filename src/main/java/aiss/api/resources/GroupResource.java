@@ -185,6 +185,7 @@ public class GroupResource {
 
         NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
         NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        NotFound.isTaskFoundInGroup(group, task, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.addTaskToGroup(groupId, taskId);
@@ -198,7 +199,7 @@ public class GroupResource {
     }
 
     @DELETE
-    @Path("/{groupId}/{taskId}")
+    @Path("/{groupId}/task/{taskId}")
     public Response deleteTaskToGroup(@PathParam("groupId") String groupId, @PathParam("taskId") String taskId) {
         Group group = repository.getGroup(groupId);
         Task task = repository.getTask(taskId);
@@ -206,6 +207,7 @@ public class GroupResource {
 
         NotFound.isGroupFound(group, groupId, controller); // Comprobamos que existe un grupo con la id dada.
         NotFound.isTaskFound(task, taskId, controller); // Comprobamos que existe una tarea con la id dada.
+        NotFound.isTaskFoundInGroup(group, task, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
         repository.deleteTaskToGroup(groupId, taskId);
