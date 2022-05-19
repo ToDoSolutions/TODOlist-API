@@ -10,6 +10,10 @@ import aiss.utilities.messages.Checker;
 import aiss.utilities.messages.ControllerResponse;
 import aiss.utilities.messages.Message;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -35,9 +39,11 @@ public class PokemonResource {
                                @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority) {
         Task task;
         ControllerResponse controller = ControllerResponse.create();
-        Checker.isDateCorrect(finishedDate, controller);
+        Date auxFinishedDate = Checker.isDateCorrect(finishedDate, controller);
+        Checker.isAfter(Date.valueOf(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))), auxFinishedDate, controller);
         Status auxStatus = Checker.isStatusCorrect(status, controller);
-        //Checker.isPriorityCorrect(priority, controller);
+        Integer auxPriority = Checker.isNumberCorrect(priority, controller);
+        Checker.isPriorityCorrect(auxPriority, controller);
         if (controller.hasError()) return controller.getMessage();
         try {
             task = Parse.taskFromPokemon(repository.getPokemon(name), auxStatus, finishedDate, priority);
@@ -54,8 +60,12 @@ public class PokemonResource {
                                @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority) {
         Task task;
         ControllerResponse controller = ControllerResponse.create();
-        Checker.isDateCorrect(finishedDate, controller);
+        Date auxFinishedDate = Checker.isDateCorrect(finishedDate, controller);
+        Checker.isAfter(Date.valueOf(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))), auxFinishedDate, controller);
         Status auxStatus = Checker.isStatusCorrect(status, controller);
+        Integer auxPriority = Checker.isNumberCorrect(priority, controller);
+        Checker.isPriorityCorrect(auxPriority, controller);
+        if (controller.hasError()) return controller.getMessage();
         if (controller.hasError()) return controller.getMessage();
         try {
             task = Parse.taskFromPokemon(repository.getPokemon(name), auxStatus, finishedDate, priority);

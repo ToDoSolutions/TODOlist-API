@@ -123,11 +123,16 @@ public class Checker {
                     Pair.of("message", "The difficulty of the task must be one of the following: EASY, MEDIUM, HARD, HARDCORE, I_WANT_TO_DIE")));
     }
 
-    public static void isDateCorrect(String date, ControllerResponse controller) {
-        if (date != null && !date.matches("\\d{4}-\\d{2}-\\d{2}"))
-            controller.addError(Message.send(Response.Status.BAD_REQUEST,
+    public static Date isDateCorrect(String date, ControllerResponse controller) {
+        if (date != null && !date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+        	controller.addError(Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
                     Pair.of("message", "The date is not valid, it should be yyyy-MM-dd format")));
+        	return null;
+        } else if (date == null)
+        	return null;
+            
+        return Date.valueOf(date);
     }
     
     public static Status isStatusCorrect(String status, ControllerResponse controller) {
@@ -151,29 +156,54 @@ public class Checker {
     }
 
     public static void isParamGELNumber(String param, ControllerResponse controller) {
-        if (param != null && !param.matches("[<>=]{2}\\d+") && !param.matches("[<>=]\\d+")
-                && !param.matches("\\d+"))
+        if (param != null && !param.matches("[<>=]{2}\\d+") && !param.matches("[<>=]\\d+"))
             controller.addError(Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The parameter is not valid, does not have a number or has more than two of the following characters: =, <, >")));
+                    Pair.of("message", "The parameter is not valid, does not have a number or it must have one or two of the following characters: =, <, >")));
     }
 
     public static void isParamGELDate(String param, ControllerResponse controller) {
         if (param != null && !param.matches("[<>=]{2}\\d{4}-\\d{2}-\\d{2}")
-                && !param.matches("[<>=]\\d{4}-\\d{2}-\\d{2}") && !param.matches("\\d{4}-\\d{2}-\\d{2}"))
+                && !param.matches("[<>=]\\d{4}-\\d{2}-\\d{2}"))
             controller.addError(Message.send(Response.Status.BAD_REQUEST,
                     Pair.of("status", "400"),
-                    Pair.of("message", "The parameter is not valid, does not have a date or has more than two of the following characters: =, <, >")));
+                    Pair.of("message", "The parameter is not valid, does not have a date or it must have one or two of the following characters: =, <, >")));
     }
     
-    /*
-    public static void isPriorityCorrect(String priority, ControllerResponse controller) {
-    	if (priority == null && (priority < 0 || priority > 5))
+    public static Integer isNumberCorrect(String number, ControllerResponse controller) {
+    	if (number != null && !number.matches("\\d+") && !number.matches("-\\d+") ) {
+    		controller.addError(Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "You must introduce a number and it's " + number)));
+    		return null;
+    	} else if (number == null)
+    		return null;
+    		
+    	
+    	return Integer.parseInt(number);
+    }
+    
+    public static void isPriorityCorrect(Integer priority, ControllerResponse controller) {
+    	
+    	if (Boolean.TRUE.equals(controller.hasError())) {	
+    	} else if (priority != null && (priority < 0 || priority > 5)) 
+    		controller.addError(Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The priority must be between 0 and 5 and it's " + priority)));
+    		
 	}
-	*/
+	
+    public static void isAfter(Date start, Date finish, ControllerResponse controller) {
+		if (Boolean.TRUE.equals(controller.hasError())) {	
+    	} else if (finish != null && start != null && start.after(finish))
+    		controller.addError(Message.send(Response.Status.BAD_REQUEST,
+                    Pair.of("status", "400"),
+                    Pair.of("message", "The finish date is " + finish + " and it must be after " + start)));
+		
+	}
     
-    
-
     private Checker() {
     }
+
+	
 }
