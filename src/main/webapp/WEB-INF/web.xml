@@ -30,14 +30,4 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-    
-    <filter>
-  		<filter-name>CorsFilter</filter-name>
- 	 	<filter-class>aiss.api.CORSFilter</filter-class>
-	</filter>
- 
-	<filter-mapping>
-	  	<filter-name>CorsFilter</filter-name>
-	  	<url-pattern>/*</url-pattern>
-	</filter-mapping>
 </web-app>

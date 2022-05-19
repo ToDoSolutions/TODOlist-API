@@ -1,6 +1,5 @@
 openapi: 3.0.0
 servers:
-  - url: http://localhost:8089/api/v1
   - url: https://todolist-api-348718.ew.r.appspot.com/api/v1
 info:
   description: Crea tu propia lista de tareas para cualquier proyecto.
