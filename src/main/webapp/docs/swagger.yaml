@@ -402,11 +402,6 @@ paths:
       summary: Add a task to a user
       description: Add a task to a user
       operationId: addTaskToUser
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              $ref: '#/components/schemas/User'
       parameters:
         - name: userId
           in: path
@@ -668,11 +663,6 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              $ref: '#/components/schemas/User'
       responses:
         '201':
           description: User added to the group
@@ -797,11 +787,6 @@ paths:
       summary: Add GitHub user
       description: Adds a GitHub user
       operationId: addGitHubUser
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              $ref: '#/components/schemas/User'
       parameters:
         - name: account
           in: path
@@ -879,11 +864,6 @@ paths:
       summary: Add task to GitHub user
       description: Adds a task to a GitHub user
       operationId: addTaskGitHubUser
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              $ref: '#/components/schemas/User'
       parameters:
         - name: account
           in: path
