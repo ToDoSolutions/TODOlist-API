@@ -16,6 +16,8 @@ tags:
     description: Group's operations
   - name: GitHub User
     description: GitHub user's operations (Using the GitHub API)
+  - name: Pokemon
+    description: Pokemon operations (Using the Pokemon API)
 paths:
   /tasks:
     get:
@@ -912,7 +914,89 @@ paths:
           description: Bad request
         '404':
           description: GitHub user or task not found
-
+  '/pokemon/{name}':
+    get:
+      tags:
+        - Pokemon
+      summary: Generate task from a Pokemon
+      description: Generates a task from a Pokemon
+      operationId: getTaskPokemon
+      parameters:
+        - name: name
+          in: path
+          description: Name of a Pokemon
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of a task
+          required: false
+          schema:
+            type: string
+        - name: finishedDate
+          in: query
+          description: When the task finished (after start date)
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          description: Priority of a task (between 0 and 5)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pokemon found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Pokemon not found
+    post:
+      tags:
+        - Pokemon
+      summary: Add task from a pokemon
+      description: Adds a task generated from a pokemon
+      operationId: addTaskPokemon
+      parameters:
+        - name: name
+          in: path
+          description: Name of a Pokemon
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of a task
+          required: false
+          schema:
+            type: string
+        - name: finishedDate
+          in: query
+          description: When the task finished (after start date)
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          description: Priority of a task (between 0 and 5)
+          required: false
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Task added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request
+        '404':
+          description: Pokemon not found
 
 components:
   schemas:
