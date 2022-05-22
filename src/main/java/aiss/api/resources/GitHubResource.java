@@ -19,6 +19,10 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Path("/github")
 @Produces("application/json")
@@ -35,6 +39,23 @@ public class GitHubResource {
         // Creamos una instancia si no existe.
         instance = (instance == null) ? new GitHubResource() : instance;
         return instance;
+    }
+    
+    @GET
+    @Path("repos/{account}")
+    public Response getAllTask(@PathParam("account") String account) {
+    	List<Map<String, Object>> tasks;
+        try {
+            tasks = Arrays.asList(repository.getAllRepos(account))
+            		.stream()
+            		.map(repo -> Parse.taskFromGitHub(repo, null, null, null, null).getFields(Task.ALL_ATTRIBUTES))
+            		.collect(Collectors.toList());
+        } catch (Exception e) {
+        	return Message.send(Response.Status.NOT_FOUND,
+                    Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The user with the name " + e + " was not found"));
+        }
+        return Response.ok(tasks).build();
     }
 
 
@@ -58,7 +79,7 @@ public class GitHubResource {
         Checker.isRepoCorrect(task, controller); // Comprobamos si el repo es correcto.
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
 
-        return Response.ok(task).build();
+        return Response.ok(task.getFields(task.ALL_ATTRIBUTES)).build();
 
 
     }

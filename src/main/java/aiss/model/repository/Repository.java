@@ -65,7 +65,13 @@ public interface Repository {
     TaskGitHub getRepo(String account, String repo);
 
     Owner getOwner(String account);
+    
+    TaskGitHub[] getAllRepos(String account);
 
     // Para pokemon.
     Pokemon getPokemon(String name);
+
+	Pokemon[] getPokemons();
+
+	
 }

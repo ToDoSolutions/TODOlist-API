@@ -41,19 +41,23 @@ public class UserResource {
 
     @GET
     public Response getAll(@QueryParam("order") String order,
-                           @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                           @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                            @QueryParam("fieldsUser") String fieldsUser, @QueryParam("fieldsTask") String fieldsTask,
                            @QueryParam("name") String name, @QueryParam("surname") String surname, @QueryParam("email") String email,
                            @QueryParam("location") String location, @QueryParam("taskCompleted") String taskCompleted) {
         List<User> result = new ArrayList<>(), users = new ArrayList<>(repository.getAllUser());
-        if (order != null)
-            Order.sequenceUser(users, order);
-        int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
-        int end = limit == null || limit > users.size() ? users.size() : start + limit; // Donde va a terminar.
-
         ControllerResponse controller = ControllerResponse.create();
+        Integer auxLimit = Checker.isNumberCorrect(limit, controller);
+        Integer auxOffset = Checker.isNumberCorrect(offset, controller);
         Checker.isParamGELNumber(taskCompleted,  controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
+        
+        if (order != null)
+            Order.sequenceUser(users, order);
+        int start = offset == null || auxOffset < 1 ? 0 : auxOffset - 1; // Donde va a comenzar.
+        int end = limit == null || auxLimit > users.size() ? users.size() : start + auxLimit; // Donde va a terminar.
+
+        
 
         for (int i = start; i < end; i++) {
             User user = users.get(i);

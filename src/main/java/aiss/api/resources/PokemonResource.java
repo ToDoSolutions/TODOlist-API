@@ -2,6 +2,7 @@ package aiss.api.resources;
 
 import aiss.model.Status;
 import aiss.model.Task;
+import aiss.model.pokemon.Pokemon;
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Pair;
@@ -13,6 +14,12 @@ import aiss.utilities.messages.Message;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -32,6 +39,22 @@ public class PokemonResource {
         instance = (instance == null) ? new PokemonResource() : instance; // Creamos una instancia si no existe.
         return instance;
     }
+    
+    @GET
+    public Response getPokemon() {
+        List<Map<String, Object>> tasks;
+        try {
+            tasks = Arrays.asList(repository.getPokemons())
+            		.stream()
+            		.map(pokemon -> Parse.taskFromPokemon(pokemon, null, null, null).getFields(Task.ALL_ATTRIBUTES))
+            		.collect(Collectors.toList());
+        } catch (Exception e) {
+            return Message.send(Response.Status.NOT_FOUND, Pair.of("status: ", "404"),
+                    Pair.of("message: ", "The pokemon with the name was not found"));
+        }
+        return Response.ok(tasks).build();
+    }
+    
 
     @GET
     @Path("/{name}")

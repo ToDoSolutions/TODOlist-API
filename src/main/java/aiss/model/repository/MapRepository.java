@@ -262,6 +262,13 @@ public class MapRepository implements Repository {
         ClientResource cr = new ClientResource(uri);
         return cr.get(Owner.class);
     }
+    
+    @Override 
+    public TaskGitHub[] getAllRepos(String account) {
+    	Owner owner = getOwner(account);
+    	ClientResource cr = new ClientResource(owner.getReposUrl());
+    	return cr.get(TaskGitHub[].class);
+    }
 
     // Para pokemon.
     @Override
@@ -275,6 +282,14 @@ public class MapRepository implements Repository {
         // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Pokemon.class);
+    }
+    
+    @Override
+    public Pokemon[] getPokemons() {
+        String uri = "https://aisspkmnapi.ts.r.appspot.com/api/pokemons/";
+        // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
+        ClientResource cr = new ClientResource(uri);
+        return cr.get(Pokemon[].class);
     }
 
     public void resetIndex() {

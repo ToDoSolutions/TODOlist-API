@@ -39,21 +39,23 @@ public class GroupResource {
 
     @GET
     public Response getAll(@QueryParam("order") String order,
-                           @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                           @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                            @QueryParam("fieldsGroup") String fieldsGroup, @QueryParam("fieldsUser") String fieldsUser,
                            @QueryParam("fieldsTask") String fieldsTask, @QueryParam("name") String name,
                            @QueryParam("description") String description, @QueryParam("numTasks") String numTasks,
                            @QueryParam("createdDate") String createdDate) {
         List<Group> result = new ArrayList<>(), groups = new ArrayList<>(repository.getAllGroup()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
-        if (order != null)
-            Order.sequenceGroup(groups, order);
-        int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
-        int end = limit == null || limit > groups.size() ? groups.size() : start + limit; // Donde va a terminar.
         ControllerResponse controller = ControllerResponse.create();
-
+        Integer auxLimit = Checker.isNumberCorrect(limit, controller);
+        Integer auxOffset = Checker.isNumberCorrect(offset, controller);
         Checker.isParamGELDate(createdDate, controller);
         Checker.isParamGELNumber(numTasks, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
+        if (order != null)
+            Order.sequenceGroup(groups, order);
+        int start = offset == null || auxOffset < 1? 0 : auxOffset - 1; // Donde va a comenzar.
+        int end = limit == null || auxLimit > groups.size() ? groups.size() : start + auxLimit; // Donde va a terminar.
+        
 
         for (int i = start; i < end; i++) {
             Group group = groups.get(i);

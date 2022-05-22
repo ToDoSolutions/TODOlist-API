@@ -40,15 +40,15 @@ public class TaskResource {
 
     @GET
     public Response getAllTasks(@QueryParam("order") String order,
-                                @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset,
+                                @QueryParam("limit") String limit, @QueryParam("offset") String offset,
                                 @QueryParam("fields") String fields, @QueryParam("title") String title,
                                 @QueryParam("status") String status, @QueryParam("startDate") String startDate,
                                 @QueryParam("finishedDate") String finishedDate, @QueryParam("priority") String priority,
                                 @QueryParam("difficulty") String difficulty, @QueryParam("duration") String duration) {
         List<Task> result = new ArrayList<>(), tasks = new ArrayList<>(repository.getAllTask()); // No se puede utilizar .toList() porque eso es a partir de Java 16.
-        if (order != null)
-            Order.sequenceTask(result, order);
         ControllerResponse controller = ControllerResponse.create();
+        Integer auxLimit = Checker.isNumberCorrect(limit, controller);
+        Integer auxOffset = Checker.isNumberCorrect(offset, controller);
         Status auxStatus = Checker.isStatusCorrect(status, controller);
         Difficulty auxDifficulty = Checker.isDifficultyCorrect(difficulty, controller);
         Checker.isParamGELDate(startDate, controller); // Comprobamos formato de fecha de inicio.
@@ -56,10 +56,10 @@ public class TaskResource {
         Checker.isParamGELNumber(priority, controller);
         Checker.isParamGELNumber(duration, controller);
         if (Boolean.TRUE.equals(controller.hasError())) return controller.getMessage();
-
-
-        int start = offset == null ? 0 : offset - 1; // Donde va a comenzar.
-        int end = limit == null || limit > tasks.size() ? tasks.size() : start + limit; // Donde va a terminar.
+        if (order != null)
+            Order.sequenceTask(result, order);
+        int start = offset == null || auxOffset < 1 ? 0 : auxOffset - 1; // Donde va a comenzar.
+        int end = limit == null || auxLimit > tasks.size() ? tasks.size() : start + auxLimit; // Donde va a terminar.
         for (int i = start; i < end; i++) {
             Task task = tasks.get(i);
             if (task != null &&
