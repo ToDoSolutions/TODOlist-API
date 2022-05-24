@@ -278,15 +278,15 @@ public class MapRepository implements Repository {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String uri = "https://aisspkmnapi.ts.r.appspot.com/api/pokemons/" + name;
+        String uri = "https://pokemonapiaiss.lm.r.appspot.com/api/pokemons/" + name;
         // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Pokemon.class);
     }
     
     @Override
-    public Pokemon[] getPokemons() {
-        String uri = "https://aisspkmnapi.ts.r.appspot.com/api/pokemons/";
+    public Pokemon[] getAllPokemons() {
+        String uri = "https://pokemonapiaiss.lm.r.appspot.com/api/pokemons/";
         // Logger.getLogger(MapRepository.class.getName()).log(Level.FINE, "TASK URI: " + uri);
         ClientResource cr = new ClientResource(uri);
         return cr.get(Pokemon[].class);

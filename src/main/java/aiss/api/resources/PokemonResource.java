@@ -2,7 +2,7 @@ package aiss.api.resources;
 
 import aiss.model.Status;
 import aiss.model.Task;
-import aiss.model.pokemon.Pokemon;
+
 import aiss.model.repository.MapRepository;
 import aiss.model.repository.Repository;
 import aiss.utilities.Pair;
@@ -14,11 +14,11 @@ import aiss.utilities.messages.Message;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import javax.ws.rs.*;
@@ -44,7 +44,7 @@ public class PokemonResource {
     public Response getPokemon() {
         List<Map<String, Object>> tasks;
         try {
-            tasks = Arrays.asList(repository.getPokemons())
+            tasks = Arrays.asList(repository.getAllPokemons())
             		.stream()
             		.map(pokemon -> Parse.taskFromPokemon(pokemon, null, null, null).getFields(Task.ALL_ATTRIBUTES))
             		.collect(Collectors.toList());

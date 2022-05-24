@@ -71,7 +71,7 @@ public interface Repository {
     // Para pokemon.
     Pokemon getPokemon(String name);
 
-	Pokemon[] getPokemons();
+	Pokemon[] getAllPokemons();
 
 	
 }
