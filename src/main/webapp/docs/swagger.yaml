@@ -760,7 +760,7 @@ paths:
           description: Task deleted from the group
         '404':
           description: Group or task not found
-  /github/{account}:
+  '/github/{account}':
     get:
       tags:
         - GitHub User
@@ -807,6 +807,29 @@ paths:
           description: Bad request
         '404':
           description: GitHub user not found
+  '/repos/{account}':
+    get:
+        tags:
+          - GitHub User
+        summary: Get all repositories from GitHub user 
+        description: Gets all repositories from  a GitHub user 
+        operationId: getAllRepos
+        parameters:
+          - name: account
+            in: path
+            description: Name of the GitHub account
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: GitHub user found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Task'
+          '404':
+            description: GitHub user not found
   '/github/{account}/{repo}':
     get:
       tags:
@@ -914,12 +937,28 @@ paths:
           description: Bad request
         '404':
           description: GitHub user or task not found
+  /pokemon:
+    get:
+      tags:
+        - Pokemon
+      summary: Get task from each Pokemon
+      description: Gets a task from each Pokemon
+      operationId: getTaskAllPokemon
+      responses:
+        '200':
+          description: Pokemons found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Pokemons not found
   '/pokemon/{name}':
     get:
       tags:
         - Pokemon
-      summary: Generate task from a Pokemon
-      description: Generates a task from a Pokemon
+      summary: Get task from  Pokemon
+      description: Gets a task from a Pokemon
       operationId: getTaskPokemon
       parameters:
         - name: name
@@ -959,7 +998,7 @@ paths:
       tags:
         - Pokemon
       summary: Add task from a pokemon
-      description: Adds a task generated from a pokemon
+      description: Adds a task from a pokemon
       operationId: addTaskPokemon
       parameters:
         - name: name
