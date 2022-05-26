@@ -7,7 +7,7 @@ import org.junit.Test;
 import aiss.model.repository.MapRepository;
 import aiss.model.pokemon.Pokemon;
 
-class PokemonTest {
+public class PokemonTest {
 
 	static Pokemon poke1;
 	static Pokemon[] pokeAll;
