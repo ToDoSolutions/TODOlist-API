@@ -2,8 +2,13 @@ package aiss.model.resources;
 
 import static org.junit.Assert.*;
 
+import java.sql.Date;
+
 import org.junit.Test;
 
+import aiss.model.Difficulty;
+import aiss.model.Status;
+import aiss.model.Task;
 import aiss.model.User;
 import aiss.model.github.Owner;
 import aiss.model.github.TaskGitHub;
@@ -13,7 +18,7 @@ import aiss.utilities.Parse;
 public class GitHubTest {
 
 	static Owner owner1;
-	static TaskGitHub taskg1, taskg2;
+	static TaskGitHub repo1;
 	static MapRepository repository = (MapRepository) new MapRepository().getInstance(); 
 	
 	
@@ -37,32 +42,35 @@ public class GitHubTest {
 	
 		// Show result
 		System.out.println("GitHub Avatar: " +  owner1.getAvatarUrl());
-	//	System.out.println("GitHub generation: " +  p.getAvatar());
 
 	}
-//	
-//	
-//	
-//	@Test
-//	public void testGetRepo() {
-//		
-//		//Damos un owner y un repositorio 
-//		String propietarioGit= "alesanfe";
-//		String repositorio= "TODOlist-API";
-//		
-//		taskg1 = repository.getRepo(propietarioGit, repositorio);
-//		
-//		
-//		//test
-//		TaskGitHub tg = repository.getRepo(taskg1.getId().toString(),repositorio);
-//		
-//		
-//		assertEquals("The id of the GitHub do not match", taskg1.getId(), tg.getId());
-//		assertEquals("The name of the GitHub do not match", taskg1.getUrl(), tg.getUrl());
-//	
-//		// Show result
-//		System.out.println("GitHub name: " +  tg.getId());
-//		System.out.println("GitHub generation: " +  tg.getUrl());
-//
-//	}
+	
+	
+	
+	@Test
+	public void testGetRepo() {
+		
+		//Damos un owner y un repositorio 
+		String propietario1= "alesanfe";
+		String repositorio= "TODOlist-API";
+		Status status= Status.IN_PROGRESS;
+       
+        Integer priority = 2;
+        Difficulty difficulty = Difficulty.EASY;
+		
+		repo1 = repository.getRepo(propietario1, repositorio);
+		
+		
+		//test
+		Task tg = Parse.taskFromGitHub(repo1, status, repositorio, priority, difficulty);
+		repository.addTask(tg);;
+		
+	//	assertEquals("The id of the GitHub do not match", repo1.getId(), tg.get());
+	//	assertEquals("The name of the GitHub do not match", taskg1.getUrl(), tg.getUrl());
+	
+		// Show result
+		System.out.println("GitHubTask Difficulty: " +  tg.getDifficulty());
+	//	System.out.println("GitHub generation: " +  tg.getUrl());
+
+	}
 }
