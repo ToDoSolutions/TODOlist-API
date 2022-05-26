@@ -2,8 +2,6 @@ package aiss.model.resources;
 
 import static org.junit.Assert.*;
 
-import java.sql.Date;
-
 import org.junit.Test;
 
 import aiss.model.Difficulty;

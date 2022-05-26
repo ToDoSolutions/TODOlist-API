@@ -1,15 +1,11 @@
 package aiss.model.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
-import java.util.Collection;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
-
-
-import aiss.model.pokemon.Pokemon;
 import aiss.model.repository.MapRepository;
+import aiss.model.pokemon.Pokemon;
 
 class PokemonTest {
 
