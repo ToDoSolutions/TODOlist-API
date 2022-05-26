@@ -64,9 +64,7 @@ public class GitHubTest {
 		//test
 		Task tg = Parse.taskFromGitHub(repo1, status, repositorio, priority, difficulty);
 		repository.addTask(tg);;
-		
-	//	assertEquals("The id of the GitHub do not match", repo1.getId(), tg.get());
-	//	assertEquals("The name of the GitHub do not match", taskg1.getUrl(), tg.getUrl());
+	
 	
 		// Show result
 		System.out.println("GitHubTask Difficulty: " +  tg.getDifficulty());

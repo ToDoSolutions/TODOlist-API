@@ -35,21 +35,5 @@ class PokemonTest {
 		System.out.println("Pokemon generation: " +  p.getGeneration());
 
 	}
-//
-//	@Test
-//	public void testGetAlltPokemon() {
-//		
-//		
-//		pokeAll = repository.getAllPokemons();
-//		
-//		Pokemon[] p = repository.getAllPokemons();
-//		
-//	
-//		// Show result
-//		System.out.println("Pokemon name: " +  pokeAll);
-//		System.out.println("Pokemon generation: " +  pokeAll);
-//	
-//	}
-	
-	
+		
 }
